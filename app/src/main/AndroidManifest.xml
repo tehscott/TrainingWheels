@@ -16,6 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="group5.cs3750.trainingwheels.Tutorial"
+            android:label="@string/title_activity_tutorial" >
+        </activity>
     </application>
 
 </manifest>
