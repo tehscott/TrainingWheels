@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 
 public class TrainingIDE extends Activity{
-
+    //
     Button bIf, bWhile, bFor, bString, bProcedure, bInt;
     TextView console;
 
