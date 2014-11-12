@@ -50,6 +50,17 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="group5.cs3750.trainingwheels.Settings"
+            android:label="@string/title_activity_tutorial"
+            android:screenOrientation="portrait"
+            >
+            <intent-filter>
+                <action android:name="group5.cs3750.trainingwheels.SETTINGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
