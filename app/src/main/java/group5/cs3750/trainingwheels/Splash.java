@@ -26,11 +26,13 @@ public class Splash extends Activity {
                 try{
                     sleep(1800);
                     ring.start();
+                    sleep(500);
+                    ring.start();
                     sleep(2500);
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }finally {
-                    Intent ourIntent = new Intent("group5.cs3750.trainingwheels.TUTORIAL");
+                    Intent ourIntent = new Intent("group5.cs3750.trainingwheels.MENU");
                     startActivity(ourIntent);
                 }
             }
