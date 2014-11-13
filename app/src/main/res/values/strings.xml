@@ -6,7 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_tutorial">Tutorial</string>
     <string name="training_ide">IDE</string>
-    <string name="menu_welcome">Welcome!</string>
+    <string name="demo_menu_welcome">Welcome!</string>
     <!-- Settings Strings -->
     <string name="settingsSpinnerTitle">Difficulty</string>
     <string-array name="settingsSpinnerArray">

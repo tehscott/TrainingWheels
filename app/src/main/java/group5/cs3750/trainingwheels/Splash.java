@@ -32,7 +32,7 @@ public class Splash extends Activity {
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }finally {
-                    Intent ourIntent = new Intent("group5.cs3750.trainingwheels.MENU");
+                    Intent ourIntent = new Intent("group5.cs3750.trainingwheels.DEMOMENU");
                     startActivity(ourIntent);
                 }
             }
