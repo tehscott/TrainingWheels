@@ -9,6 +9,7 @@
     <string name="demo_menu_welcome">Welcome!</string>
     <!-- Settings Strings -->
     <string name="settingsSpinnerTitle">Difficulty</string>
+    <string name="main_menu">Main Menu</string>
     <string-array name="settingsSpinnerArray">
         <item>Beginner</item>
         <item>Amateur</item>
