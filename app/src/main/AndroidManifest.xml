@@ -8,69 +8,68 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".DemoMenu"
+            android:name="group5.cs3750.trainingwheels.DemoMenu"
             android:label="@string/demo_menu_welcome"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="group5.cs3750.trainingwheels.DEMOMENU" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".Splash"
+            android:name="group5.cs3750.trainingwheels.Splash"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-        android:name="group5.cs3750.trainingwheels.Tutorial"
-        android:label="@string/title_activity_tutorial"
-        android:screenOrientation="portrait"
-            >
-        <intent-filter>
-            <action android:name="group5.cs3750.trainingwheels.TUTORIAL" />
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
-    </activity>
-
-        <activity
-            android:name=".TrainingIDE"
-            android:label="@string/training_ide"
-            android:screenOrientation="landscape"
-            >
+            android:name="group5.cs3750.trainingwheels.Tutorial"
+            android:label="@string/title_activity_tutorial"
+            android:screenOrientation="portrait" >
             <intent-filter>
-                <action android:name="group5.cs3750.trainingwheels.TRAININGIDE" />
+                <action android:name="group5.cs3750.trainingwheels.TUTORIAL" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="group5.cs3750.trainingwheels.TrainingIDE"
+            android:label="@string/training_ide"
+            android:screenOrientation="landscape" >
+            <intent-filter>
+                <action android:name="group5.cs3750.trainingwheels.TRAININGIDE" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="group5.cs3750.trainingwheels.Settings"
             android:label="@string/title_activity_tutorial"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="group5.cs3750.trainingwheels.SETTINGS" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="group5.cs3750.trainingwheels.MainMenu"
             android:label="@string/main_menu"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="group5.cs3750.trainingwheels.MAINMENU" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="group5.cs3750.trainingwheels.User"
+            android:label="@string/title_activity_user" >
         </activity>
     </application>
 

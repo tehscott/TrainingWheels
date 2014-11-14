@@ -10,12 +10,16 @@
     <!-- Settings Strings -->
     <string name="settingsSpinnerTitle">Difficulty</string>
     <string name="main_menu">Main Menu</string>
+
     <string-array name="settingsSpinnerArray">
         <item>Beginner</item>
         <item>Amateur</item>
         <item>Professional</item>
     </string-array>
 
-
+    <string name="title_activity_user">User</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="hints_tips">Hints/Tips:</string>
+    <string name="sound">Sound:</string>
 
 </resources>

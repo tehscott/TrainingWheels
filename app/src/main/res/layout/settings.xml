@@ -1,48 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    >
+    tools:context=".Settings"
+    android:padding="10dp">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="Difficulty"
+        android:textSize="16sp"
+        android:id="@+id/difficulty_label"
+        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/difficultySpinner"
+        android:layout_alignBottom="@+id/difficultySpinner"/>
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/difficultySpinner"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:entries="@array/settingsSpinnerArray"
         android:prompt="@string/settingsSpinnerTitle"
-        android:layout_marginLeft="45dp"
-        android:layout_marginTop="72dp"
-        android:focusable="true" />
+        android:focusable="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/difficulty_label"
+        android:layout_toEndOf="@+id/difficulty_label" />
 
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sound:"
+        android:text="@string/sound"
+        android:textSize="16sp"
         android:id="@+id/soundSwitch"
-        android:layout_below="@+id/difficultySpinner"
-        android:layout_alignLeft="@+id/difficultySpinner"
-        android:layout_alignStart="@+id/difficultySpinner"
-        android:layout_marginTop="34dp" />
+        android:layout_below="@+id/difficulty_label"
+        android:layout_alignLeft="@+id/difficulty_label"
+        android:layout_alignStart="@+id/difficulty_label"
+        android:layout_marginTop="5dp"/>
 
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hints/Tips:"
+        android:text="@string/hints_tips"
+        android:textSize="16sp"
         android:id="@+id/hintsSwitch"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/soundSwitch"
         android:layout_alignLeft="@+id/soundSwitch"
-        android:layout_alignStart="@+id/soundSwitch" />
+        android:layout_alignStart="@+id/soundSwitch"
+        android:layout_marginTop="5dp"/>
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Remember Me"
+        android:text="@string/remember_me"
+        android:textSize="16sp"
         android:id="@+id/rememberMeCheckBox"
         android:layout_below="@+id/hintsSwitch"
         android:layout_alignLeft="@+id/hintsSwitch"
         android:layout_alignStart="@+id/hintsSwitch"
-        android:layout_marginTop="45dp" />
+        android:layout_marginTop="5dp"/>
 
 </RelativeLayout>

@@ -1,0 +1,71 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="group5.cs3750.trainingwheels.User">
+
+    <TextView android:text="Current Rank:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/current_rank_label"
+        android:textSize="16sp"
+        android:layout_marginRight="2dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Junior Developer"
+        android:id="@+id/current_rank_value"
+        android:layout_alignTop="@+id/current_rank_label"
+        android:layout_alignBottom="@+id/current_rank_label"
+        android:layout_toRightOf="@+id/current_rank_label" />
+
+    <TextView
+        android:text="Level Completed:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/level_completed_label"
+        android:layout_below="@+id/current_rank_label"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="16sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="2dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="5"
+        android:id="@+id/level_completed_value"
+        android:layout_alignTop="@+id/level_completed_label"
+        android:layout_alignBottom="@+id/level_completed_label"
+        android:layout_toRightOf="@+id/level_completed_label" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exp until next rank:"
+        android:id="@+id/exp_label"
+        android:layout_below="@+id/level_completed_label"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="16sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="2dp"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_alignTop="@+id/exp_label"
+        android:layout_alignBottom="@+id/exp_label"
+        android:layout_toRightOf="@+id/exp_label"
+        android:layout_alignParentRight="true"
+        android:progress="35"/>
+
+</RelativeLayout>
