@@ -4,13 +4,21 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 
 public class TrainingIDE extends Activity{
     //
-    Button bIf, bWhile, bFor, bString, bProcedure, bInt;
+    Button bIf, bWhile, bFor, bString, bProcedure, bInt, bRun;
+    EditText notePad;
     TextView console;
+    Boolean forPressed = false;
+    Boolean whilePressed = false;
+
+    //StringBuilder notePadOut = new StringBuilder();
+    String notePadOut;
+    StringBuilder consoleOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +31,61 @@ public class TrainingIDE extends Activity{
         bString = (Button) findViewById(R.id.bString);
         bProcedure = (Button) findViewById(R.id.bProcedure);
         bInt = (Button) findViewById(R.id.bInt);
+        notePad = (EditText) findViewById(R.id.tvNotePad);
+        bRun = (Button) findViewById(R.id.bRun);
         console = (TextView) findViewById(R.id.tvConsole);
+        //notePad = (TextView) findViewById(R.id.tvNotePad);
+
+        bRun.setOnClickListener(new View.OnClickListener() {
+            //FileOutputStream fos;
+            @Override
+            public void onClick(View v) {
+
+
+                if(forPressed){
+                    printFor();
+                    forPressed = false;
+                }
+                if(whilePressed){
+                    printWhile();
+                    whilePressed = false;
+                }
+
+//                String getCode = String.valueOf(notePad.getText());
+//                getCode.replace("\n", "");
+//                getCode.replace("\\s", "");
+//
+//                char[] code = getCode.toCharArray();
+//
+//                char[] codeHolder;
+
+                //char[] code;
+
+//                for(int i = 0; i < code.length; i++){
+//                   // System.out.println(code[i]);
+//                }
+
+
+
+
+//                Interpreter interpret = new Interpreter();
+//               System.out.println("Files dir is "+getFilesDir());
+//                String FILENAME = "hello_file";
+//                String string = "hello world!";
+//                try {
+//                    FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+//                    fos.write(string.getBytes());
+//                    fos.close();
+//                }catch(Exception e){
+//
+//                }
+//
+//                System.out.println("Files last is "+fileList().toString());
+//                interpret.dummyFile();
+//                //create object and send
+//                //get text from console
+            }
+        });
 
         bIf.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -33,17 +95,35 @@ public class TrainingIDE extends Activity{
             }
         });
         bWhile.setOnClickListener(new View.OnClickListener(){
+
             @Override
             public void onClick(View view)
             {
-                console.setText(String.format("while (<condition>) {\n\n  <statement>\n\n}"));
+                console.setText("");
+                notePad.setText("");
+                notePadOut = "";
+                notePadOut += " Boolean isTrue = true;\n" +
+                        "        while (isTrue){\n" +
+                        "            System.out.println(\"I am truest to do it!\");\n" +
+                        "            isTrue = false;\n" +
+                        "        }\n" +
+                        "    }\n\n";
+
+                notePad.setText(notePadOut);
+                whilePressed = true;
             }
         });
         bFor.setOnClickListener(new View.OnClickListener(){
+
             @Override
             public void onClick(View view)
             {
-
+                console.setText("");
+                notePad.setText("");
+                notePadOut = "";
+                notePadOut += "for (int i = 0; i < 10; i++){\n\n  System.out.println(\"Hello, world!\");\n\n}\n\n";
+                notePad.setText(notePadOut);
+                forPressed = true;
             }
         });
         bString.setOnClickListener(new View.OnClickListener(){
@@ -67,24 +147,24 @@ public class TrainingIDE extends Activity{
 
             }
         });
+    }
 
+    public void printFor(){
+        consoleOut = new StringBuilder();
+        for(int i = 0; i < 10; i++){
+            consoleOut.append(" Hello, world!\n");
+        }
 
-//
-//        add.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view)
-//            {
-//                counter++;
-//                display.setText("You total is "+ counter);
-//            }
-//        });
-//
-//        sub.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                counter--;
-//                display.setText("You total is "+ counter);
-//            }
-//        });
+        console.setText(consoleOut.toString());
+    }
+
+    public void printWhile(){
+        consoleOut = new StringBuilder();
+        Boolean isTrue = true;
+        while (isTrue){
+            consoleOut.append(" I am truest to do it!\n");
+            isTrue = false;
+        }
+        console.setText(consoleOut.toString());
     }
 }
