@@ -2,11 +2,11 @@ package group5.cs3750.trainingwheels;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 
 public class TrainingIDE extends Activity{
     //
@@ -35,6 +35,8 @@ public class TrainingIDE extends Activity{
         bRun = (Button) findViewById(R.id.bRun);
         console = (TextView) findViewById(R.id.tvConsole);
         //notePad = (TextView) findViewById(R.id.tvNotePad);
+        //FileOutputStream fos;
+
 
         bRun.setOnClickListener(new View.OnClickListener() {
             //FileOutputStream fos;
@@ -68,8 +70,8 @@ public class TrainingIDE extends Activity{
 
 
 
-//                Interpreter interpret = new Interpreter();
-//               System.out.println("Files dir is "+getFilesDir());
+                //Interpreter interpret = new Interpreter();
+               //System.out.println("Files dir is "+getFilesDir());
 //                String FILENAME = "hello_file";
 //                String string = "hello world!";
 //                try {
@@ -81,9 +83,9 @@ public class TrainingIDE extends Activity{
 //                }
 //
 //                System.out.println("Files last is "+fileList().toString());
-//                interpret.dummyFile();
-//                //create object and send
-//                //get text from console
+                //interpret.dummyFile();
+                //create object and send
+                //get text from console
             }
         });
 
@@ -101,15 +103,47 @@ public class TrainingIDE extends Activity{
             {
                 console.setText("");
                 notePad.setText("");
-                notePadOut = "";
-                notePadOut += " Boolean isTrue = true;\n" +
-                        "        while (isTrue){\n" +
-                        "            System.out.println(\"I am truest to do it!\");\n" +
-                        "            isTrue = false;\n" +
-                        "        }\n" +
-                        "    }\n\n";
 
-                notePad.setText(notePadOut);
+                /*
+                beginner
+                 */
+
+                notePadOut = "";
+                notePadOut += " Boolean isTrue = true;<br>" +
+                        "        while ( <font color='red'><i>condition</i></font> ){<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+                        "             <font color='red'><i>statement</i></font> <br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+                        "            isTrue = false;<br>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                        "        }<br>" +
+                        "    }<br><br>";
+                notePad.setText(Html.fromHtml(notePadOut));
+
+                /*
+                amateur
+                 */
+//                notePadOut = "";
+//                notePadOut += " Boolean isTrue =  <font color='red'><i>set_condition</i></font> ;<br>" +
+//                        "        while ( <font color='red'><i>condition</i></font> ){<br>" +
+//                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+//                        " <font color='red'><i>statement</i></font> <br>" +
+//                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+//                        "isTrue = false;<br>" +
+//                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>" +
+//                        "    }<br><br>";
+//                notePad.setText(Html.fromHtml(notePadOut));
+
+//                /*
+//                professional
+//                 */
+//                notePadOut = "<br><br>";
+//                notePadOut += "" +
+//                        "        while ( ){<br>" +
+//                        "           <br>" +
+//                        "            " +
+//                        "    }<br><br>";
+//                notePad.setText(Html.fromHtml(notePadOut));
                 whilePressed = true;
             }
         });
@@ -121,8 +155,29 @@ public class TrainingIDE extends Activity{
                 console.setText("");
                 notePad.setText("");
                 notePadOut = "";
-                notePadOut += "for (int i = 0; i < 10; i++){\n\n  System.out.println(\"Hello, world!\");\n\n}\n\n";
-                notePad.setText(notePadOut);
+
+                /*
+                beginner
+                 */
+//                notePadOut += "for (int i = 0; <font color='red'><i>condition</i></font>; i++){<br><br> " +
+//                        "System.out.println(\"Hello, world!\");<br><br>" +
+//                        "}<br><br>";
+//                notePad.setText(Html.fromHtml(notePadOut));
+
+                /*
+                amatuer
+                 */
+                notePadOut += "for (<font color='red'><i>init</i></font>; <font color='red'><i>condition</i></font>; <font color='red'><i>iterator</i></font>){<br>" +
+                        " <font color='red'><i>statement</i></font> <br>"+
+                "}<br><br>";
+                notePad.setText(Html.fromHtml(notePadOut));
+
+                /*
+                professional
+                 */
+//                notePadOut += "for ( ){\n\n  " +
+//                        "}\n\n";
+//                notePad.setText(notePadOut);
                 forPressed = true;
             }
         });

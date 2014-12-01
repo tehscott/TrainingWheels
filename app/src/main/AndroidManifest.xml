@@ -23,7 +23,8 @@
         <activity
             android:name="group5.cs3750.trainingwheels.Splash"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="landscape" >
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
