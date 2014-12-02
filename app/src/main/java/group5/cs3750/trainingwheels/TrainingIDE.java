@@ -168,7 +168,7 @@ public class TrainingIDE extends Activity{
                 /*
                 amatuer
                  */
-                notePadOut += "for (<font color='red'><i>init</i></font>; <font color='red'><i>condition</i></font>; <font color='red'><i>iterator</i></font>){<br>" +
+                notePadOut += "for (<font color='red'><i>init</i></font>; <font color='red'><i>condition</i></font>; <font color='red'><i>iterate</i></font>){<br>" +
                         " <font color='red'><i>statement</i></font> <br>"+
                 "}<br><br>";
                 notePad.setText(Html.fromHtml(notePadOut));

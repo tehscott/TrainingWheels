@@ -25,6 +25,7 @@ public class Splash extends Activity {
         final ImageView imageD=(ImageView)findViewById(R.id.letterD);
         final ImageView imageE=(ImageView)findViewById(R.id.letterE);
         final ImageView imageA=(ImageView)findViewById(R.id.letterA);
+        final ImageView[] viewArray = {imageI,imageD, imageE,imageA};
         ring = MediaPlayer.create(Splash.this, R.raw.ring);
 
 
@@ -41,6 +42,11 @@ public class Splash extends Activity {
                     anim.setInterpolator(new LinearInterpolator());
                     anim.setRepeatCount(0);
                     anim.setDuration(1000);
+
+//                    int counter = 0;
+//                    while (counter < 4){
+//
+//                    }
                     imageI.startAnimation(anim);
                     imageD.startAnimation(anim);
                     imageE.startAnimation(anim);
