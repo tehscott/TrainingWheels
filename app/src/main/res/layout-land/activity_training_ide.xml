@@ -15,41 +15,47 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="While"
-            android:id="@+id/bWhile" />
+            android:id="@+id/bWhile"
+            android:tag="while" />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="If"
-            android:id="@+id/bIf" />
+            android:id="@+id/bIf"
+            android:tag="if" />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="For"
             android:id="@+id/bFor"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:tag="for" />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="String"
             android:id="@+id/bString"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:tag="string" />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Int"
             android:id="@+id/bInt"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:tag="int" />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Procedure"
             android:id="@+id/bProcedure"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:tag="procedure" />
     </LinearLayout>
 
     <FrameLayout

@@ -2,9 +2,15 @@ package group5.cs3750.trainingwheels;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 
@@ -32,6 +39,9 @@ public class TrainingIDE extends Activity{
     private Button tutorialPrevButton, tutorialCloseButton, tutorialNextButton;
     private AlertDialog tutorialDialog;
     private final GestureDetector detector = new GestureDetector(new SwipeGestureDetector());
+
+    // Drag/drop variables
+    private View draggedButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +205,7 @@ public class TrainingIDE extends Activity{
                 forPressed = true;
             }
         });
+
         bString.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view)
@@ -216,6 +227,22 @@ public class TrainingIDE extends Activity{
 
             }
         });
+
+        // Long click listeners
+        bWhile.setOnLongClickListener(new CustomOnLongPressListener());
+        bIf.setOnLongClickListener(new CustomOnLongPressListener());
+        bFor.setOnLongClickListener(new CustomOnLongPressListener());
+        bString.setOnLongClickListener(new CustomOnLongPressListener());
+        bInt.setOnLongClickListener(new CustomOnLongPressListener());
+        bProcedure.setOnLongClickListener(new CustomOnLongPressListener());
+
+        // On drag listeners
+        bWhile.setOnTouchListener(new CustomOnTouchListener());
+        bIf.setOnTouchListener(new CustomOnTouchListener());
+        bFor.setOnTouchListener(new CustomOnTouchListener());
+        bString.setOnTouchListener(new CustomOnTouchListener());
+        bInt.setOnTouchListener(new CustomOnTouchListener());
+        bProcedure.setOnTouchListener(new CustomOnTouchListener());
 
         showTutorial();
     }
@@ -299,6 +326,39 @@ public class TrainingIDE extends Activity{
             }
         });
         tutorialDialog.show();
+    }
+
+    private class CustomOnLongPressListener implements View.OnLongClickListener {
+        @Override
+        public boolean onLongClick(View v) {
+            Log.i("IDEA", v.getTag() + " drag started.");
+
+            ClipData clipData = ClipData.newPlainText("", "");
+            View.DragShadowBuilder dsb = new View.DragShadowBuilder(v);
+            v.startDrag(clipData, dsb, v, 0);
+            //v.setEnabled(false);
+
+            draggedButton = v;
+
+            return false;
+        }
+    };
+
+    private class CustomOnTouchListener implements View.OnTouchListener {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            Log.i("IDEA", event.toString());
+
+            switch(event.getAction()) {
+                case MotionEvent.ACTION_UP:
+                    v.setEnabled(true);
+                    draggedButton = null;
+
+                    break;
+            }
+
+            return false;
+        }
     }
 
     class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
