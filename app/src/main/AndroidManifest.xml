@@ -8,12 +8,11 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        //android:debuggable="true"
-        >
+
         <activity
             android:name="group5.cs3750.trainingwheels.DemoMenu"
             android:label="@string/demo_menu_welcome"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="group5.cs3750.trainingwheels.DEMOMENU" />
 
@@ -34,7 +33,7 @@
         <activity
             android:name="group5.cs3750.trainingwheels.Tutorial"
             android:label="@string/title_activity_tutorial"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="group5.cs3750.trainingwheels.TUTORIAL" />
 
@@ -54,7 +53,7 @@
         <activity
             android:name="group5.cs3750.trainingwheels.Settings"
             android:label="@string/title_activity_tutorial"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="group5.cs3750.trainingwheels.SETTINGS" />
 
@@ -64,7 +63,7 @@
         <activity
             android:name="group5.cs3750.trainingwheels.MainMenu"
             android:label="@string/main_menu"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="group5.cs3750.trainingwheels.MAINMENU" />
 

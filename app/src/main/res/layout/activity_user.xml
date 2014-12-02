@@ -4,7 +4,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="group5.cs3750.trainingwheels.User">
+    tools:context="group5.cs3750.trainingwheels.User"
+    android:background="@drawable/bg">
 
     <TextView android:text="Current Rank:"
         android:layout_width="wrap_content"
@@ -64,6 +65,7 @@
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_alignTop="@+id/exp_label"
         android:layout_alignBottom="@+id/exp_label"
+        android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/exp_label"
         android:layout_alignParentRight="true"
         android:progress="35"/>

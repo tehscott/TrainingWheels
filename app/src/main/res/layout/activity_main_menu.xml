@@ -1,49 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings"
-        android:id="@+id/btnSettings" />
+        android:src="@drawable/settings_selector"
+        android:background="@android:color/transparent"
+        android:id="@+id/btnSettings"
+        android:layout_alignParentRight="true"
+        android:layout_margin="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Welcome, User!"
+        android:textAppearance="?android:attr/textAppearanceLargeInverse"
+        android:textStyle="bold"
+        android:text="Welcome to IDEA!"
         android:id="@+id/txtWelcomeUser"
-        android:layout_gravity="center_horizontal" />
+        android:layout_below="@+id/btnSettings"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Continue Game"
-        android:id="@+id/btnContinueGame"
-        android:layout_gravity="center_horizontal" />
+        android:layout_below="@+id/txtWelcomeUser"
+        android:orientation="vertical">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start New Game"
-        android:id="@+id/btnStartNewGame"
-        android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continue Game"
+            android:id="@+id/btnContinueGame"
+            android:layout_gravity="center_horizontal" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="STATS"
-        android:id="@+id/btnStats"
-        android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start New Game"
+            android:id="@+id/btnStartNewGame"
+            android:layout_below="@+id/btnContinueGame"
+            android:layout_gravity="center_horizontal" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView2"
-        android:src="@drawable/trainingwheels"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="100dp" />
-</LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stats"
+            android:id="@+id/btnStats"
+            android:layout_below="@+id/btnStartNewGame"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+</RelativeLayout>
