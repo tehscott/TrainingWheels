@@ -57,8 +57,8 @@ public class Splash extends Activity {
                     e.printStackTrace();
                 }finally {
                     try {
-                        sleep(1500);
-                        Intent ourIntent = new Intent("group5.cs3750.trainingwheels.DEMOMENU");
+                        sleep(3000);
+                        Intent ourIntent = new Intent(Splash.this, MainMenu.class);
                         startActivity(ourIntent);
                     }catch(Exception e){
 

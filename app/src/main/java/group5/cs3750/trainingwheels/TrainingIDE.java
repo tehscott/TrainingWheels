@@ -1,12 +1,18 @@
 package group5.cs3750.trainingwheels;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 
 public class TrainingIDE extends Activity{
@@ -20,6 +26,12 @@ public class TrainingIDE extends Activity{
     //StringBuilder notePadOut = new StringBuilder();
     String notePadOut;
     StringBuilder consoleOut;
+
+    // Tutorial variables
+    private ViewFlipper tutorialFlipper;
+    private Button tutorialPrevButton, tutorialCloseButton, tutorialNextButton;
+    private AlertDialog tutorialDialog;
+    private final GestureDetector detector = new GestureDetector(new SwipeGestureDetector());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,6 +216,8 @@ public class TrainingIDE extends Activity{
 
             }
         });
+
+        showTutorial();
     }
 
     public void printFor(){
@@ -223,5 +237,106 @@ public class TrainingIDE extends Activity{
             isTrue = false;
         }
         console.setText(consoleOut.toString());
+    }
+
+    private void showTutorial() {
+        final View tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
+        tutorialFlipper = (ViewFlipper) tutorialView.findViewById(R.id.tutorial_flipper);
+        tutorialFlipper.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(final View view, final MotionEvent event) {
+                detector.onTouchEvent(event);
+                return true;
+            }
+        });
+
+        tutorialPrevButton = (Button) tutorialView.findViewById(R.id.tutorial_prev_button);
+        tutorialCloseButton = (Button) tutorialView.findViewById(R.id.tutorial_close_button);
+        tutorialNextButton = (Button) tutorialView.findViewById(R.id.tutorial_next_button);
+
+        tutorialPrevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_in));
+                tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_out));
+                tutorialFlipper.showPrevious();
+
+                tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
+                tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
+            }
+        });
+        tutorialPrevButton.setEnabled(false);
+
+        tutorialCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tutorialDialog.dismiss();
+            }
+        });
+
+        tutorialNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_in));
+                tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_out));
+                tutorialFlipper.showNext();
+
+                tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
+                tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+        builder.setTitle("IDEA Tutorial");
+        builder.setView(tutorialView);
+        builder.setCancelable(false); // False so that they are forced to dismiss and fire the OnDismiss event
+
+        tutorialDialog = builder.create();
+        tutorialDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                //prefs.edit().putBoolean("showTutorial", false).commit();
+            }
+        });
+        tutorialDialog.show();
+    }
+
+    class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
+        private static final int SWIPE_MIN_DISTANCE = 120;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                // right to left swipe
+                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    if(tutorialNextButton.isEnabled()) {
+                        tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_in));
+                        tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_out));
+                        tutorialFlipper.showNext();
+
+                        tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
+                        tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
+                    }
+
+                    return true;
+                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    if(tutorialPrevButton.isEnabled()) {
+                        tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_in));
+                        tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_out));
+                        tutorialFlipper.showPrevious();
+
+                        tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
+                        tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
+                    }
+                    return true;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
     }
 }
