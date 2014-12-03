@@ -3,6 +3,7 @@ package group5.cs3750.trainingwheels;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -18,7 +19,7 @@ import java.util.Set;
  */
 public class Settings extends Activity {
 
-    SharedPreferences settings = getSharedPreferences("UserInfo", 0);
+    SharedPreferences settings;
     SharedPreferences.Editor editor;
     public boolean sound;
     public boolean hints;
@@ -26,13 +27,14 @@ public class Settings extends Activity {
     public Switch soundSwitch;
     public Switch hintsSwitch;
     public Spinner difficultySpinner;
-    public Button saveButton;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
+
+        settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        editor = settings.edit();
 
         sound = settings.getBoolean("sound", true);
         hints = settings.getBoolean("hints", false);
@@ -41,7 +43,6 @@ public class Settings extends Activity {
         soundSwitch = (Switch) findViewById(R.id.soundSwitch);
         hintsSwitch = (Switch) findViewById(R.id.hintsSwitch);
         difficultySpinner = (Spinner) findViewById(R.id.difficultySpinner);
-        saveButton = (Button) findViewById(R.id.saveButton);
 
         soundSwitch.setChecked(sound);
         hintsSwitch.setChecked(hints);
@@ -52,15 +53,22 @@ public class Settings extends Activity {
         else
             difficultySpinner.setSelection(2);
 
+        difficultySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String[] difficulties = getResources().getStringArray(R.array.settingsSpinnerArray);
+
+                difficulty = difficulties[position];
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
         soundSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,
                                          boolean isChecked) {
-                if (isChecked) {
-                    sound = true;
-                } else {
-                    sound = false;
-                }
+                sound = isChecked;
             }
         });
 
@@ -68,23 +76,18 @@ public class Settings extends Activity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,
                                          boolean isChecked) {
-                if (isChecked) {
-                    hints = true;
-                } else {
-                    hints = false;
-                }
+                hints = isChecked;
             }
         });
+    }
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
-            @Override
-            public void onClick(View v) {
-                editor.putBoolean("sound", sound);
-                editor.putBoolean("hints", hints);
-                editor.putString("difficulty", difficulty);
-                editor.commit();
-            }
-        });
+        editor.putBoolean("sound", sound);
+        editor.putBoolean("hints", hints);
+        editor.putString("difficulty", difficulty);
+        editor.commit();
     }
 }
