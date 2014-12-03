@@ -5,10 +5,12 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.DragEvent;
@@ -310,65 +312,70 @@ public class TrainingIDE extends Activity{
     }
 
     private void showTutorial() {
-        final View tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
-        tutorialFlipper = (ViewFlipper) tutorialView.findViewById(R.id.tutorial_flipper);
-        tutorialFlipper.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(final View view, final MotionEvent event) {
-                detector.onTouchEvent(event);
-                return true;
-            }
-        });
+        SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        final boolean hints = getPrefs.getBoolean("hints", true);
 
-        tutorialPrevButton = (Button) tutorialView.findViewById(R.id.tutorial_prev_button);
-        tutorialCloseButton = (Button) tutorialView.findViewById(R.id.tutorial_close_button);
-        tutorialNextButton = (Button) tutorialView.findViewById(R.id.tutorial_next_button);
+        if(hints) {
+            final View tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
+            tutorialFlipper = (ViewFlipper) tutorialView.findViewById(R.id.tutorial_flipper);
+            tutorialFlipper.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(final View view, final MotionEvent event) {
+                    detector.onTouchEvent(event);
+                    return true;
+                }
+            });
 
-        tutorialPrevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_in));
-                tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_out));
-                tutorialFlipper.showPrevious();
+            tutorialPrevButton = (Button) tutorialView.findViewById(R.id.tutorial_prev_button);
+            tutorialCloseButton = (Button) tutorialView.findViewById(R.id.tutorial_close_button);
+            tutorialNextButton = (Button) tutorialView.findViewById(R.id.tutorial_next_button);
 
-                tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
-                tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
-            }
-        });
-        tutorialPrevButton.setEnabled(false);
+            tutorialPrevButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_in));
+                    tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_out));
+                    tutorialFlipper.showPrevious();
 
-        tutorialCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tutorialDialog.dismiss();
-            }
-        });
+                    tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
+                    tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
+                }
+            });
+            tutorialPrevButton.setEnabled(false);
 
-        tutorialNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_in));
-                tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_out));
-                tutorialFlipper.showNext();
+            tutorialCloseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tutorialDialog.dismiss();
+                }
+            });
 
-                tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
-                tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
-            }
-        });
+            tutorialNextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_in));
+                    tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_out));
+                    tutorialFlipper.showNext();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
-        builder.setTitle("IDEA Tutorial");
-        builder.setView(tutorialView);
-        builder.setCancelable(false); // False so that they are forced to dismiss and fire the OnDismiss event
+                    tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
+                    tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
+                }
+            });
 
-        tutorialDialog = builder.create();
-        tutorialDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                //prefs.edit().putBoolean("showTutorial", false).commit();
-            }
-        });
-        tutorialDialog.show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+            builder.setTitle("IDEA Tutorial");
+            builder.setView(tutorialView);
+            builder.setCancelable(false); // False so that they are forced to dismiss and fire the OnDismiss event
+
+            tutorialDialog = builder.create();
+            tutorialDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    //prefs.edit().putBoolean("showTutorial", false).commit();
+                }
+            });
+            tutorialDialog.show();
+        }
     }
 
     private class CustomOnLongPressListener implements View.OnLongClickListener {
