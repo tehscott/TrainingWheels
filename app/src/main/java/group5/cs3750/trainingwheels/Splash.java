@@ -3,8 +3,10 @@ package group5.cs3750.trainingwheels;
 import android.app.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -26,9 +28,10 @@ public class Splash extends Activity {
         final ImageView imageE=(ImageView)findViewById(R.id.letterE);
         final ImageView imageA=(ImageView)findViewById(R.id.letterA);
         final ImageView[] viewArray = {imageI,imageD, imageE,imageA};
-        ring = MediaPlayer.create(Splash.this, R.raw.ring);
+        ring = MediaPlayer.create(Splash.this, R.raw.splashsound);
 
-
+        SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        final boolean sound = getPrefs.getBoolean("sound", true);
 
         Thread timer = new Thread(){
             public void run(){
@@ -43,10 +46,7 @@ public class Splash extends Activity {
                     anim.setRepeatCount(0);
                     anim.setDuration(1000);
 
-//                    int counter = 0;
-//                    while (counter < 4){
-//
-//                    }
+                   // ring.start();
                     imageI.startAnimation(anim);
                     imageD.startAnimation(anim);
                     imageE.startAnimation(anim);
@@ -57,7 +57,11 @@ public class Splash extends Activity {
                     e.printStackTrace();
                 }finally {
                     try {
-                        sleep(3000);
+                        if(sound){
+                            sleep(500);
+                            ring.start();
+                        }
+                        sleep(4000);
                         Intent ourIntent = new Intent(Splash.this, MainMenu.class);
                         startActivity(ourIntent);
                     }catch(Exception e){

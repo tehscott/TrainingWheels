@@ -52,7 +52,7 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Procedure"
+            android:text="Function"
             android:id="@+id/bProcedure"
             android:layout_gravity="center_horizontal"
             android:tag="procedure" />
