@@ -30,11 +30,11 @@ import android.widget.ViewFlipper;
 public class TrainingIDE extends Activity{
     //
     Button bIf, bWhile, bFor, bString, bProcedure, bInt, bRun;
-    //EditText notePad;
-    //TextView console;
+    EditText notePad;
+    TextView console;
     ScrollView programmingAreaScrollview;
     LinearLayout programmingArea;
-    TextView output;
+    EditText output;
     Boolean forPressed = false;
     Boolean whilePressed = false;
 
@@ -48,6 +48,8 @@ public class TrainingIDE extends Activity{
     private AlertDialog tutorialDialog;
     private final GestureDetector detector = new GestureDetector(new SwipeGestureDetector());
 
+    private String difficulty;
+    private SharedPreferences settings;
     // Drag/drop variables
     private View draggedButton;
 
@@ -62,16 +64,19 @@ public class TrainingIDE extends Activity{
         bString = (Button) findViewById(R.id.bString);
         bProcedure = (Button) findViewById(R.id.bProcedure);
         bInt = (Button) findViewById(R.id.bInt);
-        //notePad = (EditText) findViewById(R.id.tvNotePad);
+        notePad = (EditText) findViewById(R.id.tvNotePad);
         bRun = (Button) findViewById(R.id.bRun);
-        //console = (TextView) findViewById(R.id.tvConsole);
+
+
+        console = (TextView) findViewById(R.id.outputText);
         //notePad = (TextView) findViewById(R.id.tvNotePad);
         //FileOutputStream fos;
 
         programmingAreaScrollview = (ScrollView) findViewById(R.id.programmingAreaScrollview);
         programmingArea = (LinearLayout) findViewById(R.id.programmingArea);
-        output = (TextView) findViewById(R.id.outputText);
-
+        output = (EditText) findViewById(R.id.editProgrammingArea);
+        settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        difficulty = settings.getString("difficulty", "Beginner");
 
         bRun.setOnClickListener(new View.OnClickListener() {
             //FileOutputStream fos;
@@ -87,158 +92,9 @@ public class TrainingIDE extends Activity{
                     printWhile();
                     whilePressed = false;
                 }
-
-//                String getCode = String.valueOf(notePad.getText());
-//                getCode.replace("\n", "");
-//                getCode.replace("\\s", "");
-//
-//                char[] code = getCode.toCharArray();
-//
-//                char[] codeHolder;
-
-                //char[] code;
-
-//                for(int i = 0; i < code.length; i++){
-//                   // System.out.println(code[i]);
-//                }
-
-
-
-
-                //Interpreter interpret = new Interpreter();
-               //System.out.println("Files dir is "+getFilesDir());
-//                String FILENAME = "hello_file";
-//                String string = "hello world!";
-//                try {
-//                    FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-//                    fos.write(string.getBytes());
-//                    fos.close();
-//                }catch(Exception e){
-//
-//                }
-//
-//                System.out.println("Files last is "+fileList().toString());
-                //interpret.dummyFile();
-                //create object and send
-                //get text from console
             }
         });
 
-        bIf.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view)
-            {
-
-            }
-        });
-        bWhile.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view)
-            {
-                //console.setText("");
-                //notePad.setText("");
-
-                /*
-                beginner
-                 */
-
-                notePadOut = "";
-                notePadOut += " Boolean isTrue = true;<br>" +
-                        "        while ( <font color='red'><i>condition</i></font> ){<br>" +
-                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
-                        "             <font color='red'><i>statement</i></font> <br>" +
-                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
-                        "            isTrue = false;<br>" +
-                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-                        "        }<br>" +
-                        "    }<br><br>";
-                //notePad.setText(Html.fromHtml(notePadOut));
-
-                /*
-                amateur
-                 */
-//                notePadOut = "";
-//                notePadOut += " Boolean isTrue =  <font color='red'><i>set_condition</i></font> ;<br>" +
-//                        "        while ( <font color='red'><i>condition</i></font> ){<br>" +
-//                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-//                        " <font color='red'><i>statement</i></font> <br>" +
-//                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
-//                        "isTrue = false;<br>" +
-//                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>" +
-//                        "    }<br><br>";
-//                notePad.setText(Html.fromHtml(notePadOut));
-
-//                /*
-//                professional
-//                 */
-//                notePadOut = "<br><br>";
-//                notePadOut += "" +
-//                        "        while ( ){<br>" +
-//                        "           <br>" +
-//                        "            " +
-//                        "    }<br><br>";
-//                notePad.setText(Html.fromHtml(notePadOut));
-                whilePressed = true;
-            }
-        });
-        bFor.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view)
-            {
-                //console.setText("");
-                //notePad.setText("");
-                notePadOut = "";
-
-                /*
-                beginner
-                 */
-//                notePadOut += "for (int i = 0; <font color='red'><i>condition</i></font>; i++){<br><br> " +
-//                        "System.out.println(\"Hello, world!\");<br><br>" +
-//                        "}<br><br>";
-//                notePad.setText(Html.fromHtml(notePadOut));
-
-                /*
-                amatuer
-                 */
-                notePadOut += "for (<font color='red'><i>init</i></font>; <font color='red'><i>condition</i></font>; <font color='red'><i>iterate</i></font>){<br>" +
-                        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-                        " <font color='red'><i>statement</i></font> <br>"+
-                "}<br><br>";
-                //notePad.setText(Html.fromHtml(notePadOut));
-
-                /*
-                professional
-                 */
-//                notePadOut += "for ( ){\n\n  " +
-//                        "}\n\n";
-//                notePad.setText(notePadOut);
-                forPressed = true;
-            }
-        });
-
-        bString.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view)
-            {
-
-            }
-        });
-        bProcedure.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view)
-            {
-
-            }
-        });
-        bInt.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view)
-            {
-
-            }
-        });
 
         // Long click listeners
         bWhile.setOnLongClickListener(new CustomOnLongPressListener());
@@ -248,7 +104,7 @@ public class TrainingIDE extends Activity{
         bInt.setOnLongClickListener(new CustomOnLongPressListener());
         bProcedure.setOnLongClickListener(new CustomOnLongPressListener());
 
-        // On drag listeners
+
         programmingAreaScrollview.setOnDragListener(new View.OnDragListener() {
             // http://developer.android.com/guide/topics/ui/drag-drop.html
 
@@ -256,12 +112,43 @@ public class TrainingIDE extends Activity{
             public boolean onDrag(View v, DragEvent event) {
                 switch(event.getAction()) {
                     case DragEvent.ACTION_DRAG_STARTED:
+                        return true; // Returning true is NECESSARY for the listener to receive the drop event
+                    case DragEvent.ACTION_DRAG_ENDED:
+                        draggedButton.setEnabled(true);
+                        draggedButton = null;
+                        break; // No need to return anything here
+                    case DragEvent.ACTION_DROP:
+                        Log.i("IDEA", v.getTag() + " received drop.");
+                        String buttonDragged = event.getClipData().getItemAt(0).getText().toString();
+                        if(buttonDragged.contentEquals("for")){
+                            displayFortext();
+                        }
+                        else if(buttonDragged.contentEquals("while")){
+                            displayWhileText();
+                        }
+
+                        return true; // Return true/false here based on whether or not the drop is valid
+                }
+
+                return false;
+            }
+        });
+        output.setOnDragListener(new View.OnDragListener() {
+            // http://developer.android.com/guide/topics/ui/drag-drop.html
+
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                switch(event.getAction()) {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                        Log.i("IDEA", v.getTag() + " color drag.");
                         v.setBackgroundColor(Color.GREEN);
+                        programmingAreaScrollview.setBackgroundColor(Color.GREEN);
 
                         return true; // Returning true is NECESSARY for the listener to receive the drop event
 
                     case DragEvent.ACTION_DRAG_ENDED:
                         v.setBackgroundColor(Color.WHITE);
+                        programmingAreaScrollview.setBackgroundColor(Color.WHITE);
                         draggedButton.setEnabled(true);
                         draggedButton = null;
 
@@ -269,10 +156,19 @@ public class TrainingIDE extends Activity{
 
                     case DragEvent.ACTION_DROP:
                         Log.i("IDEA", v.getTag() + " received drop.");
+                        String buttonDragged = event.getClipData().getItemAt(0).getText().toString();
 
-                        TextView tv = new TextView(TrainingIDE.this);
-                        tv.setText(event.getClipData().getItemAt(0).getText());
-                        programmingArea.addView(tv);
+                        if(buttonDragged.contentEquals("for")){
+                            displayFortext();
+                        }
+                        else if(buttonDragged.contentEquals("while")){
+                            displayWhileText();
+                        }
+
+
+//                       TextView tv = new TextView(TrainingIDE.this);
+//                        tv.setText(event.getClipData().getItemAt(0).getText());
+//                       programmingArea.addView(tv);
 
                         return true; // Return true/false here based on whether or not the drop is valid
                 }
@@ -292,23 +188,116 @@ public class TrainingIDE extends Activity{
         showTutorial();
     }
 
+    private void displayFortext() {
+        //TextView tv = new TextView(TrainingIDE.this);
+        //EditText tv = new EditText(TrainingIDE.this);
+        whilePressed = false;
+        output.setText(" ");
+                /*
+                beginner
+                 */
+        if(difficulty.contentEquals("Beginner")) {
+
+            notePadOut = "";
+            notePadOut += "for (int i = 0; <font color='red'><i>condition</i></font>; i++){<br><br> "+
+                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                    "System.out.println(\" \");<br><br>" +
+                    "}<br>";
+            output.setText(Html.fromHtml(notePadOut));
+
+        }
+
+                /*
+                amatuer
+                 */
+        else if(difficulty.contentEquals("Amateur")) {
+            notePadOut += "for (<font color='red'><i>init</i></font>; <font color='red'><i>condition</i></font>; <font color='red'><i>iterate</i></font>){<br>" +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                    " <font color='red'><i>statement</i></font> <br>" +
+                    "}<br>";
+            output.setText(Html.fromHtml(notePadOut));
+        }
+                /*
+                professional
+                 */
+        else{
+            notePadOut = "";
+            notePadOut += "for ( ){\n\n}\n";
+            output.setText(notePadOut);
+        }
+
+        forPressed = true;
+
+
+       // etv.setText();
+        //programmingArea.addView(output);
+
+    }
+
+    private void displayWhileText() {
+         /*
+                beginner
+                 */
+        forPressed = false;
+        if (difficulty.contentEquals("Beginner")) {
+            notePadOut = "";
+            notePadOut += " Boolean isTrue = true;<br>" +
+                    "        while ( <font color='red'><i>condition</i></font> ){<br>" +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                    "             <font color='red'><i>statement</i></font> <br>" +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                    "            isTrue = false;<br>" +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                    "        }<br>" +
+                    "    }<br><br>";
+            output.setText(Html.fromHtml(notePadOut));
+        }
+                /*
+                amateur
+                 */
+        else if (difficulty.contentEquals("Amateur")) {
+            notePadOut = "";
+            notePadOut += " Boolean isTrue =  <font color='red'><i>set_condition</i></font> ;<br>" +
+                    "        while ( <font color='red'><i>condition</i></font> ){<br>" +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                    " <font color='red'><i>statement</i></font> <br>" +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                    "isTrue = false;<br>" +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>" +
+                    "    }<br><br>";
+            output.setText(Html.fromHtml(notePadOut));
+        } else {
+                /*
+                professional
+                 */
+            notePadOut = "";
+            notePadOut += "" +
+                    "        while ( ){<br>" +
+                    "           <br>" +
+                    "            " +
+                    "    }<br><br>";
+            output.setText(Html.fromHtml(notePadOut));
+        }
+        whilePressed = true;
+    }
+
     public void printFor(){
         consoleOut = new StringBuilder();
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 5; i++){
             consoleOut.append(" Hello, world!\n");
         }
 
-        //console.setText(consoleOut.toString());
+        console.setText(consoleOut.toString());
     }
 
     public void printWhile(){
         consoleOut = new StringBuilder();
         Boolean isTrue = true;
         while (isTrue){
-            consoleOut.append(" I am truest to do it!\n");
+            consoleOut.append(" I am truest to do it!\n\n\n\n");
             isTrue = false;
         }
-        //console.setText(consoleOut.toString());
+        console.setText(consoleOut.toString());
     }
 
     private void showTutorial() {

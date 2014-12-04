@@ -74,7 +74,7 @@
                 <Button
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="Procedure"
+                    android:text="Function"
                     android:id="@+id/bProcedure"
                     android:layout_gravity="center_horizontal"
                     android:tag="procedure" />
@@ -120,10 +120,12 @@
                     android:tag="programmingArea"
                     android:orientation="vertical">
 
-                    <TextView
+                    <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Test"/>
+                        android:text=""
+                        android:id="@+id/editProgrammingArea"
+                        />
                 </LinearLayout>
             </ScrollView>
 
@@ -153,14 +155,19 @@
                 android:textStyle="bold"
                 android:layout_margin="2dp"/>
 
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/outputText"
                 android:tag="outputText"
-                android:text="Test"
+                android:text="\n\n\n\n\n"
                 android:padding="2dp"
                 android:background="@android:color/white"/>
+            </ScrollView>
             </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>
