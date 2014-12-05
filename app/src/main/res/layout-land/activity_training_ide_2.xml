@@ -58,10 +58,10 @@
                 <Button
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="String"
-                    android:id="@+id/bString"
+                    android:text="Print"
+                    android:id="@+id/bPrint"
                     android:layout_gravity="center_horizontal"
-                    android:tag="string" />
+                    android:tag="print" />
 
                 <Button
                     android:layout_width="fill_parent"
@@ -77,7 +77,14 @@
                     android:text="Function"
                     android:id="@+id/bProcedure"
                     android:layout_gravity="center_horizontal"
-                    android:tag="procedure" />
+                    android:tag="function" />
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="String"
+                    android:id="@+id/bString"
+                    android:layout_gravity="center_horizontal"
+                    android:tag="string" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

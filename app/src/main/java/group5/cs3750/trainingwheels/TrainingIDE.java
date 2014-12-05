@@ -26,10 +26,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import org.w3c.dom.Text;
+
 
 public class TrainingIDE extends Activity{
     //
-    Button bIf, bWhile, bFor, bString, bProcedure, bInt, bRun;
+    Button bIf, bWhile, bFor, bString, bProcedure, bInt, bRun, bPrint;
     EditText notePad;
     TextView console;
     ScrollView programmingAreaScrollview;
@@ -66,6 +68,7 @@ public class TrainingIDE extends Activity{
         bInt = (Button) findViewById(R.id.bInt);
         notePad = (EditText) findViewById(R.id.tvNotePad);
         bRun = (Button) findViewById(R.id.bRun);
+        bPrint = (Button) findViewById(R.id.bPrint);
 
 
         console = (TextView) findViewById(R.id.outputText);
@@ -103,6 +106,7 @@ public class TrainingIDE extends Activity{
         bString.setOnLongClickListener(new CustomOnLongPressListener());
         bInt.setOnLongClickListener(new CustomOnLongPressListener());
         bProcedure.setOnLongClickListener(new CustomOnLongPressListener());
+        bPrint.setOnLongClickListener(new CustomOnLongPressListener());
 
 
         programmingAreaScrollview.setOnDragListener(new View.OnDragListener() {
@@ -126,6 +130,21 @@ public class TrainingIDE extends Activity{
                         else if(buttonDragged.contentEquals("while")){
                             displayWhileText();
                         }
+
+                        else if(buttonDragged.contentEquals("print") && forPressed){
+                            displayFortextPrint();
+                        }
+                        else if(buttonDragged.contentEquals("print")){
+                            EditText tv = new EditText(TrainingIDE.this);
+                            tv.setText("System.out.println(\" \");");
+                            programmingArea.addView(tv);
+                        }
+                        else{
+
+                        TextView tv = new TextView(TrainingIDE.this);
+                        tv.setText(event.getClipData().getItemAt(0).getText());
+                        programmingArea.addView(tv);
+                }
 
                         return true; // Return true/false here based on whether or not the drop is valid
                 }
@@ -165,10 +184,23 @@ public class TrainingIDE extends Activity{
                             displayWhileText();
                         }
 
+                        else if(buttonDragged.contentEquals("print") && forPressed){
+                            displayFortextPrint();
+                        }
+                        else if(buttonDragged.contentEquals("print")){
+                            EditText tv = new EditText(TrainingIDE.this);
+                            tv.setText("System.out.println(\" \");");
+                            programmingArea.addView(tv);
+                        }
+                        else {
 
-//                       TextView tv = new TextView(TrainingIDE.this);
-//                        tv.setText(event.getClipData().getItemAt(0).getText());
-//                       programmingArea.addView(tv);
+                            TextView tv = new TextView(TrainingIDE.this);
+                            tv.setText(event.getClipData().getItemAt(0).getText());
+                            programmingArea.addView(tv);
+                        }
+//                            EditText tv = new EditText(TrainingIDE.this);
+//                            tv.setText(event.getClipData().getItemAt(0).getText());
+//                            programmingArea.addView(tv);
 
                         return true; // Return true/false here based on whether or not the drop is valid
                 }
@@ -188,32 +220,79 @@ public class TrainingIDE extends Activity{
         showTutorial();
     }
 
-    private void displayFortext() {
+    private void displayFortextPrint() {
         //TextView tv = new TextView(TrainingIDE.this);
         //EditText tv = new EditText(TrainingIDE.this);
         whilePressed = false;
         output.setText(" ");
+        notePadOut = " ";
                 /*
                 beginner
                  */
         if(difficulty.contentEquals("Beginner")) {
 
-            notePadOut = "";
-            notePadOut += "for (int i = 0; <font color='red'><i>condition</i></font>; i++){<br><br> "+
-                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-                    "System.out.println(\" \");<br><br>" +
+            // notePadOut = "";
+            notePadOut += "for (int i = 0; <font color='red'><i>condition</i></font>; i++){<br>"+
+
+                    "System.out.println(\" \");<br>" +
                     "}<br>";
             output.setText(Html.fromHtml(notePadOut));
-
         }
 
                 /*
                 amatuer
                  */
         else if(difficulty.contentEquals("Amateur")) {
+            notePadOut = "";
             notePadOut += "for (<font color='red'><i>init</i></font>; <font color='red'><i>condition</i></font>; <font color='red'><i>iterate</i></font>){<br>" +
-                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-                    " <font color='red'><i>statement</i></font> <br>" +
+
+                    "System.out.println(\" \");<br>" +
+                    "}<br>";
+            output.setText(Html.fromHtml(notePadOut));
+        }
+                /*
+                professional
+                 */
+        else{
+            notePadOut = "";
+            notePadOut += "for ( ){\n" +
+                    " System.out.println(\" \");" +
+                    "\n}\n";
+            output.setText(notePadOut);
+        }
+
+        forPressed = true;
+
+
+        // etv.setText();
+        //programmingArea.addView(output);
+    }
+
+    private void displayFortext() {
+        //TextView tv = new TextView(TrainingIDE.this);
+        //EditText tv = new EditText(TrainingIDE.this);
+        whilePressed = false;
+        output.setText(" ");
+        notePadOut = " ";
+                /*
+                beginner
+                 */
+        if(difficulty.contentEquals("Beginner")) {
+
+           // notePadOut = "";
+            notePadOut += "for (int i = 0; <font color='red'><i>condition</i></font>; i++){<br><br> "+
+
+                    "}<br>";
+            output.setText(Html.fromHtml(notePadOut));
+        }
+
+                /*
+                amatuer
+                 */
+        else if(difficulty.contentEquals("Amateur")) {
+            notePadOut = "";
+            notePadOut += "for (<font color='red'><i>init</i></font>; <font color='red'><i>condition</i></font>; <font color='red'><i>iterate</i></font>){<br><br>" +
+
                     "}<br>";
             output.setText(Html.fromHtml(notePadOut));
         }
