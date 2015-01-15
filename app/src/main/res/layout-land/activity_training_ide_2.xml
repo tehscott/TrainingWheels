@@ -118,7 +118,8 @@
                 android:id="@+id/programmingAreaScrollview"
                 android:layout_below="@+id/programmingAreaLabel"
                 android:tag="programmingAreaScrollview"
-                android:padding="2dp">
+                android:padding="2dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -135,6 +136,13 @@
                         />
                 </LinearLayout>
             </ScrollView>
+
+            <ExpandableListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/expList">
+
+            </ExpandableListView>
 
             <Button
                 android:layout_width="wrap_content"

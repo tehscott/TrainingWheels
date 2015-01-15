@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -27,6 +28,11 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+
+import customexpandablelistadapater.ListObject;
+import customexpandablelistadapater.RootAdapter;
 
 
 public class TrainingIDE extends Activity{
@@ -218,6 +224,111 @@ public class TrainingIDE extends Activity{
 //        bProcedure.setOnTouchListener(new CustomOnTouchListener());
 
         showTutorial();
+
+
+
+
+
+
+
+        // TEST CODE
+        String[] state = {"A","B","C"};
+        String[][] parent = {
+                {"aa","bb","cc","dd","ee"},
+                {"ff","gg","hh","ii","jj"},
+                {"kk","ll","mm","nn","oo"}
+        };
+
+        String[][][] child = {
+                {
+                        {"aaa","aab","aac","aad","aae"},
+                        {"bba","bbb","bbc","bbd","bbe"},
+                        {"cca","ccb","ccc","ccd","cce","ccf","ccg"},
+                        {"dda","ddb","dddc","ddd","dde","ddf"},
+                        {"eea","eeb","eec"}
+                },
+                {
+                        {"ffa","ffb","ffc","ffd","ffe"},
+                        {"gga","ggb","ggc","ggd","gge"},
+                        {"hha","hhb","hhc","hhd","hhe","hhf","hhg"},
+                        {"iia","iib","iic","iid","iie","ii"},
+                        {"jja","jjb","jjc","jjd"}
+                },
+                {
+                        {"kka","kkb","kkc","kkd","kke"},
+                        {"lla","llb","llc","lld","lle"},
+                        {"mma","mmb","mmc","mmd","mme","mmf","mmg"},
+                        {"nna","nnb","nnc","nnd","nne","nnf"},
+                        {"ooa","oob"}
+                }
+        };
+
+        ListObject obj = new ListObject();
+        obj.children =  new ArrayList<ListObject>();
+        for(int i = 0;i < state.length; i++)
+        {
+            ListObject root =  new ListObject();
+            root.title = state[i];
+            root.children =  new ArrayList<ListObject>();
+            for(int j=0;j<parent[i].length;j++)
+            {
+                ListObject p =  new ListObject();
+                p.title=parent[i][j];
+                p.children =  new ArrayList<ListObject>();
+                for(int k=0;k<child[i][j].length;k++)
+                {
+                    ListObject c =  new ListObject();
+                    c.title =child[i][j][k];
+                    p.children.add(c);
+                }
+                root.children.add(p);
+            }
+            obj.children.add(root);
+        }
+
+        if (!obj.children.isEmpty()) {
+            final ExpandableListView elv = (ExpandableListView) findViewById(R.id.expList);
+
+            elv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+                @Override
+                public boolean onGroupClick(ExpandableListView parent, View v,
+                                            int groupPosition, long id) {
+
+                    return true; /* or false depending on what you need */
+                }
+            });
+
+
+            ExpandableListView.OnGroupClickListener grpLst = new ExpandableListView.OnGroupClickListener() {
+                @Override
+                public boolean onGroupClick(ExpandableListView eListView, View view, int groupPosition,
+                                            long id) {
+
+                    return true/* or false depending on what you need */;
+                }
+            };
+
+
+            ExpandableListView.OnChildClickListener childLst = new ExpandableListView.OnChildClickListener() {
+                @Override
+                public boolean onChildClick(ExpandableListView eListView, View view, int groupPosition,
+                                            int childPosition, long id) {
+
+                    return true/* or false depending on what you need */;
+                }
+            };
+
+            ExpandableListView.OnGroupExpandListener grpExpLst = new ExpandableListView.OnGroupExpandListener() {
+                @Override
+                public void onGroupExpand(int groupPosition) {
+
+                }
+            };
+
+            final RootAdapter adapter = new RootAdapter(this, obj, grpLst, childLst, grpExpLst);
+            elv.setAdapter(adapter);
+        }
     }
 
     private void displayFortextPrint() {
