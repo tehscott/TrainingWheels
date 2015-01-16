@@ -22,8 +22,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import java.util.ArrayList;
 
-public class TrainingIDE extends Activity{
+import group5.cs3750.trainingwheels.programmingobjects.For;
+import group5.cs3750.trainingwheels.programmingobjects.ProgrammingObject;
+
+
+public class TrainingIDE extends Activity {
+    private ArrayList<ProgrammingObject> programmingObjects = new ArrayList<ProgrammingObject>();
+
     //
     Button bIf, bWhile, bFor, bString, bProcedure, bInt, bRun, bPrint;
     EditText notePad;
@@ -68,7 +75,7 @@ public class TrainingIDE extends Activity{
 
         programmingAreaScrollview = (ScrollView) findViewById(R.id.programmingAreaScrollview);
         programmingArea = (LinearLayout) findViewById(R.id.programmingArea);
-        output = (EditText) findViewById(R.id.editProgrammingArea);
+        //output = (EditText) findViewById(R.id.editProgrammingArea);
         settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         difficulty = settings.getString("difficulty", "Beginner");
 
@@ -116,7 +123,22 @@ public class TrainingIDE extends Activity{
                         Log.i("IDEA", v.getTag() + " received drop.");
                         String buttonDragged = event.getClipData().getItemAt(0).getText().toString();
                         if(buttonDragged.contentEquals("for")){
-                            displayFortext();
+                            //displayFortext();
+
+                            For pObject1 = new For(programmingObjects.size(), ProgrammingObject.Placement.FIRST, 1, 5, ProgrammingObject.ComparisonOperator.EQUAL);
+                            For pObject2 = new For(programmingObjects.size(), ProgrammingObject.Placement.FIRST, 1, 5, ProgrammingObject.ComparisonOperator.EQUAL);
+                            pObject1.setPartner(pObject2);
+                            programmingObjects.add(pObject1);
+
+                            Button b1 = new Button(TrainingIDE.this);
+                            b1.setText(pObject1.toString());
+
+                            Button b2 = new Button(TrainingIDE.this);
+                            b2.setText(pObject1.toString());
+                            b2.setEnabled(false);
+
+                            programmingArea.addView(b1);
+                            programmingArea.addView(b2);
                         }
                         else if(buttonDragged.contentEquals("while")){
                             displayWhileText();
@@ -143,7 +165,8 @@ public class TrainingIDE extends Activity{
                 return false;
             }
         });
-        output.setOnDragListener(new View.OnDragListener() {
+
+        programmingArea.setOnDragListener(new View.OnDragListener() {
             // http://developer.android.com/guide/topics/ui/drag-drop.html
 
             @Override
@@ -169,7 +192,22 @@ public class TrainingIDE extends Activity{
                         String buttonDragged = event.getClipData().getItemAt(0).getText().toString();
 
                         if(buttonDragged.contentEquals("for")){
-                            displayFortext();
+                            //displayFortext();
+
+                            For pObject1 = new For(programmingObjects.size(), ProgrammingObject.Placement.FIRST, 1, 5, ProgrammingObject.ComparisonOperator.EQUAL);
+                            For pObject2 = new For(programmingObjects.size(), ProgrammingObject.Placement.FIRST, 1, 5, ProgrammingObject.ComparisonOperator.EQUAL);
+                            pObject1.setPartner(pObject2);
+                            programmingObjects.add(pObject1);
+
+                            Button b1 = new Button(TrainingIDE.this);
+                            b1.setText(pObject1.toString());
+
+                            Button b2 = new Button(TrainingIDE.this);
+                            b2.setText(pObject1.toString());
+                            b2.setEnabled(false);
+
+                            programmingArea.addView(b1);
+                            programmingArea.addView(b2);
                         }
                         else if(buttonDragged.contentEquals("while")){
                             displayWhileText();
