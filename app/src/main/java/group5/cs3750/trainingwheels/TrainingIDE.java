@@ -34,7 +34,7 @@ public class TrainingIDE extends Activity{
     private Button tutorialPrevButton, tutorialCloseButton, tutorialNextButton;
     private AlertDialog tutorialDialog;
     private final GestureDetector detector = new GestureDetector(new SwipeGestureDetector());
-
+    //comment
     private String difficulty;
     private SharedPreferences settings;
     // Drag/drop variables
