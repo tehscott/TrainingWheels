@@ -3,12 +3,9 @@ package group5.cs3750.trainingwheels;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -20,19 +17,10 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
-import customexpandablelistadapater.ListObject;
-import customexpandablelistadapater.RootAdapter;
 
 
 public class TrainingIDE extends Activity{
@@ -46,7 +34,6 @@ public class TrainingIDE extends Activity{
     Boolean forPressed = false;
     Boolean whilePressed = false;
 
-    //StringBuilder notePadOut = new StringBuilder();
     String notePadOut;
     StringBuilder consoleOut;
 
@@ -78,8 +65,6 @@ public class TrainingIDE extends Activity{
 
 
         console = (TextView) findViewById(R.id.outputText);
-        //notePad = (TextView) findViewById(R.id.tvNotePad);
-        //FileOutputStream fos;
 
         programmingAreaScrollview = (ScrollView) findViewById(R.id.programmingAreaScrollview);
         programmingArea = (LinearLayout) findViewById(R.id.programmingArea);
@@ -204,9 +189,6 @@ public class TrainingIDE extends Activity{
                             tv.setText(event.getClipData().getItemAt(0).getText());
                             programmingArea.addView(tv);
                         }
-//                            EditText tv = new EditText(TrainingIDE.this);
-//                            tv.setText(event.getClipData().getItemAt(0).getText());
-//                            programmingArea.addView(tv);
 
                         return true; // Return true/false here based on whether or not the drop is valid
                 }
@@ -215,125 +197,10 @@ public class TrainingIDE extends Activity{
             }
         });
 
-        // On touch listeners
-//        bWhile.setOnTouchListener(new CustomOnTouchListener());
-//        bIf.setOnTouchListener(new CustomOnTouchListener());
-//        bFor.setOnTouchListener(new CustomOnTouchListener());
-//        bString.setOnTouchListener(new CustomOnTouchListener());
-//        bInt.setOnTouchListener(new CustomOnTouchListener());
-//        bProcedure.setOnTouchListener(new CustomOnTouchListener());
-
         showTutorial();
-
-
-
-
-
-
-
-        // TEST CODE
-        String[] state = {"A","B","C"};
-        String[][] parent = {
-                {"aa","bb","cc","dd","ee"},
-                {"ff","gg","hh","ii","jj"},
-                {"kk","ll","mm","nn","oo"}
-        };
-
-        String[][][] child = {
-                {
-                        {"aaa","aab","aac","aad","aae"},
-                        {"bba","bbb","bbc","bbd","bbe"},
-                        {"cca","ccb","ccc","ccd","cce","ccf","ccg"},
-                        {"dda","ddb","dddc","ddd","dde","ddf"},
-                        {"eea","eeb","eec"}
-                },
-                {
-                        {"ffa","ffb","ffc","ffd","ffe"},
-                        {"gga","ggb","ggc","ggd","gge"},
-                        {"hha","hhb","hhc","hhd","hhe","hhf","hhg"},
-                        {"iia","iib","iic","iid","iie","ii"},
-                        {"jja","jjb","jjc","jjd"}
-                },
-                {
-                        {"kka","kkb","kkc","kkd","kke"},
-                        {"lla","llb","llc","lld","lle"},
-                        {"mma","mmb","mmc","mmd","mme","mmf","mmg"},
-                        {"nna","nnb","nnc","nnd","nne","nnf"},
-                        {"ooa","oob"}
-                }
-        };
-
-        ListObject obj = new ListObject();
-        obj.children =  new ArrayList<ListObject>();
-        for(int i = 0;i < state.length; i++)
-        {
-            ListObject root =  new ListObject();
-            root.title = state[i];
-            root.children =  new ArrayList<ListObject>();
-            for(int j=0;j<parent[i].length;j++)
-            {
-                ListObject p =  new ListObject();
-                p.title=parent[i][j];
-                p.children =  new ArrayList<ListObject>();
-                for(int k=0;k<child[i][j].length;k++)
-                {
-                    ListObject c =  new ListObject();
-                    c.title =child[i][j][k];
-                    p.children.add(c);
-                }
-                root.children.add(p);
-            }
-            obj.children.add(root);
-        }
-
-        if (!obj.children.isEmpty()) {
-            final ExpandableListView elv = (ExpandableListView) findViewById(R.id.expList);
-
-            elv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-
-                @Override
-                public boolean onGroupClick(ExpandableListView parent, View v,
-                                            int groupPosition, long id) {
-
-                    return true; /* or false depending on what you need */
-                }
-            });
-
-
-            ExpandableListView.OnGroupClickListener grpLst = new ExpandableListView.OnGroupClickListener() {
-                @Override
-                public boolean onGroupClick(ExpandableListView eListView, View view, int groupPosition,
-                                            long id) {
-
-                    return true/* or false depending on what you need */;
-                }
-            };
-
-
-            ExpandableListView.OnChildClickListener childLst = new ExpandableListView.OnChildClickListener() {
-                @Override
-                public boolean onChildClick(ExpandableListView eListView, View view, int groupPosition,
-                                            int childPosition, long id) {
-
-                    return true/* or false depending on what you need */;
-                }
-            };
-
-            ExpandableListView.OnGroupExpandListener grpExpLst = new ExpandableListView.OnGroupExpandListener() {
-                @Override
-                public void onGroupExpand(int groupPosition) {
-
-                }
-            };
-
-            final RootAdapter adapter = new RootAdapter(this, obj, grpLst, childLst, grpExpLst);
-            elv.setAdapter(adapter);
-        }
     }
 
     private void displayFortextPrint() {
-        //TextView tv = new TextView(TrainingIDE.this);
-        //EditText tv = new EditText(TrainingIDE.this);
         whilePressed = false;
         output.setText(" ");
         notePadOut = " ";
@@ -373,15 +240,9 @@ public class TrainingIDE extends Activity{
         }
 
         forPressed = true;
-
-
-        // etv.setText();
-        //programmingArea.addView(output);
     }
 
     private void displayFortext() {
-        //TextView tv = new TextView(TrainingIDE.this);
-        //EditText tv = new EditText(TrainingIDE.this);
         whilePressed = false;
         output.setText(" ");
         notePadOut = " ";
@@ -417,11 +278,6 @@ public class TrainingIDE extends Activity{
         }
 
         forPressed = true;
-
-
-       // etv.setText();
-        //programmingArea.addView(output);
-
     }
 
     private void displayWhileText() {
@@ -572,23 +428,6 @@ public class TrainingIDE extends Activity{
             return false;
         }
     };
-
-//    private class CustomOnTouchListener implements View.OnTouchListener {
-//        @Override
-//        public boolean onTouch(View v, MotionEvent event) {
-//            Log.i("IDEA", event.toString());
-//
-//            switch(event.getAction()) {
-//                case MotionEvent.ACTION_UP:
-//                    v.setEnabled(true);
-//                    draggedButton = null;
-//
-//                    break;
-//            }
-//
-//            return false;
-//        }
-//    }
 
     class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
         private static final int SWIPE_MIN_DISTANCE = 120;
