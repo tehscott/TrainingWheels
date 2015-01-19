@@ -1,0 +1,117 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin"
+    tools:context="group5.cs3750.trainingwheels.Tutorial">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tutorial_title"
+        android:layout_centerHorizontal="true"
+        android:text="While Loops"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <ViewFlipper
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tutorial_flipper"
+        android:layout_alignLeft="@+id/tutorial_button_container"
+        android:layout_alignRight="@+id/tutorial_button_container"
+        android:layout_below="@+id/tutorial_title"
+        android:layout_above="@+id/tutorial_button_container">
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="In this challenge, you will be required to print out 10 numbers.  you will do this by using a While loop, Condition statement, Print statement, and a variable."
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A While loop is a control flow statement that allows code to be executed repeatedly based on a given boolean (true or false) condition.  The while loop can be thought of as a repeating statement.  The while contruct consists of a block of code and a condition/expression."
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="First you need to drag a variable into the programming area and set it to 0.  To create a While loop, drag it from the left panel into the Programming area on the right. You will be prompted to enter a condition."
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Inside of the while loop add a Print statement. Print the variable and increment by one."
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+    </ViewFlipper>
+
+    <LinearLayout
+        android:id="@+id/tutorial_button_container"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prev"
+            android:id="@+id/tutorial_prev_button"
+            android:layout_gravity="bottom"
+            android:layout_weight=".3"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Close"
+            android:id="@+id/tutorial_close_button"
+            android:layout_gravity="bottom"
+            android:layout_weight=".3" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:id="@+id/tutorial_next_button"
+            android:layout_gravity="bottom"
+            android:layout_weight=".3" />
+    </LinearLayout>
+</RelativeLayout>
