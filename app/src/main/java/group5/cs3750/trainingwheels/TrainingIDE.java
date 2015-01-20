@@ -20,19 +20,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import java.util.ArrayList;
-
-import group5.cs3750.trainingwheels.canvas.CanvasView;
-import group5.cs3750.trainingwheels.programmingobjects.ProgrammingObject;
 
 public class TrainingIDE extends Activity{
     //
-    Button bIf, bWhile, bFor, bString, bProcedure, bInt, bRun, bPrint;
+    Button bIf, bWhile, bFor, bString, bProcedure, bVariable, bRun, bPrint;
     EditText notePad;
     TextView console;
-    //ScrollView programmingAreaScrollview;
-    //LinearLayout programmingArea;
-    private CanvasView canvas;
+    ScrollView programmingAreaScrollview;
+    LinearLayout programmingArea;
 
     // Tutorial variables
     private ViewFlipper tutorialFlipper;
@@ -45,8 +40,6 @@ public class TrainingIDE extends Activity{
     // Drag/drop variables
     private View draggedButton;
 
-    private ArrayList<ProgrammingObject> programmingObjects = new ArrayList<ProgrammingObject>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,13 +50,13 @@ public class TrainingIDE extends Activity{
         bFor = (Button) findViewById(R.id.bFor);
         bString = (Button) findViewById(R.id.bString);
         bProcedure = (Button) findViewById(R.id.bProcedure);
-        bInt = (Button) findViewById(R.id.bInt);
+        bVariable = (Button) findViewById(R.id.bVariable);
         notePad = (EditText) findViewById(R.id.tvNotePad);
         bRun = (Button) findViewById(R.id.bRun);
         bPrint = (Button) findViewById(R.id.bPrint);
         console = (TextView) findViewById(R.id.outputText);
-        //programmingAreaScrollview = (ScrollView) findViewById(R.id.programmingAreaScrollview);
-        //programmingArea = (LinearLayout) findViewById(R.id.programmingArea);
+        programmingAreaScrollview = (ScrollView) findViewById(R.id.programmingAreaScrollview);
+        programmingArea = (LinearLayout) findViewById(R.id.programmingArea);
         settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         difficulty = settings.getString("difficulty", "Beginner");
 
@@ -74,17 +67,17 @@ public class TrainingIDE extends Activity{
             }
         });
 
+
         // Long click listeners
         bWhile.setOnLongClickListener(new CustomOnLongPressListener());
         bIf.setOnLongClickListener(new CustomOnLongPressListener());
         bFor.setOnLongClickListener(new CustomOnLongPressListener());
         bString.setOnLongClickListener(new CustomOnLongPressListener());
-        bInt.setOnLongClickListener(new CustomOnLongPressListener());
+        bVariable.setOnLongClickListener(new CustomOnLongPressListener());
         bProcedure.setOnLongClickListener(new CustomOnLongPressListener());
         bPrint.setOnLongClickListener(new CustomOnLongPressListener());
 
-        // programmingAreaScrollview.setOnDragListener(new View.OnDragListener() {
-        canvas.setOnDragListener(new View.OnDragListener() {
+        programmingAreaScrollview.setOnDragListener(new View.OnDragListener() {
             // http://developer.android.com/guide/topics/ui/drag-drop.html
             @Override
             public boolean onDrag(View v, DragEvent event) {
@@ -98,27 +91,40 @@ public class TrainingIDE extends Activity{
                     case DragEvent.ACTION_DROP:
                         Log.i("IDEA", v.getTag() + " received drop.");
                         String buttonDragged = event.getClipData().getItemAt(0).getText().toString();
-                        //TextView tv = new TextView(TrainingIDE.this);
-                        //tv.setText(event.getClipData().getItemAt(0).getText());
-                        //programmingArea.addView(tv);
+                        TextView tv = new TextView(TrainingIDE.this);
+                        String tutorialEvent = (String) event.getClipData().getItemAt(0).getText();
+                        tv.setText(event.getClipData().getItemAt(0).getText());
 
-
-
+                        programmingArea.addView(tv);
+                        showTutorial(tutorialEvent);
                         return true; // Return true/false here based on whether or not the drop is valid
                 }
                 return false;
             }
         });
-        showTutorial();
+
     }
 
 
-    private void showTutorial() {
+    private void showTutorial(String tutorial) {
         SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         final boolean hints = getPrefs.getBoolean("hints", true);
-
+        final View tutorialView;
         if(hints) {
-            final View tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
+
+            if(tutorial.contentEquals("for")){
+                tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
+            }
+            else if(tutorial.contentEquals("while")){
+                tutorialView = getLayoutInflater().inflate(R.layout.while_tutorial_dialog, null);
+            }
+            else if(tutorial.contentEquals("variable")){
+                tutorialView = getLayoutInflater().inflate(R.layout.variable_tutorial_dialog, null);
+            }
+            else{
+                tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
+            }
+
             tutorialFlipper = (ViewFlipper) tutorialView.findViewById(R.id.tutorial_flipper);
             tutorialFlipper.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -127,6 +133,7 @@ public class TrainingIDE extends Activity{
                     return true;
                 }
             });
+
 
             tutorialPrevButton = (Button) tutorialView.findViewById(R.id.tutorial_prev_button);
             tutorialCloseButton = (Button) tutorialView.findViewById(R.id.tutorial_close_button);

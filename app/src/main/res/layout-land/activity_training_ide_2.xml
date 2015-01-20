@@ -66,10 +66,10 @@
                 <Button
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="Int"
-                    android:id="@+id/bInt"
+                    android:text="Variable"
+                    android:id="@+id/bVariable"
                     android:layout_gravity="center_horizontal"
-                    android:tag="int" />
+                    android:tag="variable" />
 
                 <Button
                     android:layout_width="fill_parent"
