@@ -111,6 +111,7 @@
                 android:textStyle="bold"
                 android:layout_margin="2dp"/>
 
+            <!--
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -128,6 +129,13 @@
                     android:orientation="vertical">
                 </LinearLayout>
             </ScrollView>
+            -->
+
+            <group5.cs3750.trainingwheels.canvas.CanvasView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/canvas_view"
+                android:layout_below="@+id/programmingAreaLabel"/>
 
             <Button
                 android:layout_width="wrap_content"

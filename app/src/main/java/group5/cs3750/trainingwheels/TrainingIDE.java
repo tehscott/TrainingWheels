@@ -20,14 +20,19 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import java.util.ArrayList;
+
+import group5.cs3750.trainingwheels.canvas.CanvasView;
+import group5.cs3750.trainingwheels.programmingobjects.ProgrammingObject;
 
 public class TrainingIDE extends Activity{
     //
     Button bIf, bWhile, bFor, bString, bProcedure, bInt, bRun, bPrint;
     EditText notePad;
     TextView console;
-    ScrollView programmingAreaScrollview;
-    LinearLayout programmingArea;
+    //ScrollView programmingAreaScrollview;
+    //LinearLayout programmingArea;
+    private CanvasView canvas;
 
     // Tutorial variables
     private ViewFlipper tutorialFlipper;
@@ -39,6 +44,8 @@ public class TrainingIDE extends Activity{
     private SharedPreferences settings;
     // Drag/drop variables
     private View draggedButton;
+
+    private ArrayList<ProgrammingObject> programmingObjects = new ArrayList<ProgrammingObject>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +62,8 @@ public class TrainingIDE extends Activity{
         bRun = (Button) findViewById(R.id.bRun);
         bPrint = (Button) findViewById(R.id.bPrint);
         console = (TextView) findViewById(R.id.outputText);
-        programmingAreaScrollview = (ScrollView) findViewById(R.id.programmingAreaScrollview);
-        programmingArea = (LinearLayout) findViewById(R.id.programmingArea);
+        //programmingAreaScrollview = (ScrollView) findViewById(R.id.programmingAreaScrollview);
+        //programmingArea = (LinearLayout) findViewById(R.id.programmingArea);
         settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         difficulty = settings.getString("difficulty", "Beginner");
 
@@ -67,7 +74,6 @@ public class TrainingIDE extends Activity{
             }
         });
 
-
         // Long click listeners
         bWhile.setOnLongClickListener(new CustomOnLongPressListener());
         bIf.setOnLongClickListener(new CustomOnLongPressListener());
@@ -77,7 +83,8 @@ public class TrainingIDE extends Activity{
         bProcedure.setOnLongClickListener(new CustomOnLongPressListener());
         bPrint.setOnLongClickListener(new CustomOnLongPressListener());
 
-        programmingAreaScrollview.setOnDragListener(new View.OnDragListener() {
+        // programmingAreaScrollview.setOnDragListener(new View.OnDragListener() {
+        canvas.setOnDragListener(new View.OnDragListener() {
             // http://developer.android.com/guide/topics/ui/drag-drop.html
             @Override
             public boolean onDrag(View v, DragEvent event) {
@@ -91,9 +98,12 @@ public class TrainingIDE extends Activity{
                     case DragEvent.ACTION_DROP:
                         Log.i("IDEA", v.getTag() + " received drop.");
                         String buttonDragged = event.getClipData().getItemAt(0).getText().toString();
-                        TextView tv = new TextView(TrainingIDE.this);
-                        tv.setText(event.getClipData().getItemAt(0).getText());
-                        programmingArea.addView(tv);
+                        //TextView tv = new TextView(TrainingIDE.this);
+                        //tv.setText(event.getClipData().getItemAt(0).getText());
+                        //programmingArea.addView(tv);
+
+
+
                         return true; // Return true/false here based on whether or not the drop is valid
                 }
                 return false;
