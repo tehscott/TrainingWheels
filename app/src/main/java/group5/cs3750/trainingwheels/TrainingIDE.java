@@ -55,8 +55,8 @@ public class TrainingIDE extends Activity{
         bRun = (Button) findViewById(R.id.bRun);
         bPrint = (Button) findViewById(R.id.bPrint);
         console = (TextView) findViewById(R.id.outputText);
-        programmingAreaScrollview = (ScrollView) findViewById(R.id.programmingAreaScrollview);
-        programmingArea = (LinearLayout) findViewById(R.id.programmingArea);
+        //programmingAreaScrollview = (ScrollView) findViewById(R.id.programmingAreaScrollview);
+        //programmingArea = (LinearLayout) findViewById(R.id.programmingArea);
         settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         difficulty = settings.getString("difficulty", "Beginner");
 
@@ -95,7 +95,7 @@ public class TrainingIDE extends Activity{
                         String tutorialEvent = (String) event.getClipData().getItemAt(0).getText();
                         tv.setText(event.getClipData().getItemAt(0).getText());
 
-                        programmingArea.addView(tv);
+                        //programmingArea.addView(tv);
                         showTutorial(tutorialEvent);
                         return true; // Return true/false here based on whether or not the drop is valid
                 }
