@@ -95,8 +95,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
             // Draw the top-most objects, their children will be drawn recursively
+            int height = 0;
             for(ProgrammingObject programmingObject : trainingIDE.getProgrammingObjects()) {
-                drawProgrammingObject(programmingObject, canvas, 0, 0);
+                height = drawProgrammingObject(programmingObject, canvas, height, 0);
+                height++;
             }
 
             drawHoverLocation(canvas); // Debug function, show where the user is dragging
@@ -216,15 +218,21 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
             // Adjust x offset
             if(drawOffset.x < 0) drawOffset.x = 0;
 
-            //if(drawOffset.x + getWidth() > drawnObjectsAreaSize.x)
-            //    drawOffset.x = getWidth() - drawnObjectsAreaSize.x;
+            if(drawnObjectsAreaSize.x > getWidth()) {
+                //if(drawOffset.x + getWidth() > drawnObjectsAreaSize.x)
+                //    drawOffset.x = getWidth() - drawnObjectsAreaSize.x;
+            } else
+                drawOffset.x = 0;
 
             // Adjust y offset
             if(drawOffset.y < 0) drawOffset.y = 0;
 
-            // Not sure why this request an adjustment of 1, but it works
-            if(getHeight() + drawOffset.y - 1 > drawnObjectsAreaSize.y)
-                drawOffset.y = drawnObjectsAreaSize.y - getHeight() + 1;
+            if(drawnObjectsAreaSize.y > getHeight()) {
+                // Not sure why this request an adjustment of 1, but it works
+                if (getHeight() + drawOffset.y - 1 > drawnObjectsAreaSize.y)
+                    drawOffset.y = drawnObjectsAreaSize.y - getHeight() + 1;
+            } else
+                drawOffset.y = 0;
         }
     }
 

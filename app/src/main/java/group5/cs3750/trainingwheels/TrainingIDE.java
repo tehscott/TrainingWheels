@@ -95,22 +95,27 @@ public class TrainingIDE extends Activity{
         initCanvas();
 
         // Create some test data
-        For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-        For forObj2 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, forObj);
-        For forObj3 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, forObj2);
-        For forObj4 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, forObj3);
-        For forObj5 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, forObj3);
-        forObj.addChild(forObj2);
-        forObj2.addChild(forObj3);
-        forObj3.addChild(forObj4);
-        forObj3.addChild(forObj5);
-
-        programmingObjects.add(forObj); // Only add topmost "parent" objects. Each parent will draw its own children
+//        For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+//        For forObj2 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, forObj);
+//        For forObj3 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, forObj2);
+//        For forObj4 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, forObj3);
+//        For forObj5 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, forObj3);
+//        For forObj6 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+//        For forObj7 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+//        For forObj8 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+//        forObj.addChild(forObj2);
+//        forObj2.addChild(forObj3);
+//        forObj3.addChild(forObj4);
+//        forObj3.addChild(forObj5);
+//
+//        programmingObjects.add(forObj6);
+//        programmingObjects.add(forObj); // Only add topmost "parent" objects. Each parent will draw its own children
+//        programmingObjects.add(forObj7);
+//        programmingObjects.add(forObj8);
 
         canvasThread = new CanvasThread(canvas.getHolder(), canvas);
         canvasThread.start();
     }
-
 
     private void showTutorial(String tutorial) {
         SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -318,6 +323,14 @@ public class TrainingIDE extends Activity{
 
                         canvas.setLastDropLocation(new Point((int)event.getX(), (int)event.getY()));
                         findCurrentHoveredObject(programmingObjects);
+
+                        if(currentHoveredObject != null) {
+                            For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, currentHoveredObject.getChildren().size(), currentHoveredObject);
+                            currentHoveredObject.addChild(forObj);
+                        } else {
+                            For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+                            programmingObjects.add(forObj);
+                        }
 
                         //programmingArea.addView(tv);
                         showTutorial(tutorialEvent);
