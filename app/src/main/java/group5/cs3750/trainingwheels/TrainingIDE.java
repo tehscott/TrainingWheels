@@ -41,6 +41,7 @@ public class TrainingIDE extends Activity{
     private CanvasThread canvasThread;
     private ArrayList<ProgrammingObject> programmingObjects = new ArrayList<ProgrammingObject>();
     private ProgrammingObject currentHoveredObject; // The object that the user is currently hovering over when dragging out a programming object, can be null
+    private ProgrammingObject closestHoverObjectAbove, closestHoverObjectBelow; // The object that is closest (and above) the current hover location
 
     // Tutorial variables
     private ViewFlipper tutorialFlipper;
@@ -233,6 +234,47 @@ public class TrainingIDE extends Activity{
         }
     }
 
+    /*
+     * This finds the programming object just above where the user is dragging a new programming object.
+     * This only does anything if the user is dragging and if they are not hovering over
+     * an existing programming object. The user must also be within the bounds of the drawn object area.
+     */
+    private void findObjectJustAboveHoverLocation(List<ProgrammingObject> programmingObjectList) {
+        if(currentHoveredObject == null && canvas.getCurrentHoverLocation() != null) {
+            // Only draw a line if they are dragging within the bounding box of the drawn objects area
+            if (canvas.getDrawnObjectsAreaSize() != null &&
+                    canvas.getCurrentHoverLocation().x > 0 && canvas.getCurrentHoverLocation().x < canvas.getDrawnObjectsAreaSize().x &&
+                    canvas.getCurrentHoverLocation().y > 0 && canvas.getCurrentHoverLocation().y < canvas.getDrawnObjectsAreaSize().y) {
+
+                for (ProgrammingObject programmingObject : programmingObjectList) {
+                    if (programmingObject.getCurrentDrawnLocation() != null) {
+                        // Modify the rectangle of the programming object using the canvas offset
+                        Rect adjustedRect = new Rect(
+                                programmingObject.getCurrentDrawnLocation().left - canvas.getDrawOffset().x,
+                                programmingObject.getCurrentDrawnLocation().top - canvas.getDrawOffset().y,
+                                programmingObject.getCurrentDrawnLocation().right - canvas.getDrawOffset().x,
+                                programmingObject.getCurrentDrawnLocation().bottom - canvas.getDrawOffset().y);
+
+                        // Get object above
+                        if (canvas.getCurrentHoverLocation().y > adjustedRect.bottom && canvas.getCurrentHoverLocation().y < adjustedRect.bottom + (2 * canvas.getDrawnObjectVerticalSpacing()) + canvas.getDrawnObjectHeight()) {
+                            // The current hover location is BELOW this object. This object MIGHT be the closest one. Keep track of it.
+                            closestHoverObjectAbove = programmingObject;
+                        }
+
+                        // Get object below
+                        if (canvas.getCurrentHoverLocation().y < adjustedRect.top && canvas.getCurrentHoverLocation().y > adjustedRect.top - (2 * canvas.getDrawnObjectVerticalSpacing()) - canvas.getDrawnObjectVerticalSpacing()) {
+                            // The current hover location is ABOVE this object. This object IS the closest one (below). Keep track of it.
+                            closestHoverObjectBelow = programmingObject;
+                        }
+                    }
+
+                    if (programmingObject.getChildren() != null) // Look through this object's children
+                        findObjectJustAboveHoverLocation(programmingObject.getChildren());
+                }
+            }
+        }
+    }
+
     private class CustomOnLongPressListener implements View.OnLongClickListener {
         @Override
         public boolean onLongClick(View v) {
@@ -296,6 +338,14 @@ public class TrainingIDE extends Activity{
         return currentHoveredObject;
     }
 
+    public ProgrammingObject getClosestHoverObjectAbove() {
+        return closestHoverObjectAbove;
+    }
+
+    public ProgrammingObject getClosestHoverObjectBelow() {
+        return closestHoverObjectBelow;
+    }
+
     private void initCanvas() {
         // Initialize the OnDragListener
         canvas.setOnDragListener(new View.OnDragListener() {
@@ -312,6 +362,8 @@ public class TrainingIDE extends Activity{
                         draggedButton = null;
                         canvas.setCurrentHoverLocation(null);
                         findCurrentHoveredObject(programmingObjects);
+                        closestHoverObjectAbove = null;
+                        closestHoverObjectBelow = null;
 
                         break; // No need to return anything here
                     case DragEvent.ACTION_DROP:
@@ -321,16 +373,21 @@ public class TrainingIDE extends Activity{
                         String tutorialEvent = (String) event.getClipData().getItemAt(0).getText();
                         tv.setText(event.getClipData().getItemAt(0).getText());
 
-                        canvas.setLastDropLocation(new Point((int)event.getX(), (int)event.getY()));
+                        canvas.setLastDropLocation(new Point((int) event.getX(), (int) event.getY()));
                         findCurrentHoveredObject(programmingObjects);
 
                         if(currentHoveredObject != null) {
                             For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, currentHoveredObject.getChildren().size(), currentHoveredObject);
                             currentHoveredObject.addChild(forObj);
+                        } else if(closestHoverObjectAbove != null || closestHoverObjectBelow != null) {
+                            insertProgrammingObject();
                         } else {
                             For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
                             programmingObjects.add(forObj);
                         }
+
+                        closestHoverObjectAbove = null;
+                        closestHoverObjectBelow = null;
 
                         //programmingArea.addView(tv);
                         showTutorial(tutorialEvent);
@@ -340,6 +397,10 @@ public class TrainingIDE extends Activity{
                         canvas.setCurrentHoverLocation(new Point((int)event.getX(), (int)event.getY()));
 
                         findCurrentHoveredObject(programmingObjects);
+
+                        closestHoverObjectAbove = null;
+                        closestHoverObjectBelow = null;
+                        findObjectJustAboveHoverLocation(programmingObjects);
 
                         break;
                 }
@@ -376,5 +437,35 @@ public class TrainingIDE extends Activity{
                 return true;
             }
         });
+    }
+
+    private void insertProgrammingObject() {
+        // Inserting an object between other objects
+        if(closestHoverObjectAbove != null) {
+            if (closestHoverObjectAbove.getChildren().size() > 0) {
+                // The closest object to the hover location has children, so add this new object to the front of chose children
+                For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove);
+                closestHoverObjectAbove.insertChild(0, forObj);
+            } else {
+                // The closest object to the hover location has no children, so add this new object to the closest object's parent (if it has one),
+                // inserting the new object just after the closest object
+                if (closestHoverObjectAbove.getParent() != null) {
+                    For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
+                    closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove) + 1, forObj);
+                } else {
+                    For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+                    programmingObjects.add(forObj);
+                }
+            }
+        } else if(closestHoverObjectBelow != null) {
+            // This is a less frequent case. When this happens, only insert into the closest object's parent above the closest object
+            if(closestHoverObjectBelow.getParent() != null) {
+                For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
+                closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove), forObj);
+            } else {
+                For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+                programmingObjects.add(programmingObjects.indexOf(closestHoverObjectBelow), forObj);
+            }
+        }
     }
 }

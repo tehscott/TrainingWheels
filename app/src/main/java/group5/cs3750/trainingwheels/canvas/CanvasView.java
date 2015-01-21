@@ -1,6 +1,5 @@
 package group5.cs3750.trainingwheels.canvas;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,7 +10,6 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -26,8 +24,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
     private int drawnObjectVerticalSpacing = 10; // pixels between drawn objects
     private int drawnObjectHorizontalSpacing = 20; // pixel width of the space each level of depth adds to a drawn object
-    private int drawnObjectHeight = 40; // pixel height of drawn objects
-    private int drawnObjectWidth = 120; // pixel width of drawn objects
+    private int drawnObjectHeight = 80; // pixel height of drawn objects
+    private int drawnObjectWidth = 200; // pixel width of drawn objects
     private Point drawnObjectsAreaSize = new Point(); // the width and height (unadjusted by offset) of the area containing drawn objects
 
     private Point currentHoverLocation; // location of the users finger when they are hovering (by dragging a programming object)
@@ -136,6 +134,15 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         if(trainingIDE.getCurrentHoveredObject() != null && trainingIDE.getCurrentHoveredObject().equals(pObj))
             paint.setAlpha(50);
 
+        // For testing
+        if(DEBUG) {
+            if (trainingIDE.getClosestHoverObjectAbove() != null && trainingIDE.getClosestHoverObjectAbove().equals(pObj))
+                paint.setColor(Color.BLUE);
+
+            if (trainingIDE.getClosestHoverObjectBelow() != null && trainingIDE.getClosestHoverObjectBelow().equals(pObj))
+                paint.setColor(Color.GREEN);
+        }
+
         // Draw the start of this parent object
         canvas.drawRect(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y, paint);
         pObj.setCurrentDrawnLocation(new Rect(left, top, right, bottom));
@@ -172,6 +179,15 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         drawnObjectsAreaSize.y = (height * drawnObjectHeight) + ((drawnObjectVerticalSpacing * height) + drawnObjectHeight); // height
 
         return height;
+    }
+
+    /*
+     * This method will draw a line where the user is attempting to drop a programming object.
+     * This line is only drawn if the user is dragging an object and if they are not hovering
+     * over an existing programming object.
+     */
+    private void drawDropLine(Canvas canvas) {
+
     }
 
     private void drawHoverLocation(Canvas canvas) {
@@ -214,6 +230,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
             drawOffset.x = drawOffset.x + xChange; // plus or minus here determines which way the screen drags when you move (like apple's "natural" drag option)
             drawOffset.y = drawOffset.y + yChange; // plus or minus here determines which way the screen drags when you move (like apple's "natural" drag option)
 
+            // TODO: The stuff below doesn't work well
             // Restrict dragging so that they can't drag infinitely
             // Adjust x offset
             if(drawOffset.x < 0) drawOffset.x = 0;
@@ -242,9 +259,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void setCurrentHoverLocation(Point currentHoverLocation) {
         this.currentHoverLocation = currentHoverLocation;
-
-        //if(currentHoverLocation != null)
-        //    Log.d("IDEa", "Hover location: " + currentHoverLocation.x + ", " + currentHoverLocation.y);
     }
 
     public Point getCurrentTouchLocation() {
@@ -277,5 +291,21 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void setDrawOffset(Point drawOffset) {
         this.drawOffset = drawOffset;
+    }
+
+    public Point getDrawnObjectsAreaSize() {
+        return drawnObjectsAreaSize;
+    }
+
+    public void setDrawnObjectsAreaSize(Point drawnObjectsAreaSize) {
+        this.drawnObjectsAreaSize = drawnObjectsAreaSize;
+    }
+
+    public int getDrawnObjectVerticalSpacing() {
+        return drawnObjectVerticalSpacing;
+    }
+
+    public int getDrawnObjectHeight() {
+        return drawnObjectHeight;
     }
 }
