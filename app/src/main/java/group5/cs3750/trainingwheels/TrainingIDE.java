@@ -27,6 +27,8 @@ import group5.cs3750.trainingwheels.canvas.CanvasThread;
 import group5.cs3750.trainingwheels.canvas.CanvasView;
 import group5.cs3750.trainingwheels.programmingobjects.For;
 import group5.cs3750.trainingwheels.programmingobjects.ProgrammingObject;
+import group5.cs3750.trainingwheels.programmingobjects.Variable;
+import group5.cs3750.trainingwheels.programmingobjects.While;
 
 
 public class TrainingIDE extends Activity{
@@ -366,6 +368,7 @@ public class TrainingIDE extends Activity{
                         closestHoverObjectBelow = null;
 
                         break; // No need to return anything here
+
                     case DragEvent.ACTION_DROP:
                         Log.i("IDEA", v.getTag() + " received drop.");
                         String buttonDragged = event.getClipData().getItemAt(0).getText().toString();
@@ -376,14 +379,28 @@ public class TrainingIDE extends Activity{
                         canvas.setLastDropLocation(new Point((int) event.getX(), (int) event.getY()));
                         findCurrentHoveredObject(programmingObjects);
 
-                        if(currentHoveredObject != null) {
-                            For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, currentHoveredObject.getChildren().size(), currentHoveredObject);
-                            currentHoveredObject.addChild(forObj);
-                        } else if(closestHoverObjectAbove != null || closestHoverObjectBelow != null) {
-                            insertProgrammingObject();
+                        ProgrammingObject pObj;
+
+                        if(tutorialEvent.contentEquals("for")){
+                            pObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+                        } else if(tutorialEvent.contentEquals("while")){
+                            pObj = new While(0, new Variable(0, "whileVariable", Variable.VariableType.STRING, "beep"), "boop");
+                        } else if(tutorialEvent.contentEquals("variable")){
+                            pObj = new Variable(0, "testVariable", Variable.VariableType.STRING, "test");
                         } else {
-                            For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-                            programmingObjects.add(forObj);
+                            pObj = new Variable(0, "unsupportedType", Variable.VariableType.STRING, "unsupportedType");
+                        }
+
+                        if(currentHoveredObject != null) {
+                            //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, currentHoveredObject.getChildren().size(), currentHoveredObject);
+                            pObj.setPositionUnderParent(currentHoveredObject.getChildren().size());
+                            pObj.setParent(currentHoveredObject);
+                            currentHoveredObject.addChild(pObj);
+                        } else if(closestHoverObjectAbove != null || closestHoverObjectBelow != null) {
+                            insertProgrammingObject(pObj);
+                        } else {
+                            //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+                            programmingObjects.add(pObj);
                         }
 
                         closestHoverObjectAbove = null;
@@ -439,32 +456,35 @@ public class TrainingIDE extends Activity{
         });
     }
 
-    private void insertProgrammingObject() {
+    private void insertProgrammingObject(ProgrammingObject pObj) {
         // Inserting an object between other objects
         if(closestHoverObjectAbove != null) {
             if (closestHoverObjectAbove.getChildren().size() > 0) {
                 // The closest object to the hover location has children, so add this new object to the front of chose children
-                For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove);
-                closestHoverObjectAbove.insertChild(0, forObj);
+                //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove);
+                pObj.setParent(closestHoverObjectAbove);
+                closestHoverObjectAbove.insertChild(0, pObj);
             } else {
                 // The closest object to the hover location has no children, so add this new object to the closest object's parent (if it has one),
                 // inserting the new object just after the closest object
                 if (closestHoverObjectAbove.getParent() != null) {
-                    For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
-                    closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove) + 1, forObj);
+                    //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
+                    pObj.setParent(closestHoverObjectAbove.getParent());
+                    closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove) + 1, pObj);
                 } else {
-                    For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-                    programmingObjects.add(forObj);
+                    //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+                    programmingObjects.add(pObj);
                 }
             }
         } else if(closestHoverObjectBelow != null) {
             // This is a less frequent case. When this happens, only insert into the closest object's parent above the closest object
             if(closestHoverObjectBelow.getParent() != null) {
-                For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
-                closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove), forObj);
+                //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
+                pObj.setParent(closestHoverObjectAbove.getParent());
+                closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove), pObj);
             } else {
-                For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-                programmingObjects.add(programmingObjects.indexOf(closestHoverObjectBelow), forObj);
+                //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+                programmingObjects.add(programmingObjects.indexOf(closestHoverObjectBelow), pObj);
             }
         }
     }

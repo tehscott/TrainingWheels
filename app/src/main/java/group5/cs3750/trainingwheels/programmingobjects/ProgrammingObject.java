@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ProgrammingObject {
     public static enum ProgrammingObjectType {
-        WHILE, IF, FOR, PRINT, INT, FUNCTION, STRING
+        WHILE, IF, FOR, PRINT, INT, FUNCTION, STRING, VARIABLE
     }
 
     public static enum ComparisonOperator {
