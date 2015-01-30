@@ -21,5 +21,6 @@
     <string name="remember_me">Remember Me</string>
     <string name="hints_tips">Hints/Tips:</string>
     <string name="sound">Sound:</string>
+    <string name="title_activity_java_script_demo">JavaScriptDemo</string>
 
 </resources>
