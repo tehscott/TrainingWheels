@@ -1,0 +1,118 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin"
+    tools:context="group5.cs3750.trainingwheels.Tutorial">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tutorial_title"
+        android:layout_centerHorizontal="true"
+        android:text="Function"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <ViewFlipper
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tutorial_flipper"
+        android:layout_alignLeft="@+id/tutorial_button_container"
+        android:layout_alignRight="@+id/tutorial_button_container"
+        android:layout_below="@+id/tutorial_title"
+        android:layout_above="@+id/tutorial_button_container">
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="In this challenge you will build a function that adds two numbers together and returns the result.
+"
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A function is a block of code designed to preform a particular task. A function is executed when something evokes it. A function is a helper that can be designed once and used over and over again."
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A function can have parameters so it is able to interact and manipulate with other objects. A parameter can be a Number, String, Boolean, and Objects"
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Drag the function object into the programming area and choose which parameters you want if any. Now, drag the desired functionality into the funtion e.g. Print, While, If, etc..."
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+    </ViewFlipper>
+
+    <LinearLayout
+        android:id="@+id/tutorial_button_container"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prev"
+            android:id="@+id/tutorial_prev_button"
+            android:layout_gravity="bottom"
+            android:layout_weight=".3"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Close"
+            android:id="@+id/tutorial_close_button"
+            android:layout_gravity="bottom"
+            android:layout_weight=".3" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:id="@+id/tutorial_next_button"
+            android:layout_gravity="bottom"
+            android:layout_weight=".3" />
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,117 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin"
+    tools:context="group5.cs3750.trainingwheels.Tutorial">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tutorial_title"
+        android:layout_centerHorizontal="true"
+        android:text="If Statement"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <ViewFlipper
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tutorial_flipper"
+        android:layout_alignLeft="@+id/tutorial_button_container"
+        android:layout_alignRight="@+id/tutorial_button_container"
+        android:layout_below="@+id/tutorial_title"
+        android:layout_above="@+id/tutorial_button_container">
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="In this challenge you will build an If statement that checks to see if a condition is true. If it is true, you wll print a message stating that the condition is true.  If it is false You will print a message stating that the conditon is false."
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="An If statement is a programming conditional statement that, if proved true, performs a function or displays information."
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="An If statement takes a conditional perameter.  This paramater could be a Boolean variable, or you could be testing certain variables or equal, less than, or greater than."
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Drag the If object into the programming area and select the condtion you would like to check. "
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+    </ViewFlipper>
+
+    <LinearLayout
+        android:id="@+id/tutorial_button_container"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prev"
+            android:id="@+id/tutorial_prev_button"
+            android:layout_gravity="bottom"
+            android:layout_weight=".3"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Close"
+            android:id="@+id/tutorial_close_button"
+            android:layout_gravity="bottom"
+            android:layout_weight=".3" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:id="@+id/tutorial_next_button"
+            android:layout_gravity="bottom"
+            android:layout_weight=".3" />
+    </LinearLayout>
+</RelativeLayout>

@@ -135,6 +135,18 @@ public class TrainingIDE extends Activity{
             else if(tutorial.contentEquals("variable")){
                 tutorialView = getLayoutInflater().inflate(R.layout.variable_tutorial_dialog, null);
             }
+            else if(tutorial.contentEquals("function")){
+                tutorialView = getLayoutInflater().inflate(R.layout.function_tuorial_dialog, null);
+            }
+            else if(tutorial.contentEquals("print")){
+                tutorialView = getLayoutInflater().inflate(R.layout.print_tutorial_dialog, null);
+            }
+            else if(tutorial.contentEquals("if")){
+                tutorialView = getLayoutInflater().inflate(R.layout.if_tutorial_dialog, null);
+            }
+            else if(tutorial.contentEquals("string")){
+                tutorialView = getLayoutInflater().inflate(R.layout.string_tutorial_dialog, null);
+            }
             else{
                 tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
             }
