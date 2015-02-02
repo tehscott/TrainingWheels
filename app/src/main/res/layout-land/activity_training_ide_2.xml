@@ -1,181 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context=".TrainingIDE"
-    android:orientation="horizontal"
-    android:background="@drawable/bg">
+    tools:context=".TrainingIDE">
 
-    <LinearLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/top_bar_container"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:src="@drawable/back_button"
+            android:adjustViewBounds="true"
+            android:layout_alignParentLeft="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingLeft="3dp"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:layout_below="@+id/top_bar_container"
+        android:layout_above="@+id/bottom_bar_container">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Programming\nObjects"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:layout_margin="2dp"/>
-
-        <ScrollView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:padding="2dp"
-            android:background="@android:color/white">
+            android:orientation="vertical"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/button_container">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="While"
-                    android:id="@+id/bWhile"
-                    android:tag="while" />
-
-                <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="If"
-                    android:id="@+id/bIf"
-                    android:tag="if" />
-
-                <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="For"
-                    android:id="@+id/bFor"
-                    android:layout_gravity="center_horizontal"
-                    android:tag="for" />
-
-                <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Print"
-                    android:id="@+id/bPrint"
-                    android:layout_gravity="center_horizontal"
-                    android:tag="print" />
-
-                <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Variable"
-                    android:id="@+id/bVariable"
-                    android:layout_gravity="center_horizontal"
-                    android:tag="variable" />
-
-                <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Function"
-                    android:id="@+id/bProcedure"
-                    android:layout_gravity="center_horizontal"
-                    android:tag="function" />
-                <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="String"
-                    android:id="@+id/bString"
-                    android:layout_gravity="center_horizontal"
-                    android:tag="string" />
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="4"
-        android:orientation="horizontal">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="3dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Programming\nArea"
-                android:id="@+id/programmingAreaLabel"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:layout_margin="2dp"/>
-
-            <!--
             <ScrollView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@android:color/white"
-                android:id="@+id/programmingAreaScrollview"
-                android:layout_below="@+id/programmingAreaLabel"
-                android:tag="programmingAreaScrollview"
-                android:padding="2dp">
+                android:padding="2dp"
+                android:background="@android:color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/programmingArea"
-                    android:tag="programmingArea"
                     android:orientation="vertical">
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="While"
+                        android:id="@+id/bWhile"
+                        android:tag="while" />
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="If"
+                        android:id="@+id/bIf"
+                        android:tag="if" />
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="For"
+                        android:id="@+id/bFor"
+                        android:layout_gravity="center_horizontal"
+                        android:tag="for" />
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Print"
+                        android:id="@+id/bPrint"
+                        android:layout_gravity="center_horizontal"
+                        android:tag="print" />
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Variable"
+                        android:id="@+id/bVariable"
+                        android:layout_gravity="center_horizontal"
+                        android:tag="variable" />
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Function"
+                        android:id="@+id/bProcedure"
+                        android:layout_gravity="center_horizontal"
+                        android:tag="function" />
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="String"
+                        android:id="@+id/bString"
+                        android:layout_gravity="center_horizontal"
+                        android:tag="string" />
                 </LinearLayout>
             </ScrollView>
-            -->
+        </LinearLayout>
 
-            <group5.cs3750.trainingwheels.canvas.CanvasView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/canvas_view"
-                android:layout_below="@+id/programmingAreaLabel"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Run"
-                android:layout_margin="2dp"
-                android:id="@+id/bRun"
-                android:textColor="@android:color/holo_green_dark"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true" />
-        </RelativeLayout>
-
-        <LinearLayout
+        <group5.cs3750.trainingwheels.canvas.CanvasView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:padding="3dp"
-            android:orientation="vertical">
+            android:id="@+id/canvas_view"
+            android:layout_toRightOf="@+id/button_container"
+            android:layout_toLeftOf="@+id/output_container"/>
+
+        <ScrollView
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:id="@+id/output_container"
+            android:layout_alignParentRight="true">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Output\n"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:layout_margin="2dp"/>
+                android:id="@+id/outputText"
+                android:tag="outputText"
+                android:text="\n\n\n\n\n"
+                android:padding="2dp"
+                android:background="@android:color/white"/>
+        </ScrollView>
+    </RelativeLayout>
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/outputText"
-                    android:tag="outputText"
-                    android:text="\n\n\n\n\n"
-                    android:padding="2dp"
-                    android:background="@android:color/white"/>
-            </ScrollView>
-        </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bottom_bar_container"
+        android:layout_alignParentBottom="true">
 
-    </LinearLayout>
-</LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

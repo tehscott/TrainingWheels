@@ -14,7 +14,7 @@ public class While extends ProgrammingObject {
                     ProgrammingObjectType.WHILE, ProgrammingObjectType.IF, ProgrammingObjectType.FOR, ProgrammingObjectType.PRINT,
                     ProgrammingObjectType.INT, ProgrammingObjectType.FUNCTION, ProgrammingObjectType.STRING)
     );
-    private int drawColor = Color.GREEN;
+    private int drawColor = Color.RED;
 
     public While(int listPosition, Variable conditionVariable, Object terminationValue) {
         super(ProgrammingObjectType.WHILE, listPosition);

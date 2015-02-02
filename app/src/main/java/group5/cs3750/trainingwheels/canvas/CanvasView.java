@@ -41,6 +41,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
     public CanvasView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         this.trainingIDE = (TrainingIDE) context;
 
         if(!isInEditMode())

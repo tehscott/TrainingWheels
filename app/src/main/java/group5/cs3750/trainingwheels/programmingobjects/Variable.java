@@ -15,7 +15,7 @@ public class Variable extends ProgrammingObject {
     private VariableType variableType;
     private Object value;
     private List<ProgrammingObjectType> allowedChildTypes = new ArrayList(); // The types of programming objects that can be children to this programming object, can be null
-    private int drawColor = Color.BLUE;
+    private int drawColor = Color.RED;
 
     public Variable(int listPosition, String name, VariableType variableType, Object value) {
         super(ProgrammingObjectType.VARIABLE, listPosition);
