@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background_orange">#ff8c08</color>
+    <color name="back_button_bar_bg">#e0e0e0</color>
+    <color name="ide_bg">#eeeeee</color>
 </resources>

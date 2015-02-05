@@ -33,7 +33,7 @@ import group5.cs3750.trainingwheels.programmingobjects.While;
 
 public class TrainingIDE extends Activity{
     //
-    Button bIf, bWhile, bFor, bString, bProcedure, bVariable, bRun, bPrint;
+    Button bIf, bWhile, bFor, bString, bProcedure, bVariable, bPrint; // , bRun
     EditText notePad;
     TextView console;
     //ScrollView programmingAreaScrollview;
@@ -68,22 +68,14 @@ public class TrainingIDE extends Activity{
         bString = (Button) findViewById(R.id.bString);
         bProcedure = (Button) findViewById(R.id.bProcedure);
         bVariable = (Button) findViewById(R.id.bVariable);
-        notePad = (EditText) findViewById(R.id.tvNotePad);
-        bRun = (Button) findViewById(R.id.bRun);
         bPrint = (Button) findViewById(R.id.bPrint);
+        notePad = (EditText) findViewById(R.id.tvNotePad);
         console = (TextView) findViewById(R.id.outputText);
         //programmingAreaScrollview = (ScrollView) findViewById(R.id.programmingAreaScrollview);
         //programmingArea = (LinearLayout) findViewById(R.id.programmingArea);
         settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         difficulty = settings.getString("difficulty", "Beginner");
         canvas = (CanvasView) findViewById(R.id.canvas_view);
-
-        bRun.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         // Long click listeners
         bWhile.setOnLongClickListener(new CustomOnLongPressListener());

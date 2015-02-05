@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context=".TrainingIDE">
+    tools:context=".TrainingIDE"
+    android:background="@color/ide_bg">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -11,11 +12,26 @@
         android:layout_alignParentTop="true">
 
         <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back_button_bar"
+            android:background="@color/back_button_bar_bg"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="false"/>
+
+        <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:src="@drawable/back_button"
             android:adjustViewBounds="true"
             android:layout_alignParentLeft="true"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/run_button"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 
@@ -36,8 +52,7 @@
             <ScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:padding="2dp"
-                android:background="@android:color/white">
+                android:padding="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -48,54 +63,75 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="While"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/rounded_button_bg"
                         android:id="@+id/bWhile"
-                        android:tag="while" />
+                        android:tag="while"
+                        android:layout_marginBottom="5dp"/>
 
                     <Button
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="If"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/rounded_button_bg"
                         android:id="@+id/bIf"
-                        android:tag="if" />
+                        android:tag="if"
+                        android:layout_marginBottom="5dp" />
 
                     <Button
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="For"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/rounded_button_bg"
                         android:id="@+id/bFor"
                         android:layout_gravity="center_horizontal"
-                        android:tag="for" />
+                        android:tag="for"
+                        android:layout_marginBottom="5dp" />
 
                     <Button
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="Print"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/rounded_button_bg"
                         android:id="@+id/bPrint"
                         android:layout_gravity="center_horizontal"
-                        android:tag="print" />
+                        android:tag="print"
+                        android:layout_marginBottom="5dp" />
 
                     <Button
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="Variable"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/rounded_button_bg"
                         android:id="@+id/bVariable"
                         android:layout_gravity="center_horizontal"
-                        android:tag="variable" />
+                        android:tag="variable"
+                        android:layout_marginBottom="5dp" />
 
                     <Button
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="Function"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/rounded_button_bg"
                         android:id="@+id/bProcedure"
                         android:layout_gravity="center_horizontal"
-                        android:tag="function" />
+                        android:tag="function"
+                        android:layout_marginBottom="5dp" />
                     <Button
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="String"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/rounded_button_bg"
                         android:id="@+id/bString"
                         android:layout_gravity="center_horizontal"
-                        android:tag="string" />
+                        android:tag="string"
+                        android:layout_marginBottom="5dp" />
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
@@ -130,5 +166,11 @@
         android:id="@+id/bottom_bar_container"
         android:layout_alignParentBottom="true">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/clear_button"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </RelativeLayout>
