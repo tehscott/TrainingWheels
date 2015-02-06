@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -60,7 +62,7 @@ public class TrainingIDE extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_training_ide_2); // R.layout.activity_training_ide
+        setContentView(R.layout.activity_training_ide_2);
 
         bIf = (Button) findViewById(R.id.bIf);
         bWhile = (Button) findViewById(R.id.bWhile);
@@ -71,8 +73,6 @@ public class TrainingIDE extends Activity{
         bPrint = (Button) findViewById(R.id.bPrint);
         notePad = (EditText) findViewById(R.id.tvNotePad);
         console = (TextView) findViewById(R.id.outputText);
-        //programmingAreaScrollview = (ScrollView) findViewById(R.id.programmingAreaScrollview);
-        //programmingArea = (LinearLayout) findViewById(R.id.programmingArea);
         settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         difficulty = settings.getString("difficulty", "Beginner");
         canvas = (CanvasView) findViewById(R.id.canvas_view);
@@ -86,27 +86,13 @@ public class TrainingIDE extends Activity{
         bProcedure.setOnLongClickListener(new CustomOnLongPressListener());
         bPrint.setOnLongClickListener(new CustomOnLongPressListener());
 
-        //programmingAreaScrollview.setOnDragListener(new View.OnDragListener() {
-        initCanvas();
+        GradientDrawable gdDefault = new GradientDrawable();
+        gdDefault.setColor(getResources().getColor(R.color.button_green));
+        gdDefault.setCornerRadius(12);
 
-        // Create some test data
-//        For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-//        For forObj2 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, forObj);
-//        For forObj3 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, forObj2);
-//        For forObj4 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, forObj3);
-//        For forObj5 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, forObj3);
-//        For forObj6 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-//        For forObj7 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-//        For forObj8 = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-//        forObj.addChild(forObj2);
-//        forObj2.addChild(forObj3);
-//        forObj3.addChild(forObj4);
-//        forObj3.addChild(forObj5);
-//
-//        programmingObjects.add(forObj6);
-//        programmingObjects.add(forObj); // Only add topmost "parent" objects. Each parent will draw its own children
-//        programmingObjects.add(forObj7);
-//        programmingObjects.add(forObj8);
+        bPrint.setBackgroundDrawable(gdDefault);
+
+        initCanvas();
 
         canvasThread = new CanvasThread(canvas.getHolder(), canvas);
         canvasThread.start();

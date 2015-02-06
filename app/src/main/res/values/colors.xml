@@ -3,4 +3,11 @@
     <color name="background_orange">#ff8c08</color>
     <color name="back_button_bar_bg">#e0e0e0</color>
     <color name="ide_bg">#eeeeee</color>
+
+    <color name="button_teal">#218041</color>
+    <color name="button_blue">#048d9f</color>
+    <color name="button_red">#ab3933</color>
+    <color name="button_green">#9e8d2c</color>
+    <color name="button_purple">#7843b4</color>
+
 </resources>
