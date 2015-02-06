@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
@@ -18,7 +18,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -34,12 +33,9 @@ import group5.cs3750.trainingwheels.programmingobjects.While;
 
 
 public class TrainingIDE extends Activity{
-    //
-    Button bIf, bWhile, bFor, bString, bProcedure, bVariable, bPrint; // , bRun
-    EditText notePad;
-    TextView console;
-    //ScrollView programmingAreaScrollview;
-    //LinearLayout programmingArea;
+    private Button bIf, bWhile, bFor, bString, bProcedure, bVariable, bPrint;
+    private Button bBack, bRun, bClear;
+    private TextView outputTextView;
 
     private CanvasView canvas;
     private CanvasThread canvasThread;
@@ -53,7 +49,6 @@ public class TrainingIDE extends Activity{
     private AlertDialog tutorialDialog;
     private final GestureDetector detector = new GestureDetector(new SwipeGestureDetector());
 
-    private String difficulty;
     private SharedPreferences settings;
 
     // Drag/drop variables
@@ -64,6 +59,20 @@ public class TrainingIDE extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training_ide_2);
 
+        settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        outputTextView = (TextView) findViewById(R.id.outputText);
+
+        initButtons();
+        initCanvas();
+
+        canvasThread = new CanvasThread(canvas.getHolder(), canvas);
+        canvasThread.start();
+    }
+
+    private void initButtons() {
+        /*
+         Programming Object buttons
+        */
         bIf = (Button) findViewById(R.id.bIf);
         bWhile = (Button) findViewById(R.id.bWhile);
         bFor = (Button) findViewById(R.id.bFor);
@@ -71,11 +80,6 @@ public class TrainingIDE extends Activity{
         bProcedure = (Button) findViewById(R.id.bProcedure);
         bVariable = (Button) findViewById(R.id.bVariable);
         bPrint = (Button) findViewById(R.id.bPrint);
-        notePad = (EditText) findViewById(R.id.tvNotePad);
-        console = (TextView) findViewById(R.id.outputText);
-        settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        difficulty = settings.getString("difficulty", "Beginner");
-        canvas = (CanvasView) findViewById(R.id.canvas_view);
 
         // Long click listeners
         bWhile.setOnLongClickListener(new CustomOnLongPressListener());
@@ -86,16 +90,42 @@ public class TrainingIDE extends Activity{
         bProcedure.setOnLongClickListener(new CustomOnLongPressListener());
         bPrint.setOnLongClickListener(new CustomOnLongPressListener());
 
-        GradientDrawable gdDefault = new GradientDrawable();
-        gdDefault.setColor(getResources().getColor(R.color.button_green));
-        gdDefault.setCornerRadius(12);
+        // Custom backgrounds
+        bIf.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_teal, 12));
+        bWhile.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_orange, 12));
+        bFor.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_red, 12));
+        bString.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_blue, 12));
+        bProcedure.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
+        bVariable.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_green, 12));
+        bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_teal, 12));
 
-        bPrint.setBackgroundDrawable(gdDefault);
+        /*
+         Back, Run, Clear buttons
+        */
+        bBack = (Button) findViewById(R.id.back_button);
+        bRun = (Button) findViewById(R.id.run_button);
+        bClear = (Button) findViewById(R.id.clear_button);
 
-        initCanvas();
+        bBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        canvasThread = new CanvasThread(canvas.getHolder(), canvas);
-        canvasThread.start();
+        bRun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        bClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                outputTextView.setText("");
+            }
+        });
     }
 
     private void showTutorial(String tutorial) {
@@ -339,6 +369,8 @@ public class TrainingIDE extends Activity{
     }
 
     private void initCanvas() {
+        canvas = (CanvasView) findViewById(R.id.canvas_view);
+
         // Initialize the OnDragListener
         canvas.setOnDragListener(new View.OnDragListener() {
             // http://developer.android.com/guide/topics/ui/drag-drop.html
@@ -380,6 +412,8 @@ public class TrainingIDE extends Activity{
                         } else {
                             pObj = new Variable(0, "unsupportedType", Variable.VariableType.STRING, "unsupportedType");
                         }
+
+                        pObj.setButtonDrawable(draggedButton.getBackground()); // Save the BG of the button to use for drawing
 
                         if(currentHoveredObject != null) {
                             //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, currentHoveredObject.getChildren().size(), currentHoveredObject);
@@ -477,5 +511,13 @@ public class TrainingIDE extends Activity{
                 programmingObjects.add(programmingObjects.indexOf(closestHoverObjectBelow), pObj);
             }
         }
+    }
+
+    public static GradientDrawable getBackgroundGradientDrawable(Resources resources, int colorResourceId, int cornerRadius) {
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColor(resources.getColor(colorResourceId));
+        gd.setCornerRadius(cornerRadius);
+
+        return gd;
     }
 }

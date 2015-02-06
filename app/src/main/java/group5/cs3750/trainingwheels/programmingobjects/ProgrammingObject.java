@@ -2,9 +2,12 @@ package group5.cs3750.trainingwheels.programmingobjects;
 
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import group5.cs3750.trainingwheels.R;
 
 public class ProgrammingObject {
     public static enum ProgrammingObjectType {
@@ -21,10 +24,11 @@ public class ProgrammingObject {
     private ProgrammingObject parent; // Can be null, meaning this IS the parent
     private List<ProgrammingObjectType> allowedChildTypes; // The types of programming objects that can be children to this programming object, can be null
     private ArrayList<ProgrammingObject> children = new ArrayList<ProgrammingObject>(); // Children of this programming object, cannot be null, but can be of 0 length
+    private Drawable buttonDrawable; // This should be a copy of the drawable assigned to the button corresponding to this object
 
     // Drawing vars
     private Rect currentDrawnLocation; // Location of the object drawn on the canvas. Can be null, but probably never will be
-    private int drawColor = Color.BLACK; // Color to draw the object. The getter for this should be overridden by sub classes
+    private int drawColor = R.color.button_green; // Color to draw the object. The getter for this should be overridden by sub classes
 
     public ProgrammingObject(ProgrammingObjectType type, int listPosition) {
         this.type = type;
@@ -135,5 +139,13 @@ public class ProgrammingObject {
 
     public String getTypeName() {
         return "ERROR: Unimplemented for this object type.";
+    }
+
+    public Drawable getButtonDrawable() {
+        return buttonDrawable;
+    }
+
+    public void setButtonDrawable(Drawable buttonDrawable) {
+        this.buttonDrawable = buttonDrawable;
     }
 }

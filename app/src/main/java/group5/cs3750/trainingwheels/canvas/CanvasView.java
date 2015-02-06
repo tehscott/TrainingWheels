@@ -8,11 +8,14 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import group5.cs3750.trainingwheels.R;
 import group5.cs3750.trainingwheels.TrainingIDE;
 import group5.cs3750.trainingwheels.programmingobjects.ProgrammingObject;
 
@@ -33,7 +36,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
     private Point lastDropLocation; // location of where the user last dropped an object
     private Point drawOffset = new Point(); // offset of the canvas origin when drawing objects. dragging the drawing area (canvas) will simulate scrolling by using the offset
 
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
 
     public CanvasView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -129,13 +132,14 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         int left = depth * drawnObjectHorizontalSpacing;
         int right = left + drawnObjectWidth;
         int bottom = top + drawnObjectHeight;
+        int parentObjectStartX = 0;
+        int parentObjectStartY = 0;
 
         paint.setColor(pObj.getDrawColor());
 
         if(trainingIDE.getCurrentHoveredObject() != null && trainingIDE.getCurrentHoveredObject().equals(pObj))
             paint.setAlpha(50);
 
-        // For testing
         if(DEBUG) {
             if (trainingIDE.getClosestHoverObjectAbove() != null && trainingIDE.getClosestHoverObjectAbove().equals(pObj))
                 paint.setColor(Color.BLUE);
@@ -145,13 +149,23 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         // Draw the start of this parent object
-        canvas.drawRect(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y, paint);
+        Drawable drawable = pObj.getButtonDrawable().getConstantState().newDrawable();
+        drawable.setBounds(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y);
+        drawable.draw(canvas);
+
+        parentObjectStartX = left - drawOffset.x;
+        parentObjectStartY = top - drawOffset.y;
+
+        //canvas.drawRect(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y, paint);
         pObj.setCurrentDrawnLocation(new Rect(left, top, right, bottom));
 
         paint.setAlpha(255);
         paint.setColor(Color.WHITE);
-        canvas.drawText(pObj.getTypeName(), left - drawOffset.x + 5, top - drawOffset.y + 15, paint);
-        canvas.drawText(pObj.toString(), left - drawOffset.x + 5, top - drawOffset.y + 30, paint);
+        paint.setTextSize(40);
+        paint.setAntiAlias(true);
+        // TODO: The location to draw the text needs to be calculated rather than static (to support all devices)
+        canvas.drawText(pObj.getTypeName(), left - drawOffset.x + 35, top - drawOffset.y + 55, paint);
+        //canvas.drawText(pObj.toString(), left - drawOffset.x + 5, top - drawOffset.y + 30, paint);
 
         // Draw any children
         //
@@ -168,11 +182,17 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         right = left + drawnObjectWidth;
         bottom = top + drawnObjectHeight;
 
-        paint.setColor(pObj.getDrawColor());
-        canvas.drawRect(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y, paint);
+        //paint.setColor(pObj.getDrawColor());
+        //canvas.drawRect(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y, paint);
+        drawable.setBounds(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y);
+        drawable.draw(canvas);
 
-        paint.setColor(Color.WHITE);
-        canvas.drawText("End " + pObj.getTypeName(), left - drawOffset.x + 5, top - drawOffset.y + 15, paint);
+        // Draw the bar that connects the parent and child
+        paint.setColor(getResources().getColor(pObj.getDrawColor()));
+        canvas.drawRect(parentObjectStartX, parentObjectStartY, parentObjectStartX + 10, bottom - drawOffset.y, paint);
+
+        //paint.setColor(Color.WHITE);
+        //canvas.drawText("End " + pObj.getTypeName(), left - drawOffset.x + 5, top - drawOffset.y + 15, paint);
 
         // Update the size of the area that contains the drawn objects
         if((depth * drawnObjectHorizontalSpacing) + drawnObjectWidth > drawnObjectsAreaSize.x) // only update the width if this section is wider than any other

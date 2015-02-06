@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import group5.cs3750.trainingwheels.R;
+
 public class While extends ProgrammingObject {
     private Variable conditionVariable; // The variable to check when looping
     private Object terminationValue; // The value the variable should be to terminate the loop
@@ -14,7 +16,7 @@ public class While extends ProgrammingObject {
                     ProgrammingObjectType.WHILE, ProgrammingObjectType.IF, ProgrammingObjectType.FOR, ProgrammingObjectType.PRINT,
                     ProgrammingObjectType.INT, ProgrammingObjectType.FUNCTION, ProgrammingObjectType.STRING)
     );
-    private int drawColor = Color.RED;
+    private int drawColor = R.color.button_orange;
 
     public While(int listPosition, Variable conditionVariable, Object terminationValue) {
         super(ProgrammingObjectType.WHILE, listPosition);
