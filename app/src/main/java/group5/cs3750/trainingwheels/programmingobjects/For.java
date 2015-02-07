@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import group5.cs3750.trainingwheels.R;
+
 public class For extends ProgrammingObject {
     private int startingValue;
     private int endingValue;
@@ -15,7 +17,7 @@ public class For extends ProgrammingObject {
                     ProgrammingObjectType.WHILE, ProgrammingObjectType.IF, ProgrammingObjectType.FOR, ProgrammingObjectType.PRINT,
                     ProgrammingObjectType.INT, ProgrammingObjectType.FUNCTION, ProgrammingObjectType.STRING)
     );
-    private int drawColor = Color.RED;
+    private int drawColor = R.color.button_red;
 
     public For(int position, int startingValue, int endingValue, ComparisonOperator endingValueComparisonOperator) {
         super(ProgrammingObjectType.FOR, position);
