@@ -1,222 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context=".TrainingIDE"
-    android:background="@color/ide_bg">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".TrainingIDE"
+                android:background="@color/ide_bg">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/top_bar_container"
-        android:layout_alignParentTop="true">
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/top_bar_container"
+    android:layout_alignParentTop="true">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/back_button_bar"
-            android:background="@color/back_button_bar_bg"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="false"/>
+    <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:src="@drawable/back_button_bar"
+      android:background="@color/back_button_bar_bg"
+      android:scaleType="fitXY"
+      android:adjustViewBounds="false"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/back_button_bg"
-            android:src="@drawable/back_button"
-            android:adjustViewBounds="true"
-            android:layout_alignParentLeft="true"/>
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/back_button_bg"
+      android:src="@drawable/back_button"
+      android:adjustViewBounds="true"
+      android:layout_alignParentLeft="true"/>
 
-        <Button
-            android:id="@+id/back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:layout_alignLeft="@+id/back_button_bg"
-            android:layout_alignRight="@+id/back_button_bg"
-            android:layout_alignTop="@+id/back_button_bg"
-            android:layout_alignBottom="@+id/back_button_bg"
-            android:background="@android:color/transparent"
-            android:text="Back "
-            android:textColor="@android:color/white"/>
+    <Button
+      android:id="@+id/back_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:minWidth="0dp"
+      android:minHeight="0dp"
+      android:layout_alignLeft="@+id/back_button_bg"
+      android:layout_alignRight="@+id/back_button_bg"
+      android:layout_alignTop="@+id/back_button_bg"
+      android:layout_alignBottom="@+id/back_button_bg"
+      android:background="@android:color/transparent"
+      android:text="Back "
+      android:textColor="@android:color/white"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/run_button_bg"
-            android:src="@drawable/run_button"
-            android:adjustViewBounds="true"
-            android:layout_alignParentRight="true"/>
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/run_button_bg"
+      android:src="@drawable/run_button"
+      android:adjustViewBounds="true"
+      android:layout_alignParentRight="true"/>
 
-        <Button
-            android:id="@+id/run_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:layout_alignLeft="@+id/run_button_bg"
-            android:layout_alignRight="@+id/run_button_bg"
-            android:layout_alignTop="@+id/run_button_bg"
-            android:layout_alignBottom="@+id/run_button_bg"
-            android:background="@android:color/transparent"
-            android:text="  Run"
-            android:textColor="@android:color/white"/>
+    <Button
+      android:id="@+id/run_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:minWidth="0dp"
+      android:minHeight="0dp"
+      android:layout_alignLeft="@+id/run_button_bg"
+      android:layout_alignRight="@+id/run_button_bg"
+      android:layout_alignTop="@+id/run_button_bg"
+      android:layout_alignBottom="@+id/run_button_bg"
+      android:background="@android:color/transparent"
+      android:text="  Run"
+      android:textColor="@android:color/white"/>
 
-    </RelativeLayout>
+  </RelativeLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:layout_below="@+id/top_bar_container"
+    android:layout_above="@+id/bottom_bar_container">
 
     <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:layout_weight="3.5"
+      android:id="@+id/button_container">
+
+      <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_below="@+id/top_bar_container"
-        android:layout_above="@+id/bottom_bar_container">
+        android:padding="5dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="3.5"
-            android:id="@+id/button_container">
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="5dp">
+          <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="While"
+            android:textColor="@android:color/white"
+            android:id="@+id/bWhile"
+            android:tag="while"
+            android:layout_marginBottom="5dp"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+          <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="If"
+            android:textColor="@android:color/white"
+            android:id="@+id/bIf"
+            android:tag="if"
+            android:layout_marginBottom="5dp"/>
 
-                    <Button
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="While"
-                        android:textColor="@android:color/white"
-                        android:id="@+id/bWhile"
-                        android:tag="while"
-                        android:layout_marginBottom="5dp"/>
+          <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Do 5 times"
+            android:textColor="@android:color/white"
+            android:id="@+id/bFor"
+            android:layout_gravity="center_horizontal"
+            android:tag="for"
+            android:layout_marginBottom="5dp"/>
 
-                    <Button
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="If"
-                        android:textColor="@android:color/white"
-                        android:id="@+id/bIf"
-                        android:tag="if"
-                        android:layout_marginBottom="5dp" />
+          <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Print"
+            android:textColor="@android:color/white"
+            android:id="@+id/bPrint"
+            android:layout_gravity="center_horizontal"
+            android:tag="print"
+            android:layout_marginBottom="5dp"/>
 
-                    <Button
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="For"
-                        android:textColor="@android:color/white"
-                        android:id="@+id/bFor"
-                        android:layout_gravity="center_horizontal"
-                        android:tag="for"
-                        android:layout_marginBottom="5dp" />
+          <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Variable"
+            android:textColor="@android:color/white"
+            android:id="@+id/bVariable"
+            android:layout_gravity="center_horizontal"
+            android:tag="variable"
+            android:layout_marginBottom="5dp"/>
 
-                    <Button
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Print"
-                        android:textColor="@android:color/white"
-                        android:id="@+id/bPrint"
-                        android:layout_gravity="center_horizontal"
-                        android:tag="print"
-                        android:layout_marginBottom="5dp" />
+          <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Function"
+            android:textColor="@android:color/white"
+            android:id="@+id/bProcedure"
+            android:layout_gravity="center_horizontal"
+            android:tag="function"
+            android:layout_marginBottom="5dp"/>
 
-                    <Button
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Variable"
-                        android:textColor="@android:color/white"
-                        android:id="@+id/bVariable"
-                        android:layout_gravity="center_horizontal"
-                        android:tag="variable"
-                        android:layout_marginBottom="5dp" />
-
-                    <Button
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Function"
-                        android:textColor="@android:color/white"
-                        android:id="@+id/bProcedure"
-                        android:layout_gravity="center_horizontal"
-                        android:tag="function"
-                        android:layout_marginBottom="5dp" />
-                    <Button
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="String"
-                        android:textColor="@android:color/white"
-                        android:id="@+id/bString"
-                        android:layout_gravity="center_horizontal"
-                        android:tag="string"
-                        android:layout_marginBottom="5dp" />
-                </LinearLayout>
-            </ScrollView>
+          <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="String"
+            android:textColor="@android:color/white"
+            android:id="@+id/bString"
+            android:layout_gravity="center_horizontal"
+            android:tag="string"
+            android:layout_marginBottom="5dp"/>
         </LinearLayout>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/bar"
-            android:scaleType="fitXY"
-            android:layout_weight="0"/>
-
-        <group5.cs3750.trainingwheels.canvas.CanvasView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/canvas_view"
-            android:layout_weight="2"
-            android:layout_margin="5dp"/>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/output_container"
-            android:background="@drawable/rounded_bg"
-            android:layout_weight="3"
-            android:layout_margin="5dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/outputText"
-                android:tag="outputText"
-                android:text=""
-                android:padding="2dp"/>
-        </ScrollView>
+      </ScrollView>
     </LinearLayout>
 
-    <RelativeLayout
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:src="@drawable/bar"
+      android:scaleType="fitXY"
+      android:layout_weight="0"/>
+
+    <group5.cs3750.trainingwheels.canvas.CanvasView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:id="@+id/canvas_view"
+      android:layout_weight="2"
+      android:layout_margin="5dp"/>
+
+    <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:id="@+id/output_container"
+      android:background="@drawable/rounded_bg"
+      android:layout_weight="3"
+      android:layout_margin="5dp"
+      android:padding="10dp">
+
+      <WebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bottom_bar_container"
-        android:layout_alignParentBottom="true">
+        android:layout_height="wrap_content"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/clear_button_bg"
-            android:src="@drawable/clear_button"
-            android:adjustViewBounds="true"
-            android:layout_alignParentRight="true"/>
+    </ScrollView>
 
-        <Button
-            android:id="@+id/clear_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:layout_alignLeft="@+id/clear_button_bg"
-            android:layout_alignRight="@+id/clear_button_bg"
-            android:layout_alignTop="@+id/clear_button_bg"
-            android:layout_alignBottom="@+id/clear_button_bg"
-            android:background="@android:color/transparent"
-            android:text="  Clear"
-            android:textColor="@android:color/white"/>
-    </RelativeLayout>
+  </LinearLayout>
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/bottom_bar_container"
+    android:layout_alignParentBottom="true">
+
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/clear_button_bg"
+      android:src="@drawable/clear_button"
+      android:adjustViewBounds="true"
+      android:layout_alignParentRight="true"/>
+
+    <Button
+      android:id="@+id/clear_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:minWidth="0dp"
+      android:minHeight="0dp"
+      android:layout_alignLeft="@+id/clear_button_bg"
+      android:layout_alignRight="@+id/clear_button_bg"
+      android:layout_alignTop="@+id/clear_button_bg"
+      android:layout_alignBottom="@+id/clear_button_bg"
+      android:background="@android:color/transparent"
+      android:text="  Clear"
+      android:textColor="@android:color/white"/>
+  </RelativeLayout>
 </RelativeLayout>

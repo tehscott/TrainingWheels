@@ -1,9 +1,6 @@
 package group5.cs3750.trainingwheels.programmingobjects;
 
-import android.graphics.Color;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import group5.cs3750.trainingwheels.R;
@@ -94,4 +91,9 @@ public class Variable extends ProgrammingObject {
     public void setName(String name) {
         this.name = name;
     }
+
+  @Override
+  public void toScript(StringBuilder stringBuilder) {
+
+  }
 }

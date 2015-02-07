@@ -9,13 +9,11 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import group5.cs3750.trainingwheels.R;
 import group5.cs3750.trainingwheels.TrainingIDE;
 import group5.cs3750.trainingwheels.programmingobjects.ProgrammingObject;
 

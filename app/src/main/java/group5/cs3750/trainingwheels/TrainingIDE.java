@@ -17,6 +17,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -32,492 +33,509 @@ import group5.cs3750.trainingwheels.programmingobjects.Variable;
 import group5.cs3750.trainingwheels.programmingobjects.While;
 
 
-public class TrainingIDE extends Activity{
-    private Button bIf, bWhile, bFor, bString, bProcedure, bVariable, bPrint;
-    private Button bBack, bRun, bClear;
-    private TextView outputTextView;
+public class TrainingIDE extends Activity {
+  private Button bIf, bWhile, bFor, bString, bProcedure, bVariable, bPrint;
+  private Button bBack, bRun, bClear;
+  private TextView outputTextView;
 
-    private CanvasView canvas;
-    private CanvasThread canvasThread;
-    private ArrayList<ProgrammingObject> programmingObjects = new ArrayList<ProgrammingObject>();
-    private ProgrammingObject currentHoveredObject; // The object that the user is currently hovering over when dragging out a programming object, can be null
-    private ProgrammingObject closestHoverObjectAbove, closestHoverObjectBelow; // The object that is closest (and above) the current hover location
+  private CanvasView canvas;
+  private CanvasThread canvasThread;
+  private ArrayList<ProgrammingObject> programmingObjects = new ArrayList<ProgrammingObject>();
+  private ProgrammingObject currentHoveredObject; // The object that the user is currently hovering over when dragging out a programming object, can be null
+  private ProgrammingObject closestHoverObjectAbove, closestHoverObjectBelow; // The object that is closest (and above) the current hover location
 
-    // Tutorial variables
-    private ViewFlipper tutorialFlipper;
-    private Button tutorialPrevButton, tutorialCloseButton, tutorialNextButton;
-    private AlertDialog tutorialDialog;
-    private final GestureDetector detector = new GestureDetector(new SwipeGestureDetector());
+  // Tutorial variables
+  private ViewFlipper tutorialFlipper;
+  private Button tutorialPrevButton, tutorialCloseButton, tutorialNextButton;
+  private AlertDialog tutorialDialog;
+  private final GestureDetector detector = new GestureDetector(new SwipeGestureDetector());
 
-    private SharedPreferences settings;
+  private SharedPreferences settings;
 
-    // Drag/drop variables
-    private View draggedButton;
+  // Drag/drop variables
+  private View draggedButton;
+  private WebView webView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_training_ide_2);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_training_ide_2);
 
-        settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        outputTextView = (TextView) findViewById(R.id.outputText);
+    settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        initButtons();
-        initCanvas();
+    initButtons();
+    initCanvas();
 
-        canvasThread = new CanvasThread(canvas.getHolder(), canvas);
-        canvasThread.start();
-    }
+    canvasThread = new CanvasThread(canvas.getHolder(), canvas);
+    canvasThread.start();
+  }
 
-    private void initButtons() {
+  private void initButtons() {
         /*
          Programming Object buttons
         */
-        bIf = (Button) findViewById(R.id.bIf);
-        bWhile = (Button) findViewById(R.id.bWhile);
-        bFor = (Button) findViewById(R.id.bFor);
-        bString = (Button) findViewById(R.id.bString);
-        bProcedure = (Button) findViewById(R.id.bProcedure);
-        bVariable = (Button) findViewById(R.id.bVariable);
-        bPrint = (Button) findViewById(R.id.bPrint);
+    bIf = (Button) findViewById(R.id.bIf);
+    bWhile = (Button) findViewById(R.id.bWhile);
+    bFor = (Button) findViewById(R.id.bFor);
+    bString = (Button) findViewById(R.id.bString);
+    bProcedure = (Button) findViewById(R.id.bProcedure);
+    bVariable = (Button) findViewById(R.id.bVariable);
+    bPrint = (Button) findViewById(R.id.bPrint);
 
-        // Long click listeners
-        bWhile.setOnLongClickListener(new CustomOnLongPressListener());
-        bIf.setOnLongClickListener(new CustomOnLongPressListener());
-        bFor.setOnLongClickListener(new CustomOnLongPressListener());
-        bString.setOnLongClickListener(new CustomOnLongPressListener());
-        bVariable.setOnLongClickListener(new CustomOnLongPressListener());
-        bProcedure.setOnLongClickListener(new CustomOnLongPressListener());
-        bPrint.setOnLongClickListener(new CustomOnLongPressListener());
+    // Long click listeners
+    bWhile.setOnLongClickListener(new CustomOnLongPressListener());
+    bIf.setOnLongClickListener(new CustomOnLongPressListener());
+    bFor.setOnLongClickListener(new CustomOnLongPressListener());
+    bString.setOnLongClickListener(new CustomOnLongPressListener());
+    bVariable.setOnLongClickListener(new CustomOnLongPressListener());
+    bProcedure.setOnLongClickListener(new CustomOnLongPressListener());
+    bPrint.setOnLongClickListener(new CustomOnLongPressListener());
 
-        // Custom backgrounds
-        bIf.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_teal, 12));
-        bWhile.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_orange, 12));
-        bFor.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_red, 12));
-        bString.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_blue, 12));
-        bProcedure.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
-        bVariable.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_green, 12));
-        bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_teal, 12));
+    // Custom backgrounds
+    bIf.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_teal, 12));
+    bWhile.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_orange, 12));
+    bFor.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_red, 12));
+    bString.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_blue, 12));
+    bProcedure.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
+    bVariable.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_green, 12));
+    bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_teal, 12));
 
         /*
          Back, Run, Clear buttons
         */
-        bBack = (Button) findViewById(R.id.back_button);
-        bRun = (Button) findViewById(R.id.run_button);
-        bClear = (Button) findViewById(R.id.clear_button);
-
-        bBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        bRun.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        bClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                outputTextView.setText("");
-            }
-        });
-    }
-
-    private void showTutorial(String tutorial) {
-        SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        final boolean hints = getPrefs.getBoolean("hints", true);
-        final View tutorialView;
-        if(hints) {
-
-            if(tutorial.contentEquals("for")){
-                tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
-            }
-            else if(tutorial.contentEquals("while")){
-                tutorialView = getLayoutInflater().inflate(R.layout.while_tutorial_dialog, null);
-            }
-            else if(tutorial.contentEquals("variable")){
-                tutorialView = getLayoutInflater().inflate(R.layout.variable_tutorial_dialog, null);
-            }
-            else if(tutorial.contentEquals("function")){
-                tutorialView = getLayoutInflater().inflate(R.layout.function_tuorial_dialog, null);
-            }
-            else if(tutorial.contentEquals("print")){
-                tutorialView = getLayoutInflater().inflate(R.layout.print_tutorial_dialog, null);
-            }
-            else if(tutorial.contentEquals("if")){
-                tutorialView = getLayoutInflater().inflate(R.layout.if_tutorial_dialog, null);
-            }
-            else if(tutorial.contentEquals("string")){
-                tutorialView = getLayoutInflater().inflate(R.layout.string_tutorial_dialog, null);
-            }
-            else{
-                tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
-            }
-
-            tutorialFlipper = (ViewFlipper) tutorialView.findViewById(R.id.tutorial_flipper);
-            tutorialFlipper.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(final View view, final MotionEvent event) {
-                    detector.onTouchEvent(event);
-                    return true;
-                }
-            });
+    bBack = (Button) findViewById(R.id.back_button);
+    bRun = (Button) findViewById(R.id.run_button);
+    bClear = (Button) findViewById(R.id.clear_button);
 
 
-            tutorialPrevButton = (Button) tutorialView.findViewById(R.id.tutorial_prev_button);
-            tutorialCloseButton = (Button) tutorialView.findViewById(R.id.tutorial_close_button);
-            tutorialNextButton = (Button) tutorialView.findViewById(R.id.tutorial_next_button);
+    webView = (WebView) findViewById(R.id.webView);
+    webView.getSettings().setJavaScriptEnabled(true);
+    final String container = "<!DOCTYPE html>\n" +
+        "<html>\n" +
+        "<body>\n" +
+        "\n" +
+        "<p id=\"output\"></p>\n" +
+        "\n" +
+        "<script>%s</script>\n" +
+        "\n" +
+        "</body>\n" +
+        "</html> ";
 
-            tutorialPrevButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_in));
-                    tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_out));
-                    tutorialFlipper.showPrevious();
+    bBack.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        finish();
+      }
+    });
 
-                    tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
-                    tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
-                }
-            });
-            tutorialPrevButton.setEnabled(false);
-
-            tutorialCloseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    tutorialDialog.dismiss();
-                }
-            });
-
-            tutorialNextButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_in));
-                    tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_out));
-                    tutorialFlipper.showNext();
-                    tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
-                    tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
-                }
-            });
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
-            builder.setTitle("IDEA Tutorial");
-            builder.setView(tutorialView);
-            builder.setCancelable(false); // False so that they are forced to dismiss and fire the OnDismiss event
-
-            tutorialDialog = builder.create();
-            tutorialDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    //prefs.edit().putBoolean("showTutorial", false).commit();
-                }
-            });
-            tutorialDialog.show();
+    bRun.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (ProgrammingObject programmingObject : programmingObjects) {
+          programmingObject.toScript(stringBuilder);
         }
-    }
 
-    /**
-     * Finds the current programming object being hovered over.
-     * Sets the currentHoveredObject variable to null if nothing is found.
-     * This will search recursively through all programming objects and their children.
-     *
-     * @param programmingObjectList
-     *  the list of programming objects to look through.
-     */
-    private void findCurrentHoveredObject(List<ProgrammingObject> programmingObjectList) {
-        currentHoveredObject = null;
+        String content = stringBuilder.toString();
+        content = content.replaceAll("\\{field\\}", "output");
+        String finalContainer = String.format(container, content);
 
-        if(canvas.getCurrentHoverLocation() != null) {
-            for (ProgrammingObject programmingObject : programmingObjectList) {
-                if (programmingObject.getCurrentDrawnLocation() != null) {
-                    // Modify the rectangle of the programming object using the canvas offset
-                    Rect adjustedRect = new Rect(
-                            programmingObject.getCurrentDrawnLocation().left - canvas.getDrawOffset().x,
-                            programmingObject.getCurrentDrawnLocation().top - canvas.getDrawOffset().y,
-                            programmingObject.getCurrentDrawnLocation().right - canvas.getDrawOffset().x,
-                            programmingObject.getCurrentDrawnLocation().bottom - canvas.getDrawOffset().y);
+        webView.loadData(finalContainer, "text/html", null);
+      }
+    });
 
-                    //Log.d("IDEa", "Checking " + adjustedRect.toShortString() + " against " + canvas.getCurrentHoverLocation().toString());
+    bClear.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        outputTextView.setText("");
+      }
+    });
+  }
 
-                    if (adjustedRect.contains(canvas.getCurrentHoverLocation().x, canvas.getCurrentHoverLocation().y)) {
-                        currentHoveredObject = programmingObject;
+  private void showTutorial(String tutorial) {
+    SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+    final boolean hints = getPrefs.getBoolean("hints", true);
+    final View tutorialView;
+    if (hints) {
 
-                        return; // Found it, return
-                    }
-                }
+      if (tutorial.contentEquals("for")) {
+        tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
+      } else if (tutorial.contentEquals("while")) {
+        tutorialView = getLayoutInflater().inflate(R.layout.while_tutorial_dialog, null);
+      } else if (tutorial.contentEquals("variable")) {
+        tutorialView = getLayoutInflater().inflate(R.layout.variable_tutorial_dialog, null);
+      } else if (tutorial.contentEquals("function")) {
+        tutorialView = getLayoutInflater().inflate(R.layout.function_tuorial_dialog, null);
+      } else if (tutorial.contentEquals("print")) {
+        tutorialView = getLayoutInflater().inflate(R.layout.print_tutorial_dialog, null);
+      } else if (tutorial.contentEquals("if")) {
+        tutorialView = getLayoutInflater().inflate(R.layout.if_tutorial_dialog, null);
+      } else if (tutorial.contentEquals("string")) {
+        tutorialView = getLayoutInflater().inflate(R.layout.string_tutorial_dialog, null);
+      } else {
+        tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
+      }
 
-                if(programmingObject.getChildren() != null) // Look through this object's children
-                    findCurrentHoveredObject(programmingObject.getChildren());
-            }
-        }
-    }
-
-    /*
-     * This finds the programming object just above where the user is dragging a new programming object.
-     * This only does anything if the user is dragging and if they are not hovering over
-     * an existing programming object. The user must also be within the bounds of the drawn object area.
-     */
-    private void findObjectJustAboveHoverLocation(List<ProgrammingObject> programmingObjectList) {
-        if(currentHoveredObject == null && canvas.getCurrentHoverLocation() != null) {
-            // Only draw a line if they are dragging within the bounding box of the drawn objects area
-            if (canvas.getDrawnObjectsAreaSize() != null &&
-                    canvas.getCurrentHoverLocation().x > 0 && canvas.getCurrentHoverLocation().x < canvas.getDrawnObjectsAreaSize().x &&
-                    canvas.getCurrentHoverLocation().y > 0 && canvas.getCurrentHoverLocation().y < canvas.getDrawnObjectsAreaSize().y) {
-
-                for (ProgrammingObject programmingObject : programmingObjectList) {
-                    if (programmingObject.getCurrentDrawnLocation() != null) {
-                        // Modify the rectangle of the programming object using the canvas offset
-                        Rect adjustedRect = new Rect(
-                                programmingObject.getCurrentDrawnLocation().left - canvas.getDrawOffset().x,
-                                programmingObject.getCurrentDrawnLocation().top - canvas.getDrawOffset().y,
-                                programmingObject.getCurrentDrawnLocation().right - canvas.getDrawOffset().x,
-                                programmingObject.getCurrentDrawnLocation().bottom - canvas.getDrawOffset().y);
-
-                        // Get object above
-                        if (canvas.getCurrentHoverLocation().y > adjustedRect.bottom && canvas.getCurrentHoverLocation().y < adjustedRect.bottom + (2 * canvas.getDrawnObjectVerticalSpacing()) + canvas.getDrawnObjectHeight()) {
-                            // The current hover location is BELOW this object. This object MIGHT be the closest one. Keep track of it.
-                            closestHoverObjectAbove = programmingObject;
-                        }
-
-                        // Get object below
-                        if (canvas.getCurrentHoverLocation().y < adjustedRect.top && canvas.getCurrentHoverLocation().y > adjustedRect.top - (2 * canvas.getDrawnObjectVerticalSpacing()) - canvas.getDrawnObjectVerticalSpacing()) {
-                            // The current hover location is ABOVE this object. This object IS the closest one (below). Keep track of it.
-                            closestHoverObjectBelow = programmingObject;
-                        }
-                    }
-
-                    if (programmingObject.getChildren() != null) // Look through this object's children
-                        findObjectJustAboveHoverLocation(programmingObject.getChildren());
-                }
-            }
-        }
-    }
-
-    private class CustomOnLongPressListener implements View.OnLongClickListener {
+      tutorialFlipper = (ViewFlipper) tutorialView.findViewById(R.id.tutorial_flipper);
+      tutorialFlipper.setOnTouchListener(new View.OnTouchListener() {
         @Override
-        public boolean onLongClick(View v) {
-            Log.i("IDEA", v.getTag() + " drag started.");
-
-            ClipData clipData = ClipData.newPlainText("", v.getTag().toString());
-            View.DragShadowBuilder dsb = new View.DragShadowBuilder(v);
-            v.startDrag(clipData, dsb, v, 0);
-            v.setEnabled(false);
-
-            draggedButton = v;
-
-            return false;
+        public boolean onTouch(final View view, final MotionEvent event) {
+          detector.onTouchEvent(event);
+          return true;
         }
-    };
+      });
 
-    class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
-        private static final int SWIPE_MIN_DISTANCE = 120;
-        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
+      tutorialPrevButton = (Button) tutorialView.findViewById(R.id.tutorial_prev_button);
+      tutorialCloseButton = (Button) tutorialView.findViewById(R.id.tutorial_close_button);
+      tutorialNextButton = (Button) tutorialView.findViewById(R.id.tutorial_next_button);
+
+      tutorialPrevButton.setOnClickListener(new View.OnClickListener() {
         @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            try {
-                // right to left swipe
-                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    if(tutorialNextButton.isEnabled()) {
-                        tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_in));
-                        tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_out));
-                        tutorialFlipper.showNext();
+        public void onClick(View view) {
+          tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_in));
+          tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_out));
+          tutorialFlipper.showPrevious();
 
-                        tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
-                        tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
-                    }
-
-                    return true;
-                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    if(tutorialPrevButton.isEnabled()) {
-                        tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_in));
-                        tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_out));
-                        tutorialFlipper.showPrevious();
-
-                        tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
-                        tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
-                    }
-                    return true;
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return false;
+          tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
+          tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
         }
-    }
+      });
+      tutorialPrevButton.setEnabled(false);
 
-    public ArrayList<ProgrammingObject> getProgrammingObjects() {
-        return programmingObjects;
-    }
-
-    public ProgrammingObject getCurrentHoveredObject() {
-        return currentHoveredObject;
-    }
-
-    public ProgrammingObject getClosestHoverObjectAbove() {
-        return closestHoverObjectAbove;
-    }
-
-    public ProgrammingObject getClosestHoverObjectBelow() {
-        return closestHoverObjectBelow;
-    }
-
-    private void initCanvas() {
-        canvas = (CanvasView) findViewById(R.id.canvas_view);
-
-        // Initialize the OnDragListener
-        canvas.setOnDragListener(new View.OnDragListener() {
-            // http://developer.android.com/guide/topics/ui/drag-drop.html
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                switch(event.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        canvas.setCurrentHoverLocation(new Point((int)event.getX(), (int)event.getY()));
-
-                        return true; // Returning true is NECESSARY for the listener to receive the drop event
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        draggedButton.setEnabled(true);
-                        draggedButton = null;
-                        canvas.setCurrentHoverLocation(null);
-                        findCurrentHoveredObject(programmingObjects);
-                        closestHoverObjectAbove = null;
-                        closestHoverObjectBelow = null;
-
-                        break; // No need to return anything here
-
-                    case DragEvent.ACTION_DROP:
-                        Log.i("IDEA", v.getTag() + " received drop.");
-                        String buttonDragged = event.getClipData().getItemAt(0).getText().toString();
-                        TextView tv = new TextView(TrainingIDE.this);
-                        String tutorialEvent = (String) event.getClipData().getItemAt(0).getText();
-                        tv.setText(event.getClipData().getItemAt(0).getText());
-
-                        canvas.setLastDropLocation(new Point((int) event.getX(), (int) event.getY()));
-                        findCurrentHoveredObject(programmingObjects);
-
-                        ProgrammingObject pObj;
-
-                        if(tutorialEvent.contentEquals("for")){
-                            pObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-                        } else if(tutorialEvent.contentEquals("while")){
-                            pObj = new While(0, new Variable(0, "whileVariable", Variable.VariableType.STRING, "beep"), "boop");
-                        } else if(tutorialEvent.contentEquals("variable")){
-                            pObj = new Variable(0, "testVariable", Variable.VariableType.STRING, "test");
-                        } else {
-                            pObj = new Variable(0, "unsupportedType", Variable.VariableType.STRING, "unsupportedType");
-                        }
-
-                        pObj.setButtonDrawable(draggedButton.getBackground()); // Save the BG of the button to use for drawing
-
-                        if(currentHoveredObject != null) {
-                            //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, currentHoveredObject.getChildren().size(), currentHoveredObject);
-                            pObj.setPositionUnderParent(currentHoveredObject.getChildren().size());
-                            pObj.setParent(currentHoveredObject);
-                            currentHoveredObject.addChild(pObj);
-                        } else if(closestHoverObjectAbove != null || closestHoverObjectBelow != null) {
-                            insertProgrammingObject(pObj);
-                        } else {
-                            //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-                            programmingObjects.add(pObj);
-                        }
-
-                        closestHoverObjectAbove = null;
-                        closestHoverObjectBelow = null;
-
-                        //programmingArea.addView(tv);
-                        showTutorial(tutorialEvent);
-                        return true; // Return true/false here based on whether or not the drop is valid
-
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                        canvas.setCurrentHoverLocation(new Point((int)event.getX(), (int)event.getY()));
-
-                        findCurrentHoveredObject(programmingObjects);
-
-                        closestHoverObjectAbove = null;
-                        closestHoverObjectBelow = null;
-                        findObjectJustAboveHoverLocation(programmingObjects);
-
-                        break;
-                }
-                return false;
-            }
-        });
-
-        // Initialize the OnTouchListener
-        // This listener will be used to move the canvas around (to allow you to scroll, etc)
-        canvas.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        canvas.setCurrentTouchLocation(new Point((int) event.getX(), (int) event.getY()));
-
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        canvas.setLastTouchLocation(canvas.getCurrentTouchLocation());
-                        canvas.setCurrentTouchLocation(null);
-
-                        break;
-
-                    case MotionEvent.ACTION_MOVE:
-                        canvas.setLastTouchLocation(canvas.getCurrentTouchLocation());
-                        canvas.setCurrentTouchLocation(new Point((int) event.getX(), (int) event.getY()));
-
-                        canvas.calculateOffset();
-
-                        break;
-                }
-
-                return true;
-            }
-        });
-    }
-
-    private void insertProgrammingObject(ProgrammingObject pObj) {
-        // Inserting an object between other objects
-        if(closestHoverObjectAbove != null) {
-            if (closestHoverObjectAbove.getChildren().size() > 0) {
-                // The closest object to the hover location has children, so add this new object to the front of chose children
-                //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove);
-                pObj.setParent(closestHoverObjectAbove);
-                closestHoverObjectAbove.insertChild(0, pObj);
-            } else {
-                // The closest object to the hover location has no children, so add this new object to the closest object's parent (if it has one),
-                // inserting the new object just after the closest object
-                if (closestHoverObjectAbove.getParent() != null) {
-                    //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
-                    pObj.setParent(closestHoverObjectAbove.getParent());
-                    closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove) + 1, pObj);
-                } else {
-                    //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-                    programmingObjects.add(pObj);
-                }
-            }
-        } else if(closestHoverObjectBelow != null) {
-            // This is a less frequent case. When this happens, only insert into the closest object's parent above the closest object
-            if(closestHoverObjectBelow.getParent() != null) {
-                //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
-                pObj.setParent(closestHoverObjectAbove.getParent());
-                closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove), pObj);
-            } else {
-                //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-                programmingObjects.add(programmingObjects.indexOf(closestHoverObjectBelow), pObj);
-            }
+      tutorialCloseButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          tutorialDialog.dismiss();
         }
-    }
+      });
 
-    public static GradientDrawable getBackgroundGradientDrawable(Resources resources, int colorResourceId, int cornerRadius) {
-        GradientDrawable gd = new GradientDrawable();
-        gd.setColor(resources.getColor(colorResourceId));
-        gd.setCornerRadius(cornerRadius);
+      tutorialNextButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_in));
+          tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_out));
+          tutorialFlipper.showNext();
+          tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
+          tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
+        }
+      });
 
-        return gd;
+      AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+      builder.setTitle("IDEA Tutorial");
+      builder.setView(tutorialView);
+      builder.setCancelable(false); // False so that they are forced to dismiss and fire the OnDismiss event
+
+      tutorialDialog = builder.create();
+      tutorialDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+          //prefs.edit().putBoolean("showTutorial", false).commit();
+        }
+      });
+      tutorialDialog.show();
     }
+  }
+
+  /**
+   * Finds the current programming object being hovered over.
+   * Sets the currentHoveredObject variable to null if nothing is found.
+   * This will search recursively through all programming objects and their children.
+   *
+   * @param programmingObjectList the list of programming objects to look through.
+   */
+  private void findCurrentHoveredObject(List<ProgrammingObject> programmingObjectList) {
+    currentHoveredObject = null;
+
+    if (canvas.getCurrentHoverLocation() != null) {
+      for (ProgrammingObject programmingObject : programmingObjectList) {
+        if (programmingObject.getCurrentDrawnLocation() != null) {
+          // Modify the rectangle of the programming object using the canvas offset
+          Rect adjustedRect = new Rect(
+              programmingObject.getCurrentDrawnLocation().left - canvas.getDrawOffset().x,
+              programmingObject.getCurrentDrawnLocation().top - canvas.getDrawOffset().y,
+              programmingObject.getCurrentDrawnLocation().right - canvas.getDrawOffset().x,
+              programmingObject.getCurrentDrawnLocation().bottom - canvas.getDrawOffset().y);
+
+          //Log.d("IDEa", "Checking " + adjustedRect.toShortString() + " against " + canvas.getCurrentHoverLocation().toString());
+
+          if (adjustedRect.contains(canvas.getCurrentHoverLocation().x, canvas.getCurrentHoverLocation().y)) {
+            currentHoveredObject = programmingObject;
+
+            return; // Found it, return
+          }
+        }
+
+        if (programmingObject.getChildren() != null) // Look through this object's children
+          findCurrentHoveredObject(programmingObject.getChildren());
+      }
+    }
+  }
+
+  /*
+   * This finds the programming object just above where the user is dragging a new programming object.
+   * This only does anything if the user is dragging and if they are not hovering over
+   * an existing programming object. The user must also be within the bounds of the drawn object area.
+   */
+  private void findObjectJustAboveHoverLocation(List<ProgrammingObject> programmingObjectList) {
+    if (currentHoveredObject == null && canvas.getCurrentHoverLocation() != null) {
+      // Only draw a line if they are dragging within the bounding box of the drawn objects area
+      if (canvas.getDrawnObjectsAreaSize() != null &&
+          canvas.getCurrentHoverLocation().x > 0 && canvas.getCurrentHoverLocation().x < canvas.getDrawnObjectsAreaSize().x &&
+          canvas.getCurrentHoverLocation().y > 0 && canvas.getCurrentHoverLocation().y < canvas.getDrawnObjectsAreaSize().y) {
+
+        for (ProgrammingObject programmingObject : programmingObjectList) {
+          if (programmingObject.getCurrentDrawnLocation() != null) {
+            // Modify the rectangle of the programming object using the canvas offset
+            Rect adjustedRect = new Rect(
+                programmingObject.getCurrentDrawnLocation().left - canvas.getDrawOffset().x,
+                programmingObject.getCurrentDrawnLocation().top - canvas.getDrawOffset().y,
+                programmingObject.getCurrentDrawnLocation().right - canvas.getDrawOffset().x,
+                programmingObject.getCurrentDrawnLocation().bottom - canvas.getDrawOffset().y);
+
+            // Get object above
+            if (canvas.getCurrentHoverLocation().y > adjustedRect.bottom && canvas.getCurrentHoverLocation().y < adjustedRect.bottom + (2 * canvas.getDrawnObjectVerticalSpacing()) + canvas.getDrawnObjectHeight()) {
+              // The current hover location is BELOW this object. This object MIGHT be the closest one. Keep track of it.
+              closestHoverObjectAbove = programmingObject;
+            }
+
+            // Get object below
+            if (canvas.getCurrentHoverLocation().y < adjustedRect.top && canvas.getCurrentHoverLocation().y > adjustedRect.top - (2 * canvas.getDrawnObjectVerticalSpacing()) - canvas.getDrawnObjectVerticalSpacing()) {
+              // The current hover location is ABOVE this object. This object IS the closest one (below). Keep track of it.
+              closestHoverObjectBelow = programmingObject;
+            }
+          }
+
+          if (programmingObject.getChildren() != null) // Look through this object's children
+            findObjectJustAboveHoverLocation(programmingObject.getChildren());
+        }
+      }
+    }
+  }
+
+  private class CustomOnLongPressListener implements View.OnLongClickListener {
+    @Override
+    public boolean onLongClick(View v) {
+      Log.i("IDEA", v.getTag() + " drag started.");
+
+      ClipData clipData = ClipData.newPlainText("", v.getTag().toString());
+      View.DragShadowBuilder dsb = new View.DragShadowBuilder(v);
+      v.startDrag(clipData, dsb, v, 0);
+      v.setEnabled(false);
+
+      draggedButton = v;
+
+      return false;
+    }
+  }
+
+  ;
+
+  class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+      try {
+        // right to left swipe
+        if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+          if (tutorialNextButton.isEnabled()) {
+            tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_in));
+            tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_out));
+            tutorialFlipper.showNext();
+
+            tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
+            tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
+          }
+
+          return true;
+        } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+          if (tutorialPrevButton.isEnabled()) {
+            tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_in));
+            tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_out));
+            tutorialFlipper.showPrevious();
+
+            tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
+            tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
+          }
+          return true;
+        }
+
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      return false;
+    }
+  }
+
+  public ArrayList<ProgrammingObject> getProgrammingObjects() {
+    return programmingObjects;
+  }
+
+  public ProgrammingObject getCurrentHoveredObject() {
+    return currentHoveredObject;
+  }
+
+  public ProgrammingObject getClosestHoverObjectAbove() {
+    return closestHoverObjectAbove;
+  }
+
+  public ProgrammingObject getClosestHoverObjectBelow() {
+    return closestHoverObjectBelow;
+  }
+
+  private void initCanvas() {
+    canvas = (CanvasView) findViewById(R.id.canvas_view);
+
+    // Initialize the OnDragListener
+    canvas.setOnDragListener(new View.OnDragListener() {
+      // http://developer.android.com/guide/topics/ui/drag-drop.html
+      @Override
+      public boolean onDrag(View v, DragEvent event) {
+        switch (event.getAction()) {
+          case DragEvent.ACTION_DRAG_STARTED:
+            canvas.setCurrentHoverLocation(new Point((int) event.getX(), (int) event.getY()));
+
+            return true; // Returning true is NECESSARY for the listener to receive the drop event
+          case DragEvent.ACTION_DRAG_ENDED:
+            draggedButton.setEnabled(true);
+            draggedButton = null;
+            canvas.setCurrentHoverLocation(null);
+            findCurrentHoveredObject(programmingObjects);
+            closestHoverObjectAbove = null;
+            closestHoverObjectBelow = null;
+
+            break; // No need to return anything here
+
+          case DragEvent.ACTION_DROP:
+            Log.i("IDEA", v.getTag() + " received drop.");
+            String buttonDragged = event.getClipData().getItemAt(0).getText().toString();
+            TextView tv = new TextView(TrainingIDE.this);
+            String tutorialEvent = (String) event.getClipData().getItemAt(0).getText();
+            tv.setText(event.getClipData().getItemAt(0).getText());
+
+            canvas.setLastDropLocation(new Point((int) event.getX(), (int) event.getY()));
+            findCurrentHoveredObject(programmingObjects);
+
+            ProgrammingObject pObj;
+
+            if (tutorialEvent.contentEquals("for")) {
+              pObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+            } else if (tutorialEvent.contentEquals("while")) {
+              pObj = new While(0, new Variable(0, "whileVariable", Variable.VariableType.STRING, "beep"), "boop");
+            } else if (tutorialEvent.contentEquals("variable")) {
+              pObj = new Variable(0, "testVariable", Variable.VariableType.STRING, "test");
+            } else {
+              pObj = new Variable(0, "unsupportedType", Variable.VariableType.STRING, "unsupportedType");
+            }
+
+            pObj.setButtonDrawable(draggedButton.getBackground()); // Save the BG of the button to use for drawing
+
+            if (currentHoveredObject != null) {
+              //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, currentHoveredObject.getChildren().size(), currentHoveredObject);
+              pObj.setPositionUnderParent(currentHoveredObject.getChildren().size());
+              pObj.setParent(currentHoveredObject);
+              currentHoveredObject.addChild(pObj);
+            } else if (closestHoverObjectAbove != null || closestHoverObjectBelow != null) {
+              insertProgrammingObject(pObj);
+            } else {
+              //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+              programmingObjects.add(pObj);
+            }
+
+            closestHoverObjectAbove = null;
+            closestHoverObjectBelow = null;
+
+            //programmingArea.addView(tv);
+            showTutorial(tutorialEvent);
+            return true; // Return true/false here based on whether or not the drop is valid
+
+          case DragEvent.ACTION_DRAG_LOCATION:
+            canvas.setCurrentHoverLocation(new Point((int) event.getX(), (int) event.getY()));
+
+            findCurrentHoveredObject(programmingObjects);
+
+            closestHoverObjectAbove = null;
+            closestHoverObjectBelow = null;
+            findObjectJustAboveHoverLocation(programmingObjects);
+
+            break;
+        }
+        return false;
+      }
+    });
+
+    // Initialize the OnTouchListener
+    // This listener will be used to move the canvas around (to allow you to scroll, etc)
+    canvas.setOnTouchListener(new View.OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+          case MotionEvent.ACTION_DOWN:
+            canvas.setCurrentTouchLocation(new Point((int) event.getX(), (int) event.getY()));
+
+            break;
+
+          case MotionEvent.ACTION_UP:
+            canvas.setLastTouchLocation(canvas.getCurrentTouchLocation());
+            canvas.setCurrentTouchLocation(null);
+
+            break;
+
+          case MotionEvent.ACTION_MOVE:
+            canvas.setLastTouchLocation(canvas.getCurrentTouchLocation());
+            canvas.setCurrentTouchLocation(new Point((int) event.getX(), (int) event.getY()));
+
+            canvas.calculateOffset();
+
+            break;
+        }
+
+        return true;
+      }
+    });
+  }
+
+  private void insertProgrammingObject(ProgrammingObject pObj) {
+    // Inserting an object between other objects
+    if (closestHoverObjectAbove != null) {
+      if (closestHoverObjectAbove.getChildren().size() > 0) {
+        // The closest object to the hover location has children, so add this new object to the front of chose children
+        //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove);
+        pObj.setParent(closestHoverObjectAbove);
+        closestHoverObjectAbove.insertChild(0, pObj);
+      } else {
+        // The closest object to the hover location has no children, so add this new object to the closest object's parent (if it has one),
+        // inserting the new object just after the closest object
+        if (closestHoverObjectAbove.getParent() != null) {
+          //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
+          pObj.setParent(closestHoverObjectAbove.getParent());
+          closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove) + 1, pObj);
+        } else {
+          //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+          programmingObjects.add(pObj);
+        }
+      }
+    } else if (closestHoverObjectBelow != null) {
+      // This is a less frequent case. When this happens, only insert into the closest object's parent above the closest object
+      if (closestHoverObjectBelow.getParent() != null) {
+        //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
+        pObj.setParent(closestHoverObjectAbove.getParent());
+        closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove), pObj);
+      } else {
+        //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+        programmingObjects.add(programmingObjects.indexOf(closestHoverObjectBelow), pObj);
+      }
+    }
+  }
+
+  public static GradientDrawable getBackgroundGradientDrawable(Resources resources, int colorResourceId, int cornerRadius) {
+    GradientDrawable gd = new GradientDrawable();
+    gd.setColor(resources.getColor(colorResourceId));
+    gd.setCornerRadius(cornerRadius);
+
+    return gd;
+  }
 }
