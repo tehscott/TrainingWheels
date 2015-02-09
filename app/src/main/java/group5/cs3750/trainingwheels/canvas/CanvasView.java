@@ -34,7 +34,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
     private Point lastDropLocation; // location of where the user last dropped an object
     private Point drawOffset = new Point(); // offset of the canvas origin when drawing objects. dragging the drawing area (canvas) will simulate scrolling by using the offset
 
-    private final boolean DEBUG = false;
+    private final boolean DEBUG = true;
 
     public CanvasView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -96,9 +96,11 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
             // Draw the top-most objects, their children will be drawn recursively
             int height = 0;
-            for(ProgrammingObject programmingObject : trainingIDE.getProgrammingObjects()) {
-                height = drawProgrammingObject(programmingObject, canvas, height, 0);
-                height++;
+            synchronized (trainingIDE.getProgrammingObjects()) {
+                for (ProgrammingObject programmingObject : trainingIDE.getProgrammingObjects()) {
+                    height = drawProgrammingObject(programmingObject, canvas, height, 0);
+                    height++;
+                }
             }
 
             drawHoverLocation(canvas); // Debug function, show where the user is dragging
@@ -221,6 +223,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         if(DEBUG) {
             Paint paint = new Paint();
             paint.setColor(Color.BLACK);
+            paint.setTextSize(20);
 
             if(drawOffset != null)
                 canvas.drawText("Offset: " + drawOffset.toString(), 400, 20, paint);
@@ -228,12 +231,24 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
             if(drawnObjectsAreaSize != null)
                 canvas.drawText("Drawn objects area size: " + drawnObjectsAreaSize.toString(), 400, 40, paint);
 
-            if(drawnObjectsAreaSize != null) {
-                Paint.Style oldStyle = paint.getStyle();
-                paint.setStyle(Paint.Style.STROKE);
-                canvas.drawRect(0 - drawOffset.x, 0 - drawOffset.y, drawnObjectsAreaSize.x - drawOffset.x, drawnObjectsAreaSize.y - drawOffset.y, paint);
-                paint.setStyle(oldStyle);
-            }
+//            if(drawnObjectsAreaSize != null) {
+//                Paint.Style oldStyle = paint.getStyle();
+//                paint.setStyle(Paint.Style.STROKE);
+//                canvas.drawRect(0 - drawOffset.x, 0 - drawOffset.y, drawnObjectsAreaSize.x - drawOffset.x, drawnObjectsAreaSize.y - drawOffset.y, paint);
+//                paint.setStyle(oldStyle);
+//            }
+
+            if(trainingIDE.getCurrentHoveredObject() != null)
+                canvas.drawText("CurrentHoveredObject: " + trainingIDE.getCurrentHoveredObject().toString(), 400, 60, paint);
+
+            if(trainingIDE.getClosestHoverObjectAbove() != null)
+                canvas.drawText("ClosestHoverObjectAbove: " + trainingIDE.getClosestHoverObjectAbove().toString(), 400, 80, paint);
+
+            if(trainingIDE.getClosestHoverObjectBelow() != null)
+                canvas.drawText("ClosestHoverObjectBelow: " + trainingIDE.getClosestHoverObjectBelow().toString(), 400, 100, paint);
+
+            if(trainingIDE.getDraggedObject() != null)
+                canvas.drawText("DraggedObject: " + trainingIDE.getDraggedObject().toString(), 400, 120, paint);
         }
     }
 

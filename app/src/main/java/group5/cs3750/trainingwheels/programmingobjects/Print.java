@@ -16,12 +16,12 @@ public class Print extends ProgrammingObject {
     setButtonDrawable(new ColorDrawable(Color.YELLOW));
   }
 
-  public Print(ProgrammingObjectType type, int listPosition) {
-    super(type, listPosition);
+  public Print(int listPosition) {
+    super(ProgrammingObjectType.PRINT, listPosition);
   }
 
-  public Print(ProgrammingObjectType type, int listPosition, int positionUnderParent, ProgrammingObject parent) {
-    super(type, listPosition, positionUnderParent, parent);
+  public Print(int listPosition, int positionUnderParent, ProgrammingObject parent) {
+    super(ProgrammingObjectType.PRINT, listPosition, positionUnderParent, parent);
   }
 
   @Override

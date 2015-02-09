@@ -111,7 +111,7 @@
           <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Do 5 times"
+            android:text="For"
             android:textColor="@android:color/white"
             android:id="@+id/bFor"
             android:layout_gravity="center_horizontal"

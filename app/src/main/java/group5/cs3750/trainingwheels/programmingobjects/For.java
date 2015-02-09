@@ -37,8 +37,6 @@ public class For extends ProgrammingObject {
     );
 
     drawColor = R.color.button_red;
-
-    children.add(new Print("Hello World!<br>"));
   }
 
   @Override
