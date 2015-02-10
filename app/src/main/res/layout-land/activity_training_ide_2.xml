@@ -3,64 +3,64 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".TrainingIDE"
-                android:background="@color/ide_bg">
+                android:background="@color/ide_bg"
+                tools:context=".TrainingIDE">
 
   <RelativeLayout
+    android:id="@+id/top_bar_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/top_bar_container"
     android:layout_alignParentTop="true">
 
     <ImageView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:src="@drawable/back_button_bar"
+      android:adjustViewBounds="false"
       android:background="@color/back_button_bar_bg"
       android:scaleType="fitXY"
-      android:adjustViewBounds="false"/>
+      android:src="@drawable/back_button_bar"/>
 
     <ImageView
+      android:id="@+id/back_button_bg"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:id="@+id/back_button_bg"
-      android:src="@drawable/back_button"
+      android:layout_alignParentLeft="true"
       android:adjustViewBounds="true"
-      android:layout_alignParentLeft="true"/>
+      android:src="@drawable/back_button"/>
 
     <Button
       android:id="@+id/back_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:minWidth="0dp"
-      android:minHeight="0dp"
+      android:layout_alignBottom="@+id/back_button_bg"
       android:layout_alignLeft="@+id/back_button_bg"
       android:layout_alignRight="@+id/back_button_bg"
       android:layout_alignTop="@+id/back_button_bg"
-      android:layout_alignBottom="@+id/back_button_bg"
       android:background="@android:color/transparent"
+      android:minHeight="0dp"
+      android:minWidth="0dp"
       android:text="Back "
       android:textColor="@android:color/white"/>
 
     <ImageView
+      android:id="@+id/run_button_bg"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:id="@+id/run_button_bg"
-      android:src="@drawable/run_button"
+      android:layout_alignParentRight="true"
       android:adjustViewBounds="true"
-      android:layout_alignParentRight="true"/>
+      android:src="@drawable/run_button"/>
 
     <Button
       android:id="@+id/run_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:minWidth="0dp"
-      android:minHeight="0dp"
+      android:layout_alignBottom="@+id/run_button_bg"
       android:layout_alignLeft="@+id/run_button_bg"
       android:layout_alignRight="@+id/run_button_bg"
       android:layout_alignTop="@+id/run_button_bg"
-      android:layout_alignBottom="@+id/run_button_bg"
       android:background="@android:color/transparent"
+      android:minHeight="0dp"
+      android:minWidth="0dp"
       android:text="  Run"
       android:textColor="@android:color/white"/>
 
@@ -69,16 +69,16 @@
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:layout_above="@+id/bottom_bar_container"
     android:layout_below="@+id/top_bar_container"
-    android:layout_above="@+id/bottom_bar_container">
+    android:orientation="horizontal">
 
     <LinearLayout
+      android:id="@+id/button_container"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:orientation="vertical"
       android:layout_weight="3.5"
-      android:id="@+id/button_container">
+      android:orientation="vertical">
 
       <ScrollView
         android:layout_width="match_parent"
@@ -91,72 +91,74 @@
           android:orientation="vertical">
 
           <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="While"
-            android:textColor="@android:color/white"
             android:id="@+id/bWhile"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:tag="while"
-            android:layout_marginBottom="5dp"/>
+            android:text="While"
+            android:textColor="@android:color/white"/>
 
           <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="If"
-            android:textColor="@android:color/white"
             android:id="@+id/bIf"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:tag="if"
-            android:layout_marginBottom="5dp"/>
+            android:text="If"
+            android:textColor="@android:color/white"/>
 
           <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="For"
-            android:textColor="@android:color/white"
             android:id="@+id/bFor"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
             android:tag="for"
-            android:layout_marginBottom="5dp"/>
+            android:text="For"
+            android:textColor="@android:color/white"/>
 
           <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Print"
-            android:textColor="@android:color/white"
             android:id="@+id/bPrint"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
             android:tag="print"
-            android:layout_marginBottom="5dp"/>
+            android:text="Print"
+            android:textColor="@android:color/white"/>
 
           <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Variable"
-            android:textColor="@android:color/white"
             android:id="@+id/bVariable"
-            android:layout_gravity="center_horizontal"
-            android:tag="variable"
-            android:layout_marginBottom="5dp"/>
-
-          <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:tag="variable"
+            android:text="Variable"
+            android:textColor="@android:color/white"/>
+
+          <Button
+            android:id="@+id/bProcedure"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:tag="function"
             android:text="Function"
             android:textColor="@android:color/white"
-            android:id="@+id/bProcedure"
-            android:layout_gravity="center_horizontal"
-            android:tag="function"
-            android:layout_marginBottom="5dp"/>
+              android:visibility="gone"/>
 
           <Button
+            android:id="@+id/bString"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:tag="string"
             android:text="String"
             android:textColor="@android:color/white"
-            android:id="@+id/bString"
-            android:layout_gravity="center_horizontal"
-            android:tag="string"
-            android:layout_marginBottom="5dp"/>
+            android:visibility="gone"/>
         </LinearLayout>
       </ScrollView>
     </LinearLayout>
@@ -164,24 +166,24 @@
     <ImageView
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
-      android:src="@drawable/bar"
+      android:layout_weight="0"
       android:scaleType="fitXY"
-      android:layout_weight="0"/>
+      android:src="@drawable/bar"/>
 
     <group5.cs3750.trainingwheels.canvas.CanvasView
+      android:id="@+id/canvas_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:id="@+id/canvas_view"
-      android:layout_weight="2"
-      android:layout_margin="5dp"/>
+      android:layout_margin="5dp"
+      android:layout_weight="2"/>
 
     <ScrollView
+      android:id="@+id/output_container"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:id="@+id/output_container"
-      android:background="@drawable/rounded_bg"
-      android:layout_weight="3"
       android:layout_margin="5dp"
+      android:layout_weight="3"
+      android:background="@drawable/rounded_bg"
       android:padding="10dp">
 
       <WebView
@@ -194,30 +196,30 @@
   </LinearLayout>
 
   <RelativeLayout
+    android:id="@+id/bottom_bar_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/bottom_bar_container"
     android:layout_alignParentBottom="true">
 
     <ImageView
+      android:id="@+id/clear_button_bg"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:id="@+id/clear_button_bg"
-      android:src="@drawable/clear_button"
+      android:layout_alignParentRight="true"
       android:adjustViewBounds="true"
-      android:layout_alignParentRight="true"/>
+      android:src="@drawable/clear_button"/>
 
     <Button
       android:id="@+id/clear_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:minWidth="0dp"
-      android:minHeight="0dp"
+      android:layout_alignBottom="@+id/clear_button_bg"
       android:layout_alignLeft="@+id/clear_button_bg"
       android:layout_alignRight="@+id/clear_button_bg"
       android:layout_alignTop="@+id/clear_button_bg"
-      android:layout_alignBottom="@+id/clear_button_bg"
       android:background="@android:color/transparent"
+      android:minHeight="0dp"
+      android:minWidth="0dp"
       android:text="  Clear"
       android:textColor="@android:color/white"/>
   </RelativeLayout>

@@ -11,8 +11,10 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import group5.cs3750.trainingwheels.TrainingIDE;
 import group5.cs3750.trainingwheels.programmingobjects.ProgrammingObject;
@@ -59,6 +61,35 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width,
                                int height) {
+    }
+
+    // This listener will be used to move the canvas around (to allow you to scroll, etc)
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                setCurrentTouchLocation(new Point((int) event.getX(), (int) event.getY()));
+
+                break;
+
+            case MotionEvent.ACTION_UP:
+                setLastTouchLocation(getCurrentTouchLocation());
+                setCurrentTouchLocation(null);
+
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                setLastTouchLocation(getCurrentTouchLocation());
+                setCurrentTouchLocation(new Point((int) event.getX(), (int) event.getY()));
+
+                calculateOffset();
+
+                break;
+        }
+
+        return true;
     }
 
     @Override

@@ -488,31 +488,23 @@ public class TrainingIDE extends Activity {
             }
         });
 
-        // Initialize the OnTouchListener
-        // This listener will be used to move the canvas around (to allow you to scroll, etc)
-        canvas.setOnTouchListener(new View.OnTouchListener() {
+        canvas.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        canvas.setCurrentTouchLocation(new Point((int) event.getX(), (int) event.getY()));
+            public boolean onLongClick(View v) {
+                // TODO: allow user to pick up a programming object
+                // They should be able to move or delete it (show a trash can icon, I think)
 
-                        break;
+                // Get object we are hovered over, if any
+                canvas.setCurrentHoverLocation(new Point((int) canvas.getCurrentTouchLocation().x, (int) canvas.getCurrentTouchLocation().y));
+                findCurrentHoveredObject(programmingObjects);
 
-                    case MotionEvent.ACTION_UP:
-                        canvas.setLastTouchLocation(canvas.getCurrentTouchLocation());
-                        canvas.setCurrentTouchLocation(null);
 
-                        break;
-
-                    case MotionEvent.ACTION_MOVE:
-                        canvas.setLastTouchLocation(canvas.getCurrentTouchLocation());
-                        canvas.setCurrentTouchLocation(new Point((int) event.getX(), (int) event.getY()));
-
-                        canvas.calculateOffset();
-
-                        break;
-                }
+//                ClipData clipData = ClipData.newPlainText(v.getTag().toString(), v.getTag().toString()); // The first value can be gotten from getClipDescription(), the second value can be gotten from getClipData()
+//                View.DragShadowBuilder dsb = new View.DragShadowBuilder(v);
+//                v.startDrag(clipData, dsb, v, 0);
+//                v.setEnabled(false);
+//
+//                draggedButton = v;
 
                 return true;
             }
