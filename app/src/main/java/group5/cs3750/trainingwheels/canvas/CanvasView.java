@@ -179,6 +179,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
                 paint.setColor(Color.GREEN);
         }
 
+        // TODO: Change the alpha (or something else) of the object if it is being dragged (this should include children)
+
         // Draw the start of this parent object
         Drawable drawable = pObj.getButtonDrawable().getConstantState().newDrawable();
         drawable.setBounds(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y);
@@ -269,17 +271,20 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 //                paint.setStyle(oldStyle);
 //            }
 
+            if(trainingIDE.getLastHoveredObject() != null)
+                canvas.drawText("LastHoveredObject: " + trainingIDE.getLastHoveredObject().toString(), 400, 60, paint);
+
             if(trainingIDE.getCurrentHoveredObject() != null)
-                canvas.drawText("CurrentHoveredObject: " + trainingIDE.getCurrentHoveredObject().toString(), 400, 60, paint);
+                canvas.drawText("CurrentHoveredObject: " + trainingIDE.getCurrentHoveredObject().toString(), 400, 80, paint);
 
             if(trainingIDE.getClosestHoverObjectAbove() != null)
-                canvas.drawText("ClosestHoverObjectAbove: " + trainingIDE.getClosestHoverObjectAbove().toString(), 400, 80, paint);
+                canvas.drawText("ClosestHoverObjectAbove: " + trainingIDE.getClosestHoverObjectAbove().toString(), 400, 100, paint);
 
             if(trainingIDE.getClosestHoverObjectBelow() != null)
-                canvas.drawText("ClosestHoverObjectBelow: " + trainingIDE.getClosestHoverObjectBelow().toString(), 400, 100, paint);
+                canvas.drawText("ClosestHoverObjectBelow: " + trainingIDE.getClosestHoverObjectBelow().toString(), 400, 120, paint);
 
             if(trainingIDE.getDraggedObject() != null)
-                canvas.drawText("DraggedObject: " + trainingIDE.getDraggedObject().toString(), 400, 120, paint);
+                canvas.drawText("DraggedObject: " + trainingIDE.getDraggedObject().toString(), 400, 140, paint);
         }
     }
 

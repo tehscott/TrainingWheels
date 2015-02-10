@@ -43,7 +43,7 @@ public class TrainingIDE extends Activity {
     private CanvasView canvas;
     private CanvasThread canvasThread;
     private ArrayList<ProgrammingObject> programmingObjects = new ArrayList<ProgrammingObject>();
-    private ProgrammingObject currentHoveredObject; // The object that the user is currently hovering over when dragging out a programming object, can be null
+    private ProgrammingObject lastHoveredObject, currentHoveredObject; // The object that the user is currently hovering over when dragging out a programming object, can be null
     private ProgrammingObject closestHoverObjectAbove, closestHoverObjectBelow; // The object that is closest (and above) the current hover location
 
     // Tutorial variables
@@ -253,19 +253,15 @@ public class TrainingIDE extends Activity {
 
         if (canvas.getCurrentHoverLocation() != null) {
             for (ProgrammingObject programmingObject : programmingObjectList) {
-                if (programmingObject.getCurrentDrawnLocation() != null) {
+                if (programmingObject.getCurrentDrawnLocation() != null) { // Should never be False
                     // Modify the rectangle of the programming object using the canvas offset
-                    Rect adjustedRect = new Rect(
-                            programmingObject.getCurrentDrawnLocation().left - canvas.getDrawOffset().x,
-                            programmingObject.getCurrentDrawnLocation().top - canvas.getDrawOffset().y,
-                            programmingObject.getCurrentDrawnLocation().right - canvas.getDrawOffset().x,
-                            programmingObject.getCurrentDrawnLocation().bottom - canvas.getDrawOffset().y);
+                    Rect adjustedRect = new Rect(programmingObject.getCurrentDrawnLocation().left - canvas.getDrawOffset().x, programmingObject.getCurrentDrawnLocation().top - canvas.getDrawOffset().y, programmingObject.getCurrentDrawnLocation().right - canvas.getDrawOffset().x, programmingObject.getCurrentDrawnLocation().bottom - canvas.getDrawOffset().y);
 
                     //Log.d("IDEa", "Checking " + adjustedRect.toShortString() + " against " + canvas.getCurrentHoverLocation().toString() + ". contains: " + adjustedRect.contains(canvas.getCurrentHoverLocation().x, canvas.getCurrentHoverLocation().y));
 
-                    boolean canAdd = adjustedRect.contains(canvas.getCurrentHoverLocation().x, canvas.getCurrentHoverLocation().y);
-                    canAdd = canAdd && (draggedObject == null || !programmingObject.equals(draggedObject));
-                    canAdd = canAdd && (programmingObject.getParent() == null || !programmingObject.getParent().equals(draggedObject));
+                    boolean canAdd = adjustedRect.contains(canvas.getCurrentHoverLocation().x, canvas.getCurrentHoverLocation().y); // Did the user touch inside this object's bounds?
+                    canAdd = canAdd && (draggedObject == null || !programmingObject.equals(draggedObject)); // Is this object NOT the current dragged object?
+                    //canAdd = canAdd && !isPOChildOfPO(draggedObject, programmingObject); // Does programmingObject exist BENEATH draggedObject (is programmingObject a child of draggedObject). If so, do NOT allow this.
 
                     try {
                         if (canAdd && draggedObject != null)
@@ -276,6 +272,9 @@ public class TrainingIDE extends Activity {
 
                     if (canAdd) {
                         currentHoveredObject = programmingObject;
+
+                        if(lastHoveredObject == null)
+                            lastHoveredObject = currentHoveredObject;
 
                         //Log.d("IDEa", "Found hovered object: " + currentHoveredObject.getTypeName());
 
@@ -421,6 +420,14 @@ public class TrainingIDE extends Activity {
         this.draggedButton = draggedButton;
     }
 
+    public ProgrammingObject getLastHoveredObject() {
+        return lastHoveredObject;
+    }
+
+    public void setLastHoveredObject(ProgrammingObject lastHoveredObject) {
+        this.lastHoveredObject = lastHoveredObject;
+    }
+
     private void initCanvas() {
         canvas = (CanvasView) findViewById(R.id.canvas_view);
 
@@ -436,9 +443,13 @@ public class TrainingIDE extends Activity {
                         return true; // Returning true is NECESSARY for the listener to receive the drop event
                     case DragEvent.ACTION_DRAG_ENDED:
                         draggedButton.setEnabled(true);
+                        draggedButton.setPressed(false);
                         draggedButton = null;
+
                         canvas.setCurrentHoverLocation(null);
-                        findCurrentHoveredObject(programmingObjects);
+                        //findCurrentHoveredObject(programmingObjects); // shouldn't be necessary any more...or ever?
+                        currentHoveredObject = null;
+                        lastHoveredObject = null;
                         closestHoverObjectAbove = null;
                         closestHoverObjectBelow = null;
 
@@ -461,6 +472,7 @@ public class TrainingIDE extends Activity {
                         findCurrentHoveredObject(programmingObjects);
 
                         if (draggedObject != null) {
+                            // TODO: I think these will not be necessary any more
                             deleteProgrammingObject(programmingObjects, draggedObject);
                             addExistingProgrammingObject(draggedObject);
                         } else {
@@ -479,16 +491,20 @@ public class TrainingIDE extends Activity {
 
                         findCurrentHoveredObject(programmingObjects);
 
-                        if (draggedObject != null) {
-                            deleteProgrammingObject(programmingObjects, draggedObject);
-                            addExistingProgrammingObject(draggedObject);
-                        } else {
-                            draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
-                        }
+                        if(currentHoveredObject == null || !currentHoveredObject.equals(lastHoveredObject)) { // The user has not moved outside of the last object they hovered over, so don't delete it
+                            if (draggedObject != null) {
+                                Log.d("IDEa", "Creating new PO");
+                                deleteProgrammingObject(programmingObjects, draggedObject);
+                                addExistingProgrammingObject(draggedObject);
+                            } else {
+                                draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
+                            }
 
-                        closestHoverObjectAbove = null;
-                        closestHoverObjectBelow = null;
-                        findObjectJustAboveHoverLocation(programmingObjects);
+                            lastHoveredObject = currentHoveredObject; // being null is fine
+                            closestHoverObjectAbove = null;
+                            closestHoverObjectBelow = null;
+                            findObjectJustAboveHoverLocation(programmingObjects);
+                        }
 
                         break;
                 }
@@ -505,6 +521,7 @@ public class TrainingIDE extends Activity {
                 // Get object we are hovered over, if any
                 canvas.setCurrentHoverLocation(new Point((int) canvas.getCurrentTouchLocation().x, (int) canvas.getCurrentTouchLocation().y));
                 findCurrentHoveredObject(programmingObjects);
+                lastHoveredObject = currentHoveredObject; // null is fine
 
                 if (currentHoveredObject != null) {
                     draggedButton = getButtonForProgrammingObject(currentHoveredObject);
@@ -667,6 +684,29 @@ public class TrainingIDE extends Activity {
         }
 
         return true;
+    }
+
+    /**
+     * Determines if childPO is a child (directly, or a child of a child, etc) of parentPO.
+     * This is a recursive method.
+     *
+     * @param childPO the PO to find as a child of parentPO
+     * @param parentPO the PO to search through to find childPO
+     *
+     * @return true if childPO is a child of parentPO
+     */
+    private boolean isPOChildOfPO(ProgrammingObject childPO, ProgrammingObject parentPO) {
+        if (childPO != null && parentPO != null && parentPO.getChildren() != null && parentPO.getChildren().size() > 0) {
+            for (ProgrammingObject pObj : parentPO.getChildren()) {
+                if (childPO.equals(pObj))
+                    return true;
+
+                if (pObj.getChildren() != null) // Look through this object's children
+                    isPOChildOfPO(childPO, pObj);
+            }
+        }
+
+        return false;
     }
 
     public static GradientDrawable getBackgroundGradientDrawable(Resources resources, int colorResourceId, int cornerRadius) {

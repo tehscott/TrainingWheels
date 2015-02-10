@@ -40,7 +40,7 @@
       android:minHeight="0dp"
       android:minWidth="0dp"
       android:text="Back "
-      android:textColor="@android:color/white"/>
+      android:textColor="@color/ide_button_text"/>
 
     <ImageView
       android:id="@+id/run_button_bg"
@@ -62,7 +62,7 @@
       android:minHeight="0dp"
       android:minWidth="0dp"
       android:text="  Run"
-      android:textColor="@android:color/white"/>
+      android:textColor="@color/ide_button_text"/>
 
   </RelativeLayout>
 
@@ -97,7 +97,7 @@
             android:layout_marginBottom="5dp"
             android:tag="while"
             android:text="While"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/ide_button_text"/>
 
           <Button
             android:id="@+id/bIf"
@@ -106,7 +106,7 @@
             android:layout_marginBottom="5dp"
             android:tag="if"
             android:text="If"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/ide_button_text"/>
 
           <Button
             android:id="@+id/bFor"
@@ -116,7 +116,7 @@
             android:layout_marginBottom="5dp"
             android:tag="for"
             android:text="For"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/ide_button_text"/>
 
           <Button
             android:id="@+id/bPrint"
@@ -126,7 +126,7 @@
             android:layout_marginBottom="5dp"
             android:tag="print"
             android:text="Print"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/ide_button_text"/>
 
           <Button
             android:id="@+id/bVariable"
@@ -136,7 +136,7 @@
             android:layout_marginBottom="5dp"
             android:tag="variable"
             android:text="Variable"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/ide_button_text"/>
 
           <Button
             android:id="@+id/bProcedure"
@@ -146,7 +146,7 @@
             android:layout_marginBottom="5dp"
             android:tag="function"
             android:text="Function"
-            android:textColor="@android:color/white"
+            android:textColor="@color/ide_button_text"
               android:visibility="gone"/>
 
           <Button
@@ -157,7 +157,7 @@
             android:layout_marginBottom="5dp"
             android:tag="string"
             android:text="String"
-            android:textColor="@android:color/white"
+            android:textColor="@color/ide_button_text"
             android:visibility="gone"/>
         </LinearLayout>
       </ScrollView>
@@ -221,6 +221,6 @@
       android:minHeight="0dp"
       android:minWidth="0dp"
       android:text="  Clear"
-      android:textColor="@android:color/white"/>
+      android:textColor="@color/ide_button_text"/>
   </RelativeLayout>
 </RelativeLayout>
