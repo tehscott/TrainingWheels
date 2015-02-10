@@ -20,6 +20,7 @@ import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import group5.cs3750.trainingwheels.programmingobjects.While;
 
 
 public class TrainingIDE extends Activity {
-    private Button bIf, bWhile, bFor, bString, bProcedure, bVariable, bPrint;
+    private Button bIf, bWhile, bFor, bString, bFunction, bVariable, bPrint;
     private Button bBack, bRun, bClear;
     private TextView outputTextView;
 
@@ -81,7 +82,7 @@ public class TrainingIDE extends Activity {
         bWhile = (Button) findViewById(R.id.bWhile);
         bFor = (Button) findViewById(R.id.bFor);
         bString = (Button) findViewById(R.id.bString);
-        bProcedure = (Button) findViewById(R.id.bProcedure);
+        bFunction = (Button) findViewById(R.id.bProcedure);
         bVariable = (Button) findViewById(R.id.bVariable);
         bPrint = (Button) findViewById(R.id.bPrint);
 
@@ -91,7 +92,7 @@ public class TrainingIDE extends Activity {
         bFor.setOnLongClickListener(new CustomOnLongPressListener());
         bString.setOnLongClickListener(new CustomOnLongPressListener());
         bVariable.setOnLongClickListener(new CustomOnLongPressListener());
-        bProcedure.setOnLongClickListener(new CustomOnLongPressListener());
+        bFunction.setOnLongClickListener(new CustomOnLongPressListener());
         bPrint.setOnLongClickListener(new CustomOnLongPressListener());
 
         // Custom backgrounds
@@ -99,7 +100,7 @@ public class TrainingIDE extends Activity {
         bWhile.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_orange, 12));
         bFor.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_red, 12));
         bString.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_blue, 12));
-        bProcedure.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
+        bFunction.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
         bVariable.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_green, 12));
         bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_teal, 12));
 
@@ -264,6 +265,7 @@ public class TrainingIDE extends Activity {
 
                     boolean canAdd = adjustedRect.contains(canvas.getCurrentHoverLocation().x, canvas.getCurrentHoverLocation().y);
                     canAdd = canAdd && (draggedObject == null || !programmingObject.equals(draggedObject));
+                    canAdd = canAdd && (programmingObject.getParent() == null || !programmingObject.getParent().equals(draggedObject));
 
                     try {
                         if (canAdd && draggedObject != null)
@@ -458,9 +460,12 @@ public class TrainingIDE extends Activity {
                         canvas.setLastDropLocation(new Point((int) event.getX(), (int) event.getY()));
                         findCurrentHoveredObject(programmingObjects);
 
-                        if (draggedObject != null)
+                        if (draggedObject != null) {
                             deleteProgrammingObject(programmingObjects, draggedObject);
-                        addProgrammingObject((String) event.getClipDescription().getLabel());
+                            addExistingProgrammingObject(draggedObject);
+                        } else {
+                            addProgrammingObject((String) event.getClipDescription().getLabel());
+                        }
 
                         closestHoverObjectAbove = null;
                         closestHoverObjectBelow = null;
@@ -474,9 +479,12 @@ public class TrainingIDE extends Activity {
 
                         findCurrentHoveredObject(programmingObjects);
 
-                        if (draggedObject != null)
+                        if (draggedObject != null) {
                             deleteProgrammingObject(programmingObjects, draggedObject);
-                        draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
+                            addExistingProgrammingObject(draggedObject);
+                        } else {
+                            draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
+                        }
 
                         closestHoverObjectAbove = null;
                         closestHoverObjectBelow = null;
@@ -498,13 +506,21 @@ public class TrainingIDE extends Activity {
                 canvas.setCurrentHoverLocation(new Point((int) canvas.getCurrentTouchLocation().x, (int) canvas.getCurrentTouchLocation().y));
                 findCurrentHoveredObject(programmingObjects);
 
+                if (currentHoveredObject != null) {
+                    draggedButton = getButtonForProgrammingObject(currentHoveredObject);
 
-//                ClipData clipData = ClipData.newPlainText(v.getTag().toString(), v.getTag().toString()); // The first value can be gotten from getClipDescription(), the second value can be gotten from getClipData()
-//                View.DragShadowBuilder dsb = new View.DragShadowBuilder(v);
-//                v.startDrag(clipData, dsb, v, 0);
-//                v.setEnabled(false);
-//
-//                draggedButton = v;
+                    if (draggedButton != null) {
+                        ClipData clipData = ClipData.newPlainText(draggedButton.getTag().toString(), draggedButton.getTag().toString()); // The first value can be gotten from getClipDescription(), the second value can be gotten from getClipData()
+                        View.DragShadowBuilder dsb = new View.DragShadowBuilder(draggedButton);
+                        draggedButton.startDrag(clipData, dsb, draggedButton, 0);
+
+                        draggedObject = currentHoveredObject;
+                        deleteProgrammingObject(programmingObjects, currentHoveredObject);
+                        currentHoveredObject = null;
+                    } else {
+                        Log.e("IDEa", "Button not found for object being picked up! This should NEVER happen (unless a PO was added).");
+                    }
+                }
 
                 return true;
             }
@@ -547,6 +563,29 @@ public class TrainingIDE extends Activity {
         return pObj;
     }
 
+    /*
+     * Adds an EXISTING programming object. Particularly useful for moving a PO that has been added previously.
+     */
+    private ProgrammingObject addExistingProgrammingObject(ProgrammingObject programmingObject) {
+        if (currentHoveredObject != null) {
+            //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, currentHoveredObject.getChildren().size(), currentHoveredObject);
+            synchronized (programmingObjects) {
+                programmingObject.setPositionUnderParent(currentHoveredObject.getChildren().size());
+                programmingObject.setParent(currentHoveredObject);
+                currentHoveredObject.addChild(programmingObject);
+            }
+        } else if (closestHoverObjectAbove != null || closestHoverObjectBelow != null) {
+            insertProgrammingObject(programmingObject);
+        } else {
+            //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+            synchronized (programmingObjects) {
+                programmingObjects.add(programmingObject);
+            }
+        }
+
+        return programmingObject;
+    }
+
     private void insertProgrammingObject(ProgrammingObject pObj) {
         // Inserting an object between other objects
         synchronized (programmingObjects) {
@@ -580,6 +619,30 @@ public class TrainingIDE extends Activity {
                 }
             }
         }
+    }
+
+    private Button getButtonForProgrammingObject(ProgrammingObject programmingObject) {
+        // bIf, bWhile, bFor, bString, bFunction, bVariable, bPrint;
+        // TODO: Update this any time a button is added to the left side bar
+        String objectName = programmingObject.getTypeName().toLowerCase();
+
+        if (objectName.contentEquals("for")) {
+            return bFor;
+        } else if (objectName.contentEquals("while")) {
+            return bWhile;
+        } else if (objectName.contentEquals("variable")) {
+            return bVariable;
+        } else if (objectName.contentEquals("if")) {
+            return bIf;
+        } else if (objectName.contentEquals("string")) {
+            return bString;
+        } else if (objectName.contentEquals("function")) {
+            return bFunction;
+        } else if (objectName.contentEquals("print")) {
+            return bPrint;
+        }
+
+        return null;
     }
 
     /*
