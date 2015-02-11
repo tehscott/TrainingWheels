@@ -26,7 +26,7 @@ public class MainMenu extends Activity {
             }
         });
 
-        findViewById(R.id.btnContinueGame).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btnNewProgram).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent user = new Intent(MainMenu.this, TrainingIDE.class);
@@ -34,7 +34,7 @@ public class MainMenu extends Activity {
             }
         });
 
-        findViewById(R.id.btnStartNewGame).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btnOpenProgram).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent user = new Intent(MainMenu.this, TrainingIDE.class);
@@ -42,20 +42,16 @@ public class MainMenu extends Activity {
             }
         });
 
-        findViewById(R.id.btnStats).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.javascript_demo).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent user = new Intent(MainMenu.this, User.class);
-                startActivity(user);
+            public void onClick(View view) {
+                Intent intent = new Intent(MainMenu.this, JavaScriptDemo.class);
+                startActivity(intent);
             }
         });
 
-      findViewById(R.id.javascript_demo).setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          Intent intent = new Intent(MainMenu.this, JavaScriptDemo.class);
-          startActivity(intent);
-        }
-      });
+        findViewById(R.id.btnNewProgram).setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_green, 12));
+        findViewById(R.id.btnOpenProgram).setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
+        findViewById(R.id.javascript_demo).setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_red, 12));
     }
 }
