@@ -14,7 +14,34 @@ public abstract class ProgrammingObject {
   }
 
   public static enum ComparisonOperator {
-    EQUAL, DOES_NOT_EQUAL, LESS_THAN, GREATER_THAN, LESS_THAN_OR_EQUAL, GREATER_THAN_OR_EQUAL
+    EQUAL("=="),
+    DOES_NOT_EQUAL("!="),
+    LESS_THAN("<"),
+    GREATER_THAN(">"),
+    LESS_THAN_OR_EQUAL("<="),
+    GREATER_THAN_OR_EQUAL(">=");
+
+    private final String operator;
+
+    ComparisonOperator(String operator) {
+      this.operator = operator;
+    }
+
+    public static ComparisonOperator fromString(String text) {
+      if (text != null) {
+        for (ComparisonOperator c : ComparisonOperator.values()) {
+          if (text.equalsIgnoreCase(c.operator)) {
+            return c;
+          }
+        }
+      }
+      throw new IllegalArgumentException("No constant with text " + text + " found");
+    }
+
+    @Override
+    public String toString() {
+      return operator;
+    }
   }
 
   private ProgrammingObjectType type;

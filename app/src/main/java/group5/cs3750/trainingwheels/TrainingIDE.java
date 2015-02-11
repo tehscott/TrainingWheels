@@ -19,8 +19,8 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.util.ArrayList;
@@ -30,6 +30,7 @@ import group5.cs3750.trainingwheels.canvas.CanvasThread;
 import group5.cs3750.trainingwheels.canvas.CanvasView;
 import group5.cs3750.trainingwheels.programmingobjects.For;
 import group5.cs3750.trainingwheels.programmingobjects.If;
+import group5.cs3750.trainingwheels.programmingobjects.Print;
 import group5.cs3750.trainingwheels.programmingobjects.ProgrammingObject;
 import group5.cs3750.trainingwheels.programmingobjects.Variable;
 import group5.cs3750.trainingwheels.programmingobjects.While;
@@ -60,7 +61,7 @@ public class TrainingIDE extends Activity {
     private boolean didDrop;
     private ProgrammingObject draggedObject; // temporary dragged object
 
-    @Override
+  @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training_ide_2);
@@ -545,7 +546,7 @@ public class TrainingIDE extends Activity {
     }
 
     private ProgrammingObject addProgrammingObject(String objectName) {
-        ProgrammingObject pObj;
+        final ProgrammingObject pObj;
 
         if (objectName.contentEquals("for")) {
             pObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
@@ -555,6 +556,23 @@ public class TrainingIDE extends Activity {
             pObj = new Variable(0, "testVariable", Variable.VariableType.STRING, "test");
         } else if (objectName.contentEquals("if")) {
             pObj = new If(0, new Variable(0, "ifLeft", Variable.VariableType.STRING, "left"), "left", Variable.VariableType.STRING, ProgrammingObject.ComparisonOperator.EQUAL);
+        } else if (objectName.contentEquals("print")) {
+          pObj = new Print("");
+
+          View view = View.inflate(this, R.layout.print_dialog, null);
+          final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+          AlertDialog.Builder builder = new AlertDialog.Builder(this);
+          builder.setTitle("Enter some text");
+          builder.setView(view);
+          builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+              ((Print)pObj).setText(editText.getText().toString() + "<br>");
+              dialogInterface.dismiss();
+            }
+          });
+          builder.create().show();
+
         } else {
             pObj = new Variable(0, "unsupportedType", Variable.VariableType.STRING, "unsupportedType");
         }

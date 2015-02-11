@@ -7,6 +7,7 @@ import java.util.List;
 import group5.cs3750.trainingwheels.R;
 
 public class For extends ProgrammingObject {
+  private static int nextInt = 0;
   private int startingValue;
   private int endingValue;
   private ComparisonOperator endingValueComparisonOperator;
@@ -85,9 +86,12 @@ public class For extends ProgrammingObject {
 
   @Override
   public void toScript(StringBuilder stringBuilder) {
-    stringBuilder.append("for(var i = 0; i < 5; i++) {\n");
+    String varName = "i"+ String.valueOf(For.nextInt++);
+      stringBuilder.append("for(var ").append(varName).append(" = ").append(startingValue).append("; ")
+          .append(varName).append(" ").append(endingValueComparisonOperator.toString()).append(endingValue).append("; ")
+          .append(varName).append("++){\n ");
 
-    for (ProgrammingObject child : children) {
+      for (ProgrammingObject child : children) {
       child.toScript(stringBuilder);
     }
 

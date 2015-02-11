@@ -8,11 +8,11 @@ import android.graphics.drawable.ColorDrawable;
  */
 public class Print extends ProgrammingObject {
 
-  private String printStatement;
+  private String text;
 
   public Print(String string) {
 
-    printStatement = string;
+    text = string;
     setButtonDrawable(new ColorDrawable(Color.YELLOW));
   }
 
@@ -24,10 +24,18 @@ public class Print extends ProgrammingObject {
     super(ProgrammingObjectType.PRINT, listPosition, positionUnderParent, parent);
   }
 
+  public String getText() {
+    return text;
+  }
+
+  public void setText(String text) {
+    this.text = text;
+  }
+
   @Override
   public void toScript(StringBuilder stringBuilder) {
     stringBuilder.append("document.getElementById(\"{field}\").innerHTML += \"");
-    stringBuilder.append(printStatement);
+    stringBuilder.append(text);
     stringBuilder.append("\";\n");
   }
 }
