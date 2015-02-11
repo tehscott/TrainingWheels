@@ -477,7 +477,23 @@ public class TrainingIDE extends Activity {
                             deleteProgrammingObject(programmingObjects, draggedObject);
                             addExistingProgrammingObject(draggedObject);
                         } else {
-                            addProgrammingObject((String) event.getClipDescription().getLabel());
+                          final ProgrammingObject programmingObject = addProgrammingObject((String) event.getClipDescription().getLabel());
+                          if (programmingObject instanceof Print) {
+                            View view = View.inflate(TrainingIDE.this, R.layout.print_dialog, null);
+                            final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+                            builder.setTitle("Enter some text");
+                            builder.setView(view);
+                            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                              @Override
+                              public void onClick(DialogInterface dialogInterface, int i) {
+                                ((Print)programmingObject).setText(editText.getText().toString() + "<br>");
+                                dialogInterface.dismiss();
+                              }
+                            });
+                            builder.create().show();
+                          }
+
                         }
 
                         closestHoverObjectAbove = null;
@@ -558,21 +574,6 @@ public class TrainingIDE extends Activity {
             pObj = new If(0, new Variable(0, "ifLeft", Variable.VariableType.STRING, "left"), "left", Variable.VariableType.STRING, ProgrammingObject.ComparisonOperator.EQUAL);
         } else if (objectName.contentEquals("print")) {
           pObj = new Print("");
-
-          View view = View.inflate(this, R.layout.print_dialog, null);
-          final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
-          AlertDialog.Builder builder = new AlertDialog.Builder(this);
-          builder.setTitle("Enter some text");
-          builder.setView(view);
-          builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-              ((Print)pObj).setText(editText.getText().toString() + "<br>");
-              dialogInterface.dismiss();
-            }
-          });
-          builder.create().show();
-
         } else {
             pObj = new Variable(0, "unsupportedType", Variable.VariableType.STRING, "unsupportedType");
         }
