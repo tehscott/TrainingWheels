@@ -61,7 +61,7 @@ public class TrainingIDE extends Activity {
     private boolean didDrop;
     private ProgrammingObject draggedObject; // temporary dragged object
 
-  @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training_ide);
@@ -103,7 +103,7 @@ public class TrainingIDE extends Activity {
         bString.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_blue, 12));
         bFunction.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
         bVariable.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_green, 12));
-        bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_teal, 12));
+        bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
 
         /*
          Back, Run, Clear buttons
@@ -121,7 +121,7 @@ public class TrainingIDE extends Activity {
                 "\n" +
                 "<p id=\"output\"></p>\n" +
                 "\n" +
-                "<script>%s</script>\n" +
+                "<script>\n%s</script>\n" +
                 "\n" +
                 "</body>\n" +
                 "</html> ";
@@ -156,7 +156,7 @@ public class TrainingIDE extends Activity {
                         "<html>\n" +
                         "<body>\n" +
                         "</body>\n" +
-                        "</html> ";
+                        "</html>";
 
                 webView.loadData(container, "text/html", null);
 
@@ -282,7 +282,7 @@ public class TrainingIDE extends Activity {
                     if (canAdd) {
                         currentHoveredObject = programmingObject;
 
-                        if(lastHoveredObject == null)
+                        if (lastHoveredObject == null)
                             lastHoveredObject = currentHoveredObject;
 
                         //Log.d("IDEa", "Found hovered object: " + currentHoveredObject.getTypeName());
@@ -536,14 +536,14 @@ public class TrainingIDE extends Activity {
 //                                draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
 //                            }
 
-                            if(draggedObject != null)
-                                deleteProgrammingObject(programmingObjects, draggedObject);
-                            draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
+                        if (draggedObject != null)
+                            deleteProgrammingObject(programmingObjects, draggedObject);
+                        draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
 
-                            //lastHoveredObject = currentHoveredObject; // being null is fine
-                            closestHoverObjectAbove = null;
-                            closestHoverObjectBelow = null;
-                            findObjectJustAboveHoverLocation(programmingObjects);
+                        //lastHoveredObject = currentHoveredObject; // being null is fine
+                        closestHoverObjectAbove = null;
+                        closestHoverObjectBelow = null;
+                        findObjectJustAboveHoverLocation(programmingObjects);
                         //}
 
                         break;
@@ -596,8 +596,8 @@ public class TrainingIDE extends Activity {
         } else if (objectName.contentEquals("if")) {
             pObj = new If(0, new Variable(0, "ifLeft", Variable.VariableType.STRING, "left"), "left", Variable.VariableType.STRING, ProgrammingObject.ComparisonOperator.EQUAL);
         } else if (objectName.contentEquals("print")) {
-          pObj = new Print("");
-          //Parameters(pObj);
+            pObj = new Print("");
+            //Parameters(pObj);
         } else {
             pObj = new Variable(0, "unsupportedType", Variable.VariableType.STRING, "unsupportedType");
         }
@@ -733,9 +733,8 @@ public class TrainingIDE extends Activity {
      * Determines if childPO is a child (directly, or a child of a child, etc) of parentPO.
      * This is a recursive method.
      *
-     * @param childPO the PO to find as a child of parentPO
+     * @param childPO  the PO to find as a child of parentPO
      * @param parentPO the PO to search through to find childPO
-     *
      * @return true if childPO is a child of parentPO
      */
     private boolean isPOChildOfPO(ProgrammingObject childPO, ProgrammingObject parentPO) {
@@ -760,26 +759,22 @@ public class TrainingIDE extends Activity {
         return gd;
     }
 
-    public void Parameters(final ProgrammingObject programmingObject){
-
+    public void Parameters(final ProgrammingObject programmingObject) {
         if (programmingObject instanceof Print) {
-
             View view = View.inflate(TrainingIDE.this, R.layout.print_dialog, null);
             final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
             AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
             builder.setTitle("Enter some text");
             builder.setView(view);
             builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-              @Override
-              public void onClick(DialogInterface dialogInterface, int i) {
-                ((Print)programmingObject).setText(editText.getText().toString() + "<br>");
-                dialogInterface.dismiss();
-              }
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    ((Print) programmingObject).setText(editText.getText().toString());
+                    dialogInterface.dismiss();
+                }
             });
             builder.create().show();
-
-          }else if (programmingObject instanceof For) {
-
+        } else if (programmingObject instanceof For) {
             View view = View.inflate(TrainingIDE.this, R.layout.for_dialog, null);
             //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
             final EditText startingValue = (EditText) view.findViewById(R.id.startingValue);
@@ -792,34 +787,30 @@ public class TrainingIDE extends Activity {
             builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    ((For)programmingObject).setStartingValue(0);
-                    ((For)programmingObject).setStartingValue(10);
-                    ((For)programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.GREATER_THAN);
+                    ((For) programmingObject).setStartingValue(Integer.valueOf(startingValue.getText().toString()));
+                    ((For) programmingObject).setEndingValue(Integer.valueOf(endingValue.getText().toString()));
+                    ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.LESS_THAN);
+
                     dialogInterface.dismiss();
                 }
             });
             builder.create().show();
+        } else if (programmingObject instanceof If) {
+            View view = View.inflate(TrainingIDE.this, R.layout.if_dialog, null);
+            //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+            final EditText condition = (EditText) view.findViewById(R.id.condition);
+            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+            builder.setTitle("Enter a true or false statement");
+            builder.setView(view);
+            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    ((If) programmingObject).setExpression(condition.getText().toString());
 
-        }else if (programmingObject instanceof If) {
-
-        View view = View.inflate(TrainingIDE.this, R.layout.if_dialog, null);
-        //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
-        final EditText condition = (EditText) view.findViewById(R.id.condition);
-        AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
-        builder.setTitle("Enter a true or false statement");
-        builder.setView(view);
-        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                ((If)programmingObject).setExpression(condition.toString());
-
-                dialogInterface.dismiss();
-            }
-        });
-        builder.create().show();
-
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.create().show();
+        }
     }
-    }
-
-
 }

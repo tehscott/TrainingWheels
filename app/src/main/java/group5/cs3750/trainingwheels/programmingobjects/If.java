@@ -101,7 +101,7 @@ public class If extends ProgrammingObject {
 
     @Override
     public void toScript(StringBuilder stringBuilder) {
-        stringBuilder.append(getExpression());
+        stringBuilder.append("if(" + getExpression() + ") {\n");
 
         for (ProgrammingObject child : children) {
             child.toScript(stringBuilder);
