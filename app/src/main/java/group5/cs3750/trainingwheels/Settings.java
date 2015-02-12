@@ -18,15 +18,13 @@ import java.util.Set;
  * Created by Zachary on 11/12/2014.
  */
 public class Settings extends Activity {
-
-    SharedPreferences settings;
-    SharedPreferences.Editor editor;
-    public boolean sound;
-    public boolean hints;
-    public String difficulty;
-    public Switch soundSwitch;
-    public Switch hintsSwitch;
-    public Spinner difficultySpinner;
+    private SharedPreferences settings;
+    private SharedPreferences.Editor editor;
+    private boolean sound;
+    private boolean hints;
+    private Switch soundSwitch;
+    private Switch hintsSwitch;
+    private Button backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,31 +36,13 @@ public class Settings extends Activity {
 
         sound = settings.getBoolean("sound", true);
         hints = settings.getBoolean("hints", false);
-        difficulty = settings.getString("difficulty", "Beginner");
 
         soundSwitch = (Switch) findViewById(R.id.soundSwitch);
         hintsSwitch = (Switch) findViewById(R.id.hintsSwitch);
-        difficultySpinner = (Spinner) findViewById(R.id.difficultySpinner);
+        backButton = (Button) findViewById(R.id.back_button);
 
         soundSwitch.setChecked(sound);
         hintsSwitch.setChecked(hints);
-        if (difficulty.equals("Beginner"))
-            difficultySpinner.setSelection(0);
-        else if (difficulty.equals("Amateur"))
-            difficultySpinner.setSelection(1);
-        else
-            difficultySpinner.setSelection(2);
-
-        difficultySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String[] difficulties = getResources().getStringArray(R.array.settingsSpinnerArray);
-
-                difficulty = difficulties[position];
-            }
-
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
 
         soundSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -79,6 +59,13 @@ public class Settings extends Activity {
                 hints = isChecked;
             }
         });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -87,7 +74,6 @@ public class Settings extends Activity {
 
         editor.putBoolean("sound", sound);
         editor.putBoolean("hints", hints);
-        editor.putString("difficulty", difficulty);
         editor.commit();
     }
 }

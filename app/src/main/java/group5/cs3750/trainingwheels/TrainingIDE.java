@@ -64,7 +64,7 @@ public class TrainingIDE extends Activity {
   @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_training_ide_2);
+        setContentView(R.layout.activity_training_ide);
 
         settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
