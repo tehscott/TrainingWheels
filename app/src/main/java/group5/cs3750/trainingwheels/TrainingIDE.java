@@ -40,7 +40,6 @@ import group5.cs3750.trainingwheels.programmingobjects.While;
 public class TrainingIDE extends Activity {
     private Button bIf, bWhile, bFor, bString, bFunction, bVariable, bPrint;
     private Button bBack, bRun, bClear;
-    private TextView outputTextView;
 
     private CanvasView canvas;
     private CanvasThread canvasThread;
@@ -153,7 +152,15 @@ public class TrainingIDE extends Activity {
         bClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                outputTextView.setText("");
+                String container = "<!DOCTYPE html>\n" +
+                        "<html>\n" +
+                        "<body>\n" +
+                        "</body>\n" +
+                        "</html> ";
+
+                webView.loadData(container, "text/html", null);
+
+                programmingObjects.clear();
             }
         });
     }
@@ -520,20 +527,24 @@ public class TrainingIDE extends Activity {
 
                         findCurrentHoveredObject(programmingObjects);
 
-                        if(currentHoveredObject == null || !currentHoveredObject.equals(lastHoveredObject)) { // The user has not moved outside of the last object they hovered over, so don't delete it
-                            if (draggedObject != null) {
-                                Log.d("IDEa", "Creating new PO");
-                                deleteProgrammingObject(programmingObjects, draggedObject);
-                                addExistingProgrammingObject(draggedObject);
-                            } else {
-                                draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
-                            }
+                        //if(currentHoveredObject == null || !currentHoveredObject.equals(lastHoveredObject)) { // The user has not moved outside of the last object they hovered over, so don't delete it
+//                            if (draggedObject != null) {
+//                                Log.d("IDEa", "Creating new PO");
+//                                deleteProgrammingObject(programmingObjects, draggedObject);
+//                                addExistingProgrammingObject(draggedObject);
+//                            } else {
+//                                draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
+//                            }
 
-                            lastHoveredObject = currentHoveredObject; // being null is fine
+                            if(draggedObject != null)
+                                deleteProgrammingObject(programmingObjects, draggedObject);
+                            draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
+
+                            //lastHoveredObject = currentHoveredObject; // being null is fine
                             closestHoverObjectAbove = null;
                             closestHoverObjectBelow = null;
                             findObjectJustAboveHoverLocation(programmingObjects);
-                        }
+                        //}
 
                         break;
                 }
