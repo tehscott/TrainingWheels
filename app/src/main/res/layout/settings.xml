@@ -3,31 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
     tools:context=".Settings"
-    android:padding="10dp"
-    android:background="@drawable/bg">
+    android:background="@color/ide_bg">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
+        android:background="@color/back_button_bar_bg"
+        android:scaleType="fitXY"
+        android:src="@drawable/back_button_bar"/>
 
-    <TextView
+    <ImageView
+        android:id="@+id/back_button_bg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="Difficulty"
-        android:textSize="16sp"
-        android:id="@+id/difficulty_label"
-        android:layout_alignParentTop="true"
-        android:layout_alignTop="@+id/difficultySpinner"
-        android:layout_alignBottom="@+id/difficultySpinner"/>
+        android:layout_alignParentLeft="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/back_button"/>
 
-    <Spinner
+    <Button
+        android:id="@+id/back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/difficultySpinner"
-        android:entries="@array/settingsSpinnerArray"
-        android:prompt="@string/settingsSpinnerTitle"
-        android:focusable="true"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/difficulty_label"
-        android:layout_toEndOf="@+id/difficulty_label" />
+        android:layout_alignBottom="@+id/back_button_bg"
+        android:layout_alignLeft="@+id/back_button_bg"
+        android:layout_alignRight="@+id/back_button_bg"
+        android:layout_alignTop="@+id/back_button_bg"
+        android:background="@android:color/transparent"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:text="Back "
+        android:textColor="@color/ide_button_text"/>
 
     <Switch
         android:layout_width="wrap_content"
@@ -35,10 +41,9 @@
         android:text="@string/sound"
         android:textSize="16sp"
         android:id="@+id/soundSwitch"
-        android:layout_below="@+id/difficulty_label"
-        android:layout_alignLeft="@+id/difficulty_label"
-        android:layout_alignStart="@+id/difficulty_label"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/back_button"
+        android:layout_marginLeft="10dp"/>
 
     <Switch
         android:layout_width="wrap_content"
@@ -47,7 +52,6 @@
         android:textSize="16sp"
         android:id="@+id/hintsSwitch"
         android:layout_below="@+id/soundSwitch"
-        android:layout_alignLeft="@+id/soundSwitch"
-        android:layout_alignStart="@+id/soundSwitch"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"/>
 </RelativeLayout>
