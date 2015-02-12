@@ -20,6 +20,7 @@ import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -474,25 +475,33 @@ public class TrainingIDE extends Activity {
 
                         if (draggedObject != null) {
                             // TODO: I think these will not be necessary any more
+
                             deleteProgrammingObject(programmingObjects, draggedObject);
                             addExistingProgrammingObject(draggedObject);
+                            Parameters(draggedObject);
+
                         } else {
-                          final ProgrammingObject programmingObject = addProgrammingObject((String) event.getClipDescription().getLabel());
-                          if (programmingObject instanceof Print) {
-                            View view = View.inflate(TrainingIDE.this, R.layout.print_dialog, null);
-                            final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
-                            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
-                            builder.setTitle("Enter some text");
-                            builder.setView(view);
-                            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                              @Override
-                              public void onClick(DialogInterface dialogInterface, int i) {
-                                ((Print)programmingObject).setText(editText.getText().toString() + "<br>");
-                                dialogInterface.dismiss();
-                              }
-                            });
-                            builder.create().show();
-                          }
+                            Parameters(draggedObject);
+//                         final ProgrammingObject programmingObject = addProgrammingObject((String) event.getClipDescription().getLabel());
+//                            Parameters(programmingObject);
+//                          if (programmingObject instanceof Print) {
+//
+//                            View view = View.inflate(TrainingIDE.this, R.layout.print_dialog, null);
+//                            final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+//                            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+//                            builder.setTitle("Enter some text");
+//                            builder.setView(view);
+//                            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//                              @Override
+//                              public void onClick(DialogInterface dialogInterface, int i) {
+//                                ((Print)programmingObject).setText(editText.getText().toString() + "<br>");
+//                                dialogInterface.dismiss();
+//                              }
+//                            });
+//                            builder.create().show();
+//
+//                          }
+
 
                         }
 
@@ -500,6 +509,9 @@ public class TrainingIDE extends Activity {
                         closestHoverObjectBelow = null;
 
                         showTutorial((String) event.getClipData().getItemAt(0).getText());
+//                        final ProgrammingObject programmingObject = addProgrammingObject((String) event.getClipDescription().getLabel());
+//                        Parameters(programmingObject);
+//                        Parameters(programmingObject);
                         didDrop = true;
                         return true; // Return true/false here based on whether or not the drop is valid
 
@@ -574,6 +586,7 @@ public class TrainingIDE extends Activity {
             pObj = new If(0, new Variable(0, "ifLeft", Variable.VariableType.STRING, "left"), "left", Variable.VariableType.STRING, ProgrammingObject.ComparisonOperator.EQUAL);
         } else if (objectName.contentEquals("print")) {
           pObj = new Print("");
+          //Parameters(pObj);
         } else {
             pObj = new Variable(0, "unsupportedType", Variable.VariableType.STRING, "unsupportedType");
         }
@@ -735,4 +748,67 @@ public class TrainingIDE extends Activity {
 
         return gd;
     }
+
+    public void Parameters(final ProgrammingObject programmingObject){
+
+        if (programmingObject instanceof Print) {
+
+            View view = View.inflate(TrainingIDE.this, R.layout.print_dialog, null);
+            final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+            builder.setTitle("Enter some text");
+            builder.setView(view);
+            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialogInterface, int i) {
+                ((Print)programmingObject).setText(editText.getText().toString() + "<br>");
+                dialogInterface.dismiss();
+              }
+            });
+            builder.create().show();
+
+          }else if (programmingObject instanceof For) {
+
+            View view = View.inflate(TrainingIDE.this, R.layout.for_dialog, null);
+            //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+            final EditText startingValue = (EditText) view.findViewById(R.id.startingValue);
+            final EditText endingValue = (EditText) view.findViewById(R.id.endingValue);
+            final RadioButton increment = (RadioButton) view.findViewById(R.id.increment);
+            final RadioButton decrement = (RadioButton) view.findViewById(R.id.decrement);
+            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+            builder.setTitle("Enter your parameters");
+            builder.setView(view);
+            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    ((For)programmingObject).setStartingValue(0);
+                    ((For)programmingObject).setStartingValue(10);
+                    ((For)programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.GREATER_THAN);
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.create().show();
+
+        }else if (programmingObject instanceof If) {
+
+        View view = View.inflate(TrainingIDE.this, R.layout.if_dialog, null);
+        //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+        final EditText condition = (EditText) view.findViewById(R.id.condition);
+        AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+        builder.setTitle("Enter a true or false statement");
+        builder.setView(view);
+        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                ((If)programmingObject).setExpression(condition.toString());
+
+                dialogInterface.dismiss();
+            }
+        });
+        builder.create().show();
+
+    }
+    }
+
+
 }

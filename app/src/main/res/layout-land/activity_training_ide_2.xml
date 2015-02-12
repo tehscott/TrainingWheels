@@ -159,6 +159,16 @@
             android:text="String"
             android:textColor="@color/ide_button_text"
             android:visibility="gone"/>
+            <Button
+                android:id="@+id/bTest"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="5dp"
+                android:tag="test"
+                android:text="Test FIP"
+                android:textColor="@android:color/white"
+                />
         </LinearLayout>
       </ScrollView>
     </LinearLayout>

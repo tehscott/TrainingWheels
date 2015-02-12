@@ -12,7 +12,9 @@ public class For extends ProgrammingObject {
   private int endingValue;
   private ComparisonOperator endingValueComparisonOperator;
 
-  public For(int position, int startingValue, int endingValue, ComparisonOperator endingValueComparisonOperator) {
+
+    public For(){}
+    public For(int position, int startingValue, int endingValue, ComparisonOperator endingValueComparisonOperator) {
     super(ProgrammingObjectType.FOR, position);
 
     this.startingValue = startingValue;

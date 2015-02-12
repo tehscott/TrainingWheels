@@ -11,7 +11,9 @@ public class If extends ProgrammingObject {
     private Object conditionRightSide; // Right side of the conditional statement, can be a manually-entered value or a Variable
     private Variable.VariableType conditionRightSideType;
     private ComparisonOperator comparisonOperator;
+    private String expression;
 
+    public If() {}
     public If(int position, Variable conditionLeftSide, Object conditionRightSide, Variable.VariableType conditionRightSideType, ComparisonOperator comparisonOperator) {
         super(ProgrammingObjectType.IF, position);
 
@@ -42,6 +44,7 @@ public class If extends ProgrammingObject {
         );
 
         drawColor = R.color.button_blue;
+        //addChild(new Print("Test <br>"));
     }
 
     @Override
@@ -98,12 +101,20 @@ public class If extends ProgrammingObject {
 
     @Override
     public void toScript(StringBuilder stringBuilder) {
-        //stringBuilder.append("for(var i = 0; i < 5; i++) {\n");
+        stringBuilder.append(getExpression());
 
         for (ProgrammingObject child : children) {
             child.toScript(stringBuilder);
         }
 
         stringBuilder.append("}\n");
+    }
+
+    public String getExpression() {
+        return expression;
+    }
+
+    public void setExpression(String expression) {
+        this.expression = expression;
     }
 }
