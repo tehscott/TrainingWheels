@@ -12,12 +12,8 @@ public class For extends ProgrammingObject {
     private int endingValue;
     private ComparisonOperator endingValueComparisonOperator;
 
-
-    public For() {
-    }
-
-    public For(int position, int startingValue, int endingValue, ComparisonOperator endingValueComparisonOperator) {
-        super(ProgrammingObjectType.FOR, position);
+    public For(int startingValue, int endingValue, ComparisonOperator endingValueComparisonOperator) {
+        super(ProgrammingObjectType.FOR);
 
         this.startingValue = startingValue;
         this.endingValue = endingValue;
@@ -25,8 +21,8 @@ public class For extends ProgrammingObject {
         setFields();
     }
 
-    public For(int position, int startingValue, int endingValue, ComparisonOperator endingValueComparisonOperator, int positionUnderParent, ProgrammingObject parent) {
-        super(ProgrammingObjectType.FOR, position, positionUnderParent, parent);
+    public For(int startingValue, int endingValue, ComparisonOperator endingValueComparisonOperator, ProgrammingObject parent) {
+        super(ProgrammingObjectType.FOR, parent);
 
         this.startingValue = startingValue;
         this.endingValue = endingValue;

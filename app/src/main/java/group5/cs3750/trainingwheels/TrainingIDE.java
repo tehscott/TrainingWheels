@@ -482,43 +482,18 @@ public class TrainingIDE extends Activity {
 
                         if (draggedObject != null) {
                             // TODO: I think these will not be necessary any more
-
                             deleteProgrammingObject(programmingObjects, draggedObject);
                             addExistingProgrammingObject(draggedObject);
-                            Parameters(draggedObject);
-
+                            showParametersDialog(draggedObject);
                         } else {
-                            Parameters(draggedObject);
-//                         final ProgrammingObject programmingObject = addProgrammingObject((String) event.getClipDescription().getLabel());
-//                            Parameters(programmingObject);
-//                          if (programmingObject instanceof Print) {
-//
-//                            View view = View.inflate(TrainingIDE.this, R.layout.print_dialog, null);
-//                            final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
-//                            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
-//                            builder.setTitle("Enter some text");
-//                            builder.setView(view);
-//                            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-//                              @Override
-//                              public void onClick(DialogInterface dialogInterface, int i) {
-//                                ((Print)programmingObject).setText(editText.getText().toString() + "<br>");
-//                                dialogInterface.dismiss();
-//                              }
-//                            });
-//                            builder.create().show();
-//
-//                          }
-
-
+                            showParametersDialog(draggedObject);
                         }
 
                         closestHoverObjectAbove = null;
                         closestHoverObjectBelow = null;
 
                         showTutorial((String) event.getClipData().getItemAt(0).getText());
-//                        final ProgrammingObject programmingObject = addProgrammingObject((String) event.getClipDescription().getLabel());
-//                        Parameters(programmingObject);
-//                        Parameters(programmingObject);
+
                         didDrop = true;
                         return true; // Return true/false here based on whether or not the drop is valid
 
@@ -555,7 +530,6 @@ public class TrainingIDE extends Activity {
         canvas.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                // TODO: allow user to pick up a programming object
                 // They should be able to move or delete it (show a trash can icon, I think)
 
                 // Get object we are hovered over, if any
@@ -588,33 +562,29 @@ public class TrainingIDE extends Activity {
         final ProgrammingObject pObj;
 
         if (objectName.contentEquals("for")) {
-            pObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+            pObj = new For(0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
         } else if (objectName.contentEquals("while")) {
-            pObj = new While(0, new Variable(0, "whileVariable", Variable.VariableType.STRING, "beep"), "boop");
+            pObj = new While(new Variable("whileVariable", Variable.VariableType.STRING, "beep"), "boop");
         } else if (objectName.contentEquals("variable")) {
-            pObj = new Variable(0, "testVariable", Variable.VariableType.STRING, "test");
+            pObj = new Variable("testVariable", Variable.VariableType.STRING, "test");
         } else if (objectName.contentEquals("if")) {
-            pObj = new If(0, new Variable(0, "ifLeft", Variable.VariableType.STRING, "left"), "left", Variable.VariableType.STRING, ProgrammingObject.ComparisonOperator.EQUAL);
+            pObj = new If(new Variable("ifLeft", Variable.VariableType.STRING, "left"), "left", Variable.VariableType.STRING, ProgrammingObject.ComparisonOperator.EQUAL);
         } else if (objectName.contentEquals("print")) {
             pObj = new Print("");
-            //Parameters(pObj);
         } else {
-            pObj = new Variable(0, "unsupportedType", Variable.VariableType.STRING, "unsupportedType");
+            pObj = new Variable("unsupportedType", Variable.VariableType.STRING, "unsupportedType");
         }
 
         pObj.setButtonDrawable(draggedButton.getBackground()); // Save the BG of the button to use for drawing
 
         if (currentHoveredObject != null) {
-            //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, currentHoveredObject.getChildren().size(), currentHoveredObject);
             synchronized (programmingObjects) {
-                pObj.setPositionUnderParent(currentHoveredObject.getChildren().size());
                 pObj.setParent(currentHoveredObject);
                 currentHoveredObject.addChild(pObj);
             }
         } else if (closestHoverObjectAbove != null || closestHoverObjectBelow != null) {
             insertProgrammingObject(pObj);
         } else {
-            //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
             synchronized (programmingObjects) {
                 programmingObjects.add(pObj);
             }
@@ -628,16 +598,13 @@ public class TrainingIDE extends Activity {
      */
     private ProgrammingObject addExistingProgrammingObject(ProgrammingObject programmingObject) {
         if (currentHoveredObject != null) {
-            //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, currentHoveredObject.getChildren().size(), currentHoveredObject);
             synchronized (programmingObjects) {
-                programmingObject.setPositionUnderParent(currentHoveredObject.getChildren().size());
                 programmingObject.setParent(currentHoveredObject);
                 currentHoveredObject.addChild(programmingObject);
             }
         } else if (closestHoverObjectAbove != null || closestHoverObjectBelow != null) {
             insertProgrammingObject(programmingObject);
         } else {
-            //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
             synchronized (programmingObjects) {
                 programmingObjects.add(programmingObject);
             }
@@ -652,29 +619,24 @@ public class TrainingIDE extends Activity {
             if (closestHoverObjectAbove != null) {
                 if (closestHoverObjectAbove.getChildren().size() > 0) {
                     // The closest object to the hover location has children, so add this new object to the front of chose children
-                    //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove);
                     pObj.setParent(closestHoverObjectAbove);
                     closestHoverObjectAbove.insertChild(0, pObj);
                 } else {
                     // The closest object to the hover location has no children, so add this new object to the closest object's parent (if it has one),
                     // inserting the new object just after the closest object
                     if (closestHoverObjectAbove.getParent() != null) {
-                        //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
                         pObj.setParent(closestHoverObjectAbove.getParent());
                         closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove) + 1, pObj);
                     } else {
-                        //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
                         programmingObjects.add(pObj);
                     }
                 }
             } else if (closestHoverObjectBelow != null) {
                 // This is a less frequent case. When this happens, only insert into the closest object's parent above the closest object
                 if (closestHoverObjectBelow.getParent() != null) {
-                    //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
                     pObj.setParent(closestHoverObjectBelow.getParent());
                     closestHoverObjectBelow.getParent().insertChild(closestHoverObjectBelow.getParent().getChildren().indexOf(closestHoverObjectBelow), pObj);
                 } else {
-                    //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
                     programmingObjects.add(programmingObjects.indexOf(closestHoverObjectBelow), pObj);
                 }
             }
@@ -759,7 +721,7 @@ public class TrainingIDE extends Activity {
         return gd;
     }
 
-    public void Parameters(final ProgrammingObject programmingObject) {
+    public void showParametersDialog(final ProgrammingObject programmingObject) {
         if (programmingObject instanceof Print) {
             View view = View.inflate(TrainingIDE.this, R.layout.print_dialog, null);
             final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);

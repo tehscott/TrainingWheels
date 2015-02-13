@@ -45,8 +45,6 @@ public abstract class ProgrammingObject {
   }
 
   private ProgrammingObjectType type;
-  private int listPosition = -1; // position in the main list, starting at 0, -1 means unassigned
-  private int positionUnderParent = -1; // position underneath its parent (if it has a parent, -1 otherwise)
   private ProgrammingObject parent; // Can be null, meaning this IS the parent
   protected List<ProgrammingObjectType> allowedChildTypes; // The types of programming objects that can be children to this programming object, can be null
   protected ArrayList<ProgrammingObject> children = new ArrayList<ProgrammingObject>(); // Children of this programming object, cannot be null, but can be of 0 length
@@ -60,15 +58,12 @@ public abstract class ProgrammingObject {
 
   }
 
-  public ProgrammingObject(ProgrammingObjectType type, int listPosition) {
+  public ProgrammingObject(ProgrammingObjectType type) {
     this.type = type;
-    this.listPosition = listPosition;
   }
 
-  public ProgrammingObject(ProgrammingObjectType type, int listPosition, int positionUnderParent, ProgrammingObject parent) {
+  public ProgrammingObject(ProgrammingObjectType type, ProgrammingObject parent) {
     this.type = type;
-    this.listPosition = listPosition;
-    this.positionUnderParent = positionUnderParent;
     this.parent = parent;
   }
 
@@ -78,22 +73,6 @@ public abstract class ProgrammingObject {
 
   public void setType(ProgrammingObjectType type) {
     this.type = type;
-  }
-
-  public int getListPosition() {
-    return listPosition;
-  }
-
-  public void setListPosition(int listPosition) {
-    this.listPosition = listPosition;
-  }
-
-  public int getPositionUnderParent() {
-    return positionUnderParent;
-  }
-
-  public void setPositionUnderParent(int positionUnderParent) {
-    this.positionUnderParent = positionUnderParent;
   }
 
   public ProgrammingObject getParent() {

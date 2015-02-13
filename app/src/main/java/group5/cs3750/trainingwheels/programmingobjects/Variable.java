@@ -16,16 +16,16 @@ public class Variable extends ProgrammingObject {
     private List<ProgrammingObjectType> allowedChildTypes = new ArrayList(); // The types of programming objects that can be children to this programming object, can be null
     private int drawColor = R.color.button_green;
 
-    public Variable(int listPosition, String name, VariableType variableType, Object value) {
-        super(ProgrammingObjectType.VARIABLE, listPosition);
+    public Variable(String name, VariableType variableType, Object value) {
+        super(ProgrammingObjectType.VARIABLE);
 
         this.name = name;
         this.variableType = variableType;
         this.value = value;
     }
 
-    public Variable(int listPosition, String name, VariableType variableType, Object value, int positionUnderParent, ProgrammingObject parent) {
-        super(ProgrammingObjectType.VARIABLE, listPosition, positionUnderParent, parent);
+    public Variable(String name, VariableType variableType, Object value, ProgrammingObject parent) {
+        super(ProgrammingObjectType.VARIABLE, parent);
 
         this.name = name;
         this.variableType = variableType;
@@ -92,8 +92,15 @@ public class Variable extends ProgrammingObject {
         this.name = name;
     }
 
-  @Override
-  public void toScript(StringBuilder stringBuilder) {
+    @Override
+    public void toScript(StringBuilder stringBuilder) {
+        stringBuilder.append("var " + name);
 
-  }
+        if(value != null) {
+            if (variableType == VariableType.BOOLEAN || variableType == VariableType.NUMBER)
+                stringBuilder.append(" = " + value + ";\n");
+            else if(variableType == VariableType.STRING)
+                stringBuilder.append(" = '" + value + "';\n");
+        }
+    }
 }

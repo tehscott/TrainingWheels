@@ -16,15 +16,15 @@ public class While extends ProgrammingObject {
   );
   private int drawColor = R.color.button_orange;
 
-  public While(int listPosition, Variable conditionVariable, Object terminationValue) {
-    super(ProgrammingObjectType.WHILE, listPosition);
+  public While(Variable conditionVariable, Object terminationValue) {
+    super(ProgrammingObjectType.WHILE);
 
     this.conditionVariable = conditionVariable;
     this.terminationValue = terminationValue;
   }
 
-  public While(int listPosition, Variable conditionVariable, Object terminationValue, int positionUnderParent, ProgrammingObject parent) {
-    super(ProgrammingObjectType.WHILE, listPosition, positionUnderParent, parent);
+  public While(Variable conditionVariable, Object terminationValue, ProgrammingObject parent) {
+    super(ProgrammingObjectType.WHILE, parent);
 
     this.conditionVariable = conditionVariable;
     this.terminationValue = terminationValue;

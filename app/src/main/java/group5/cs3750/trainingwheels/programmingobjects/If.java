@@ -13,9 +13,8 @@ public class If extends ProgrammingObject {
     private ComparisonOperator comparisonOperator;
     private String expression;
 
-    public If() {}
-    public If(int position, Variable conditionLeftSide, Object conditionRightSide, Variable.VariableType conditionRightSideType, ComparisonOperator comparisonOperator) {
-        super(ProgrammingObjectType.IF, position);
+    public If(Variable conditionLeftSide, Object conditionRightSide, Variable.VariableType conditionRightSideType, ComparisonOperator comparisonOperator) {
+        super(ProgrammingObjectType.IF);
 
         this.conditionLeftSide = conditionLeftSide;
         this.conditionRightSide = conditionRightSide;
@@ -25,8 +24,8 @@ public class If extends ProgrammingObject {
         setFields();
     }
 
-    public If(int position, Variable conditionLeftSide, Object conditionRightSide, Variable.VariableType conditionRightSideType, ComparisonOperator comparisonOperator, int positionUnderParent, ProgrammingObject parent) {
-        super(ProgrammingObjectType.IF, position, positionUnderParent, parent);
+    public If(Variable conditionLeftSide, Object conditionRightSide, Variable.VariableType conditionRightSideType, ComparisonOperator comparisonOperator, ProgrammingObject parent) {
+        super(ProgrammingObjectType.IF, parent);
 
         this.conditionLeftSide = conditionLeftSide;
         this.conditionRightSide = conditionRightSide;

@@ -17,17 +17,12 @@ public class Print extends ProgrammingObject {
     private int drawColor = R.color.button_purple;
 
     public Print(String string) {
-        super(ProgrammingObjectType.PRINT, 0);
+        super(ProgrammingObjectType.PRINT);
         text = string;
-        //setButtonDrawable(new ColorDrawable(Color.YELLOW));
     }
 
-    public Print(int listPosition) {
-        super(ProgrammingObjectType.PRINT, listPosition);
-    }
-
-    public Print(int listPosition, int positionUnderParent, ProgrammingObject parent) {
-        super(ProgrammingObjectType.PRINT, listPosition, positionUnderParent, parent);
+    public Print(ProgrammingObject parent) {
+        super(ProgrammingObjectType.PRINT, parent);
     }
 
     public String getText() {
