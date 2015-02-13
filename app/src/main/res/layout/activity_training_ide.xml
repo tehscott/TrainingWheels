@@ -1,236 +1,233 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/ide_bg"
-                tools:context=".TrainingIDE">
-
-  <RelativeLayout
-    android:id="@+id/top_bar_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentTop="true">
-
-    <ImageView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:adjustViewBounds="false"
-      android:background="@color/back_button_bar_bg"
-      android:scaleType="fitXY"
-      android:src="@drawable/back_button_bar"/>
-
-    <ImageView
-      android:id="@+id/back_button_bg"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:adjustViewBounds="true"
-      android:src="@drawable/back_button"/>
-
-    <Button
-      android:id="@+id/back_button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignBottom="@+id/back_button_bg"
-      android:layout_alignLeft="@+id/back_button_bg"
-      android:layout_alignRight="@+id/back_button_bg"
-      android:layout_alignTop="@+id/back_button_bg"
-      android:background="@android:color/transparent"
-      android:minHeight="0dp"
-      android:minWidth="0dp"
-      android:text="Back "
-      android:textColor="@color/ide_button_text"/>
-
-    <ImageView
-      android:id="@+id/run_button_bg"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentRight="true"
-      android:adjustViewBounds="true"
-      android:src="@drawable/run_button"/>
-
-    <Button
-      android:id="@+id/run_button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignBottom="@+id/run_button_bg"
-      android:layout_alignLeft="@+id/run_button_bg"
-      android:layout_alignRight="@+id/run_button_bg"
-      android:layout_alignTop="@+id/run_button_bg"
-      android:background="@android:color/transparent"
-      android:minHeight="0dp"
-      android:minWidth="0dp"
-      android:text="  Run"
-      android:textColor="@color/ide_button_text"/>
-
-  </RelativeLayout>
-
-  <LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@+id/bottom_bar_container"
-    android:layout_below="@+id/top_bar_container"
-    android:orientation="horizontal">
+    android:background="@color/ide_bg"
+    tools:context=".TrainingIDE">
+
+    <RelativeLayout
+        android:id="@+id/top_bar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:background="@color/back_button_bar_bg"
+            android:scaleType="fitXY"
+            android:src="@drawable/back_button_bar" />
+
+        <ImageView
+            android:id="@+id/back_button_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:src="@drawable/back_button" />
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/back_button_bg"
+            android:layout_alignLeft="@+id/back_button_bg"
+            android:layout_alignRight="@+id/back_button_bg"
+            android:layout_alignTop="@+id/back_button_bg"
+            android:background="@android:color/transparent"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:text="Back "
+            android:textColor="@color/ide_button_text" />
+
+        <ImageView
+            android:id="@+id/run_button_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:adjustViewBounds="true"
+            android:src="@drawable/run_button" />
+
+        <Button
+            android:id="@+id/run_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/run_button_bg"
+            android:layout_alignLeft="@+id/run_button_bg"
+            android:layout_alignRight="@+id/run_button_bg"
+            android:layout_alignTop="@+id/run_button_bg"
+            android:background="@android:color/transparent"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:text="  Run"
+            android:textColor="@color/ide_button_text" />
+
+    </RelativeLayout>
 
     <LinearLayout
-      android:id="@+id/button_container"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_weight="3.5"
-      android:orientation="vertical">
-
-      <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="5dp">
+        android:layout_above="@+id/bottom_bar_container"
+        android:layout_below="@+id/top_bar_container"
+        android:orientation="horizontal">
 
         <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="vertical">
+            android:id="@+id/button_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3.5"
+            android:orientation="vertical">
 
-          <Button
-            android:id="@+id/bWhile"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:tag="while"
-            android:text="While"
-            android:textColor="@color/ide_button_text"/>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp">
 
-          <Button
-            android:id="@+id/bIf"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:tag="if"
-            android:text="If"
-            android:textColor="@color/ide_button_text"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-          <Button
-            android:id="@+id/bFor"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="5dp"
-            android:tag="for"
-            android:text="For"
-            android:textColor="@color/ide_button_text"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="DATA"
+                        android:textStyle="bold"/>
 
-          <Button
-            android:id="@+id/bPrint"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="5dp"
-            android:tag="print"
-            android:text="Print"
-            android:textColor="@color/ide_button_text"/>
+                    <Button
+                        android:id="@+id/bVariable"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:tag="variable"
+                        android:text="Variable"
+                        android:textColor="@color/ide_button_text" />
 
-          <Button
-            android:id="@+id/bVariable"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="5dp"
-            android:tag="variable"
-            android:text="Variable"
-            android:textColor="@color/ide_button_text"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="CONTROL"
+                        android:textStyle="bold"/>
 
-          <Button
-            android:id="@+id/bProcedure"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="5dp"
-            android:tag="function"
-            android:text="Function"
-            android:textColor="@color/ide_button_text"
-              android:visibility="gone"/>
+                    <Button
+                        android:id="@+id/bIf"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:tag="if"
+                        android:text="If"
+                        android:textColor="@color/ide_button_text" />
 
-          <Button
-            android:id="@+id/bString"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="5dp"
-            android:tag="string"
-            android:text="String"
-            android:textColor="@color/ide_button_text"
-            android:visibility="gone"/>
-            <Button
-                android:id="@+id/bTest"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="5dp"
-                android:tag="test"
-                android:text="Test FIP"
-                android:textColor="@android:color/white"
-                />
+                    <Button
+                        android:id="@+id/bFor"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:tag="for"
+                        android:text="For"
+                        android:textColor="@color/ide_button_text" />
+
+                    <Button
+                        android:id="@+id/bWhile"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:tag="while"
+                        android:text="While"
+                        android:textColor="@color/ide_button_text" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="OUTPUT"
+                        android:textStyle="bold"/>
+
+                    <Button
+                        android:id="@+id/bPrint"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:tag="print"
+                        android:text="Print"
+                        android:textColor="@color/ide_button_text" />
+
+                    <Button
+                        android:id="@+id/bProcedure"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:tag="function"
+                        android:text="Function"
+                        android:textColor="@color/ide_button_text"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
-      </ScrollView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:scaleType="fitXY"
+            android:src="@drawable/bar" />
+
+        <group5.cs3750.trainingwheels.canvas.CanvasView
+            android:id="@+id/canvas_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="2" />
+
+        <ScrollView
+            android:id="@+id/output_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="3"
+            android:background="@drawable/rounded_bg"
+            android:padding="10dp">
+
+            <WebView
+                android:id="@+id/webView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </ScrollView>
+
     </LinearLayout>
 
-    <ImageView
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:layout_weight="0"
-      android:scaleType="fitXY"
-      android:src="@drawable/bar"/>
-
-    <group5.cs3750.trainingwheels.canvas.CanvasView
-      android:id="@+id/canvas_view"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_margin="5dp"
-      android:layout_weight="2"/>
-
-    <ScrollView
-      android:id="@+id/output_container"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_margin="5dp"
-      android:layout_weight="3"
-      android:background="@drawable/rounded_bg"
-      android:padding="10dp">
-
-      <WebView
-        android:id="@+id/webView"
+    <RelativeLayout
+        android:id="@+id/bottom_bar_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
-    </ScrollView>
+        <ImageView
+            android:id="@+id/clear_button_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:adjustViewBounds="true"
+            android:src="@drawable/clear_button" />
 
-  </LinearLayout>
-
-  <RelativeLayout
-    android:id="@+id/bottom_bar_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true">
-
-    <ImageView
-      android:id="@+id/clear_button_bg"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentRight="true"
-      android:adjustViewBounds="true"
-      android:src="@drawable/clear_button"/>
-
-    <Button
-      android:id="@+id/clear_button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignBottom="@+id/clear_button_bg"
-      android:layout_alignLeft="@+id/clear_button_bg"
-      android:layout_alignRight="@+id/clear_button_bg"
-      android:layout_alignTop="@+id/clear_button_bg"
-      android:background="@android:color/transparent"
-      android:minHeight="0dp"
-      android:minWidth="0dp"
-      android:text="  Clear"
-      android:textColor="@color/ide_button_text"/>
-  </RelativeLayout>
+        <Button
+            android:id="@+id/clear_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/clear_button_bg"
+            android:layout_alignLeft="@+id/clear_button_bg"
+            android:layout_alignRight="@+id/clear_button_bg"
+            android:layout_alignTop="@+id/clear_button_bg"
+            android:background="@android:color/transparent"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:text="  Clear"
+            android:textColor="@color/ide_button_text" />
+    </RelativeLayout>
 </RelativeLayout>

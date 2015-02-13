@@ -10,9 +10,14 @@ public class Variable extends ProgrammingObject {
         NUMBER, STRING, BOOLEAN
     }
 
+    public static enum Action {
+        INSTANTIATE, SET, GET
+    }
+
     private String name;
     private VariableType variableType;
     private Object value;
+    private Action action;
     private List<ProgrammingObjectType> allowedChildTypes = new ArrayList(); // The types of programming objects that can be children to this programming object, can be null
     private int drawColor = R.color.button_green;
 
@@ -90,6 +95,14 @@ public class Variable extends ProgrammingObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
+    public void setAction(Action action) {
+        this.action = action;
     }
 
     @Override

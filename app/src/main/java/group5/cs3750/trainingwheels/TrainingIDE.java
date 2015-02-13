@@ -21,6 +21,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -38,7 +39,7 @@ import group5.cs3750.trainingwheels.programmingobjects.While;
 
 
 public class TrainingIDE extends Activity {
-    private Button bIf, bWhile, bFor, bString, bFunction, bVariable, bPrint;
+    private Button bIf, bWhile, bFor, bFunction, bVariable, bPrint;
     private Button bBack, bRun, bClear;
 
     private CanvasView canvas;
@@ -82,7 +83,6 @@ public class TrainingIDE extends Activity {
         bIf = (Button) findViewById(R.id.bIf);
         bWhile = (Button) findViewById(R.id.bWhile);
         bFor = (Button) findViewById(R.id.bFor);
-        bString = (Button) findViewById(R.id.bString);
         bFunction = (Button) findViewById(R.id.bProcedure);
         bVariable = (Button) findViewById(R.id.bVariable);
         bPrint = (Button) findViewById(R.id.bPrint);
@@ -91,7 +91,6 @@ public class TrainingIDE extends Activity {
         bWhile.setOnLongClickListener(new CustomOnLongPressListener());
         bIf.setOnLongClickListener(new CustomOnLongPressListener());
         bFor.setOnLongClickListener(new CustomOnLongPressListener());
-        bString.setOnLongClickListener(new CustomOnLongPressListener());
         bVariable.setOnLongClickListener(new CustomOnLongPressListener());
         bFunction.setOnLongClickListener(new CustomOnLongPressListener());
         bPrint.setOnLongClickListener(new CustomOnLongPressListener());
@@ -100,10 +99,9 @@ public class TrainingIDE extends Activity {
         bIf.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_teal, 12));
         bWhile.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_orange, 12));
         bFor.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_red, 12));
-        bString.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_blue, 12));
         bFunction.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
         bVariable.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_green, 12));
-        bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
+        bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_blue, 12));
 
         /*
          Back, Run, Clear buttons
@@ -644,7 +642,7 @@ public class TrainingIDE extends Activity {
     }
 
     private Button getButtonForProgrammingObject(ProgrammingObject programmingObject) {
-        // bIf, bWhile, bFor, bString, bFunction, bVariable, bPrint;
+        // bIf, bWhile, bFor, bFunction, bVariable, bPrint;
         // TODO: Update this any time a button is added to the left side bar
         String objectName = programmingObject.getTypeName().toLowerCase();
 
@@ -656,8 +654,6 @@ public class TrainingIDE extends Activity {
             return bVariable;
         } else if (objectName.contentEquals("if")) {
             return bIf;
-        } else if (objectName.contentEquals("string")) {
-            return bString;
         } else if (objectName.contentEquals("function")) {
             return bFunction;
         } else if (objectName.contentEquals("print")) {
@@ -768,6 +764,40 @@ public class TrainingIDE extends Activity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     ((If) programmingObject).setExpression(condition.getText().toString());
+
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.create().show();
+        } else if (programmingObject instanceof Variable) {
+            View view = View.inflate(TrainingIDE.this, R.layout.variable_dialog, null);
+            final Spinner action = (Spinner) view.findViewById(R.id.variableActionSpinner);
+            final Spinner type = (Spinner) view.findViewById(R.id.variableTypeSpinner);
+            final EditText name = (EditText) view.findViewById(R.id.variableName);
+            final EditText value = (EditText) view.findViewById(R.id.variableValue);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+            builder.setTitle("Enter your parameters");
+            builder.setView(view);
+            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if(action.getSelectedItem().equals("Instantiate"))
+                        ((Variable) programmingObject).setAction(Variable.Action.INSTANTIATE);
+                    else if(action.getSelectedItem().equals("Set"))
+                        ((Variable) programmingObject).setAction(Variable.Action.SET);
+                    else if(action.getSelectedItem().equals("Get"))
+                        ((Variable) programmingObject).setAction(Variable.Action.GET);
+
+                    if(type.getSelectedItem().equals("String"))
+                        ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
+                    else if(type.getSelectedItem().equals("Number"))
+                        ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
+                    else if(type.getSelectedItem().equals("Boolean"))
+                        ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
+
+                    ((Variable) programmingObject).setName(name.getText().toString());
+                    ((Variable) programmingObject).setValue(value.getText().toString());
 
                     dialogInterface.dismiss();
                 }
