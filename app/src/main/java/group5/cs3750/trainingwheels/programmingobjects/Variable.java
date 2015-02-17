@@ -43,19 +43,19 @@ public class Variable extends ProgrammingObject {
 
         switch (variableType) {
             case NUMBER:
-                type = "Number";
+                type = "number";
                 break;
 
             case STRING:
-                type = "String";
+                type = "string";
                 break;
 
             case BOOLEAN:
-                type = "Boolean";
+                type = "boolean";
                 break;
         }
 
-        return type + " variable '" + name + "': " + value;
+        return type + " '" + name + "': '" + value + "'";
     }
 
     @Override
@@ -103,6 +103,11 @@ public class Variable extends ProgrammingObject {
 
     public void setAction(Action action) {
         this.action = action;
+    }
+
+    @Override
+    public ProgrammingObjectType getType() {
+        return ProgrammingObjectType.VARIABLE;
     }
 
     @Override

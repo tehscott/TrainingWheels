@@ -34,7 +34,7 @@ public class For extends ProgrammingObject {
         allowedChildTypes = new ArrayList<ProgrammingObjectType>( // The types of programming objects that can be children to this programming object, can be null
                 Arrays.asList(
                         ProgrammingObjectType.WHILE, ProgrammingObjectType.IF, ProgrammingObjectType.FOR, ProgrammingObjectType.PRINT,
-                        ProgrammingObjectType.INT, ProgrammingObjectType.FUNCTION, ProgrammingObjectType.STRING)
+                        ProgrammingObjectType.FUNCTION, ProgrammingObjectType.VARIABLE)
         );
 
         drawColor = R.color.button_red;
@@ -42,7 +42,7 @@ public class For extends ProgrammingObject {
 
     @Override
     public String toString() {
-        return "Loop from " + startingValue + " to " + endingValue;
+        return startingValue + " to " + endingValue + ", " + getEndingValueComparisonOperator().toString();
     }
 
     @Override
@@ -83,6 +83,8 @@ public class For extends ProgrammingObject {
     public void setEndingValueComparisonOperator(ComparisonOperator endingValueComparisonOperator) {
         this.endingValueComparisonOperator = endingValueComparisonOperator;
     }
+
+
 
     @Override
     public void toScript(StringBuilder stringBuilder) {

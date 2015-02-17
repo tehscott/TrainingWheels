@@ -17,7 +17,7 @@
         android:id="@+id/variableActionSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/variableTypeArray"
+        android:entries="@array/variableActionArray"
         android:layout_toRightOf="@+id/variableActionLabel"/>
 
     <!-- Variable type -->
@@ -34,7 +34,7 @@
         android:id="@+id/variableTypeSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/variableActionArray"
+        android:entries="@array/variableTypeArray"
         android:layout_toRightOf="@+id/variableTypeLabel"
         android:layout_alignLeft="@+id/variableActionSpinner"
         android:layout_below="@+id/variableActionSpinner"/>

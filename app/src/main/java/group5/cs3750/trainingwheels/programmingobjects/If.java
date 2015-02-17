@@ -39,16 +39,15 @@ public class If extends ProgrammingObject {
         allowedChildTypes = new ArrayList<ProgrammingObjectType>( // The types of programming objects that can be children to this programming object, can be null
                 Arrays.asList(
                         ProgrammingObjectType.WHILE, ProgrammingObjectType.IF, ProgrammingObjectType.FOR, ProgrammingObjectType.PRINT,
-                        ProgrammingObjectType.INT, ProgrammingObjectType.FUNCTION, ProgrammingObjectType.STRING)
+                        ProgrammingObjectType.FUNCTION, ProgrammingObjectType.VARIABLE)
         );
 
         drawColor = R.color.button_blue;
-        //addChild(new Print("Test <br>"));
     }
 
     @Override
     public String toString() {
-        return "If ...";
+        return expression;
     }
 
     @Override

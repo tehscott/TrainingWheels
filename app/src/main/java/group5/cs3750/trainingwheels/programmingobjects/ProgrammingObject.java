@@ -10,7 +10,7 @@ import group5.cs3750.trainingwheels.R;
 
 public abstract class ProgrammingObject {
   public static enum ProgrammingObjectType {
-    WHILE, IF, FOR, PRINT, INT, FUNCTION, STRING, VARIABLE
+    WHILE, IF, FOR, PRINT, FUNCTION, VARIABLE
   }
 
   public static enum ComparisonOperator {

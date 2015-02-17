@@ -101,7 +101,7 @@ public class TrainingIDE extends Activity {
         bFor.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_red, 12));
         bFunction.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
         bVariable.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_green, 12));
-        bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_blue, 12));
+        bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
 
         /*
          Back, Run, Clear buttons

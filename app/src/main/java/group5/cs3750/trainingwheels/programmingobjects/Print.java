@@ -42,7 +42,7 @@ public class Print extends ProgrammingObject {
 
     @Override
     public String toString() {
-        return "Print";
+        return "'" + text + "'";
     }
 
     @Override
