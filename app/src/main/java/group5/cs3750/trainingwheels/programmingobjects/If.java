@@ -11,7 +11,7 @@ public class If extends ProgrammingObject {
     private Object conditionRightSide; // Right side of the conditional statement, can be a manually-entered value or a Variable
     private Variable.VariableType conditionRightSideType;
     private ComparisonOperator comparisonOperator;
-    private String expression;
+    private String expression = "";
 
     public If(Variable conditionLeftSide, Object conditionRightSide, Variable.VariableType conditionRightSideType, ComparisonOperator comparisonOperator) {
         super(ProgrammingObjectType.IF);

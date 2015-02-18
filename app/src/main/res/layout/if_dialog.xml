@@ -1,12 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
+    <!-- Action -->
+    <TextView
+        android:id="@+id/variableLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Variable"
+        android:gravity="center"
+        android:layout_alignTop="@+id/variableSpinner"
+        android:layout_alignBottom="@+id/variableSpinner" />
+
+    <Spinner
+        android:id="@+id/variableSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/condition"
-        android:hint="Enter a true or false expression"
-        android:layout_gravity="center_horizontal" />
-</LinearLayout>
+        android:entries="@array/variableActionArray"
+        android:layout_toRightOf="@+id/variableLabel"/>
+
+    <!-- Variable type -->
+    <TextView
+        android:id="@+id/variableTypeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type"
+        android:gravity="center"
+        android:layout_alignTop="@+id/variableTypeSpinner"
+        android:layout_alignBottom="@+id/variableTypeSpinner" />
+
+    <Spinner
+        android:id="@+id/variableTypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/variableTypeArray"
+        android:layout_toRightOf="@+id/variableTypeLabel"
+        android:layout_alignLeft="@+id/variableSpinner"
+        android:layout_below="@+id/variableSpinner"/>
+
+    <!-- Variable name -->
+    <EditText
+        android:id="@+id/variableName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter variable name"
+        android:layout_below="@+id/variableTypeSpinner"/>
+
+    <!-- Variable value -->
+    <EditText
+        android:id="@+id/variableValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter value"
+        android:layout_below="@+id/variableName"/>
+
+</RelativeLayout>
