@@ -23,6 +23,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -431,6 +434,7 @@ public class TrainingIDE extends Activity {
 
     private void initCanvas() {
         canvas = (CanvasView) findViewById(R.id.canvas_view);
+        canvas.setTrainingIDE(this);
 
         // Initialize the OnDragListener
         canvas.setOnDragListener(new View.OnDragListener() {
@@ -735,4 +739,54 @@ public class TrainingIDE extends Activity {
 
         return gd;
     }
+
+  public void doSave(View view) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle("Save Program");
+    builder.setView(View.inflate(this, R.layout.save_dialog, null));
+    builder.setNeutralButton(android.R.string.ok, null);
+
+    AlertDialog alertDialog = builder.create();
+    alertDialog.show();
+    alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new SaveClickListener(alertDialog));
+  }
+
+  class SaveClickListener implements View.OnClickListener {
+    private final AlertDialog mDialog;
+
+    public SaveClickListener(AlertDialog dialogView) {
+      mDialog = dialogView;
+    }
+
+    @Override
+    public void onClick(View view) {
+      EditText title = (EditText) mDialog.findViewById(R.id.save_title);
+      if (title.getText() == null) {
+        title.setError("You must supply a name");
+        return;
+      }
+
+      String titleText = title.getText().toString();
+      if (titleText != null && !titleText.trim().isEmpty()) {
+        titleText = titleText.trim();
+
+        for (String s : fileList()) {
+          if (s.equals(titleText)) {
+            title.setError("Name already in use");
+            return;
+          }
+        }
+        try {
+          ObjectOutputStream oos = new ObjectOutputStream(openFileOutput(titleText, MODE_PRIVATE));
+          oos.writeObject(programmingObjects);
+          oos.close();
+          mDialog.dismiss();
+        } catch (FileNotFoundException e) {
+          e.printStackTrace();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
 }

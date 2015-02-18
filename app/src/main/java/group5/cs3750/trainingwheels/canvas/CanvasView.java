@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import group5.cs3750.trainingwheels.TrainingIDE;
 import group5.cs3750.trainingwheels.programmingobjects.ProgrammingObject;
@@ -44,8 +43,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
     public CanvasView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        this.trainingIDE = (TrainingIDE) context;
 
         if(!isInEditMode())
             setZOrderOnTop(true);
@@ -378,4 +375,12 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
     public int getDrawnObjectHeight() {
         return drawnObjectHeight;
     }
+
+  public TrainingIDE getTrainingIDE() {
+    return trainingIDE;
+  }
+
+  public void setTrainingIDE(TrainingIDE trainingIDE) {
+    this.trainingIDE = trainingIDE;
+  }
 }

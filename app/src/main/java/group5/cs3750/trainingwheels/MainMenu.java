@@ -29,8 +29,7 @@ public class MainMenu extends Activity {
         findViewById(R.id.btnContinueGame).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent user = new Intent(MainMenu.this, TrainingIDE.class);
-                startActivity(user);
+                loadSavedFilesList();
             }
         });
 
@@ -49,13 +48,9 @@ public class MainMenu extends Activity {
                 startActivity(user);
             }
         });
-
-      findViewById(R.id.javascript_demo).setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          Intent intent = new Intent(MainMenu.this, JavaScriptDemo.class);
-          startActivity(intent);
-        }
-      });
     }
+
+  private void loadSavedFilesList() {
+    //TODO load list from private storage
+  }
 }

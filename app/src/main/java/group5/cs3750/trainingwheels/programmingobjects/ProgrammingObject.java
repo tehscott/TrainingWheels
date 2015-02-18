@@ -3,12 +3,13 @@ package group5.cs3750.trainingwheels.programmingobjects;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import group5.cs3750.trainingwheels.R;
 
-public abstract class ProgrammingObject {
+public abstract class ProgrammingObject implements Serializable{
   public static enum ProgrammingObjectType {
     WHILE, IF, FOR, PRINT, INT, FUNCTION, STRING, VARIABLE
   }

@@ -53,13 +53,5 @@
       android:id="@+id/btnStats"
       android:layout_gravity="center_horizontal"/>
 
-    <Button
-      android:id="@+id/javascript_demo"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:padding="10dp"
-      android:text="JavaScript Demo"
-      android:background="@android:color/holo_blue_bright"/>
   </LinearLayout>
 </RelativeLayout>
