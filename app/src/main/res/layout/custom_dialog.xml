@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80000000">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="20dp"
+        android:background="@drawable/dialog_bg" >
+
+        <TextView android:id="@+id/custom_dialog_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Dialog"
+            android:textColor="@android:color/black"
+            android:layout_alignParentTop="true" />
+
+        <View android:id="@+id/custom_dialog_divider"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@color/button_blue"
+            android:layout_below="@+id/custom_dialog_text"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/custom_dialog_content"
+            android:layout_below="@+id/custom_dialog_divider"
+            android:orientation="vertical"
+            android:padding="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/custom_dialog_button_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/custom_dialog_content" >
+
+            <Button
+                android:id="@+id/custom_dialog_left_button"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:textSize="15dp"
+                android:textColor="@color/ide_button_text"
+                android:text="@android:string/cancel"
+                android:layout_marginRight="5dp"/>
+
+            <Button
+                android:id="@+id/custom_dialog_right_button"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:textSize="15dp"
+                android:textColor="@color/ide_button_text"
+                android:text="@android:string/ok"
+                android:layout_marginLeft="5dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

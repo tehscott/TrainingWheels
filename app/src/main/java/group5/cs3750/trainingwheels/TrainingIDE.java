@@ -2,6 +2,7 @@ package group5.cs3750.trainingwheels;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -718,112 +719,233 @@ public class TrainingIDE extends Activity {
     }
 
     public void showParametersDialog(final ProgrammingObject programmingObject) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+
         if (programmingObject instanceof Print) {
-            View view = View.inflate(TrainingIDE.this, R.layout.print_dialog, null);
-            final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
-            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
-            builder.setTitle("Enter some text");
-            builder.setView(view);
-            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//            View view = View.inflate(TrainingIDE.this, R.layout.print_dialog, null);
+//            final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+//
+//            builder.setTitle("Enter some text");
+//            builder.setView(view);
+//            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    ((Print) programmingObject).setText(editText.getText().toString());
+//                    dialogInterface.dismiss();
+//                }
+//            });
+//            builder.create().show();
+
+            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Print - Enter text to print", R.layout.print_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    ((Print) programmingObject).setText(editText.getText().toString());
-                    dialogInterface.dismiss();
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    // TODO: cancel placement of object
                 }
             });
-            builder.create().show();
-        } else if (programmingObject instanceof For) {
-            final View view = View.inflate(TrainingIDE.this, R.layout.for_dialog, null);
-            //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
-            final EditText startingValue = (EditText) view.findViewById(R.id.startingValue);
-            final EditText endingValue = (EditText) view.findViewById(R.id.endingValue);
-            final RadioButton increment = (RadioButton) view.findViewById(R.id.increment);
-            final RadioButton decrement = (RadioButton) view.findViewById(R.id.decrement);
-            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
-            builder.setTitle("Enter your parameters");
-            builder.setView(view);
-            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
+                public void onClick(View v) {
+                    EditText editText = (EditText) dialog.getDialog().findViewById(R.id.print_dialog_edit_text);
+                    ((Print) programmingObject).setText(editText.getText().toString());
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        } else if (programmingObject instanceof For) {
+//            final View view = View.inflate(TrainingIDE.this, R.layout.for_dialog, null);
+//            //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+//            final EditText startingValue = (EditText) view.findViewById(R.id.startingValue);
+//            final EditText endingValue = (EditText) view.findViewById(R.id.endingValue);
+//            final RadioButton increment = (RadioButton) view.findViewById(R.id.increment);
+//            final RadioButton decrement = (RadioButton) view.findViewById(R.id.decrement);
+//
+//            builder.setTitle("Enter your parameters");
+//            builder.setView(view);
+//            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    ((For) programmingObject).setStartingValue(Integer.valueOf(startingValue.getText().toString()));
+//                    ((For) programmingObject).setEndingValue(Integer.valueOf(endingValue.getText().toString()));
+//                    if (((RadioButton) view.findViewById(R.id.increment)).isChecked()) {
+//                        ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.LESS_THAN);
+//
+//                    } else {
+//                        ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.GREATER_THAN);
+//                    }
+//                    dialogInterface.dismiss();
+//                }
+//            });
+//            builder.create().show();
+
+            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "For - Enter your parameters", R.layout.for_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    // TODO: cancel placement of object
+                }
+            });
+            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EditText startingValue = (EditText) dialog.getDialog().findViewById(R.id.startingValue);
+                    EditText endingValue = (EditText) dialog.getDialog().findViewById(R.id.endingValue);
+                    RadioButton increment = (RadioButton) dialog.getDialog().findViewById(R.id.increment);
+                    RadioButton decrement = (RadioButton) dialog.getDialog().findViewById(R.id.decrement);
+
                     ((For) programmingObject).setStartingValue(Integer.valueOf(startingValue.getText().toString()));
                     ((For) programmingObject).setEndingValue(Integer.valueOf(endingValue.getText().toString()));
-                    if(((RadioButton) view.findViewById(R.id.increment)).isChecked()){
+                    if (((RadioButton) dialog.getDialog().findViewById(R.id.increment)).isChecked()) {
                         ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.LESS_THAN);
-
-                    }else{
+                    } else {
                         ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.GREATER_THAN);
                     }
-                    dialogInterface.dismiss();
+                    dialog.dismiss();
                 }
             });
-            builder.create().show();
+            dialog.show();
         } else if (programmingObject instanceof If) {
-            View view = View.inflate(TrainingIDE.this, R.layout.if_dialog, null);
-            //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
-            //final EditText condition = (EditText) view.findViewById(R.id.variableSpinner);
-            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
-            builder.setTitle("Enter a true or false statement");
-            builder.setView(view);
-            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    //((If) programmingObject).setExpression(condition.getText().toString());
+//            View view = View.inflate(TrainingIDE.this, R.layout.if_dialog, null);
+//            //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+//            //final EditText condition = (EditText) view.findViewById(R.id.variableSpinner);
+//
+//            builder.setTitle("Enter a true or false statement");
+//            builder.setView(view);
+//            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    //((If) programmingObject).setExpression(condition.getText().toString());
+//
+//                    dialogInterface.dismiss();
+//                }
+//            });
+//            builder.create().show();
 
-                    dialogInterface.dismiss();
+            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "If - Enter a true or false statement", R.layout.if_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    // TODO: cancel placement of object
                 }
             });
-            builder.create().show();
-        } else if (programmingObject instanceof Variable) {
-            View view = View.inflate(TrainingIDE.this, R.layout.variable_dialog, null);
-            final Spinner action = (Spinner) view.findViewById(R.id.variableActionSpinner);
-            final Spinner type = (Spinner) view.findViewById(R.id.variableTypeSpinner);
-            final EditText name = (EditText) view.findViewById(R.id.variableName);
-            final EditText value = (EditText) view.findViewById(R.id.variableValue);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
-            builder.setTitle("Enter your parameters");
-            builder.setView(view);
-            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    if(action.getSelectedItem().equals("Instantiate"))
+                public void onClick(View v) {
+
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        } else if (programmingObject instanceof Variable) {
+//            View view = View.inflate(TrainingIDE.this, R.layout.variable_dialog, null);
+//            final Spinner action = (Spinner) view.findViewById(R.id.variableActionSpinner);
+//            final Spinner type = (Spinner) view.findViewById(R.id.variableTypeSpinner);
+//            final EditText name = (EditText) view.findViewById(R.id.variableName);
+//            final EditText value = (EditText) view.findViewById(R.id.variableValue);
+//
+//            builder.setTitle("Enter your parameters");
+//            builder.setView(view);
+//            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    if (action.getSelectedItem().equals("Instantiate"))
+//                        ((Variable) programmingObject).setAction(Variable.Action.INSTANTIATE);
+//                    else if (action.getSelectedItem().equals("Set"))
+//                        ((Variable) programmingObject).setAction(Variable.Action.SET);
+//                    else if (action.getSelectedItem().equals("Get"))
+//                        ((Variable) programmingObject).setAction(Variable.Action.GET);
+//
+//                    if (type.getSelectedItem().equals("String"))
+//                        ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
+//                    else if (type.getSelectedItem().equals("Number"))
+//                        ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
+//                    else if (type.getSelectedItem().equals("Boolean"))
+//                        ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
+//
+//                    ((Variable) programmingObject).setName(name.getText().toString());
+//                    ((Variable) programmingObject).setValue(value.getText().toString());
+//
+//                    dialogInterface.dismiss();
+//                }
+//            });
+//            builder.create().show();
+
+            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Variable - Enter your parameters", R.layout.variable_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    // TODO: cancel placement of object
+                }
+            });
+            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Spinner action = (Spinner) dialog.getDialog().findViewById(R.id.variableActionSpinner);
+                    Spinner type = (Spinner) dialog.getDialog().findViewById(R.id.variableTypeSpinner);
+                    EditText name = (EditText) dialog.getDialog().findViewById(R.id.variableName);
+                    EditText value = (EditText) dialog.getDialog().findViewById(R.id.variableValue);
+
+                    if (action.getSelectedItem().equals("Instantiate"))
                         ((Variable) programmingObject).setAction(Variable.Action.INSTANTIATE);
-                    else if(action.getSelectedItem().equals("Set"))
+                    else if (action.getSelectedItem().equals("Set"))
                         ((Variable) programmingObject).setAction(Variable.Action.SET);
-                    else if(action.getSelectedItem().equals("Get"))
+                    else if (action.getSelectedItem().equals("Get"))
                         ((Variable) programmingObject).setAction(Variable.Action.GET);
 
-                    if(type.getSelectedItem().equals("String"))
+                    if (type.getSelectedItem().equals("String"))
                         ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
-                    else if(type.getSelectedItem().equals("Number"))
+                    else if (type.getSelectedItem().equals("Number"))
                         ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
-                    else if(type.getSelectedItem().equals("Boolean"))
+                    else if (type.getSelectedItem().equals("Boolean"))
                         ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
 
                     ((Variable) programmingObject).setName(name.getText().toString());
                     ((Variable) programmingObject).setValue(value.getText().toString());
 
-                    dialogInterface.dismiss();
+                    dialog.dismiss();
                 }
             });
-            builder.create().show();
+            dialog.show();
         }else if (programmingObject instanceof While) {
-            View view = View.inflate(TrainingIDE.this, R.layout.while_dialog, null);
-            final Spinner condition = (Spinner) view.findViewById(R.id.whileConditionSpinner);
-            final Spinner operand = (Spinner) view.findViewById(R.id.whileOperandSpinner);
-            final Spinner terminatingValue = (Spinner) view.findViewById(R.id.whileTermSpinner);
+//            View view = View.inflate(TrainingIDE.this, R.layout.while_dialog, null);
+//            final Spinner condition = (Spinner) view.findViewById(R.id.whileConditionSpinner);
+//            final Spinner operand = (Spinner) view.findViewById(R.id.whileOperandSpinner);
+//            final Spinner terminatingValue = (Spinner) view.findViewById(R.id.whileTermSpinner);
+//
+//            builder.setTitle("Create While");
+//            builder.setView(view);
+//            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    dialogInterface.dismiss();
+//                }
+//            });
+//            builder.create().show();
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
-            builder.setTitle("Create While");
-            builder.setView(view);
-            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "While - Enter your parameters", R.layout.while_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-
-                    dialogInterface.dismiss();
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    // TODO: cancel placement of object
                 }
             });
-            builder.create().show();
+            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Spinner condition = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionSpinner);
+                    Spinner operand = (Spinner) dialog.getDialog().findViewById(R.id.whileOperandSpinner);
+                    Spinner terminatingValue = (Spinner) dialog.getDialog().findViewById(R.id.whileTermSpinner);
+
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
         }
     }
 }
