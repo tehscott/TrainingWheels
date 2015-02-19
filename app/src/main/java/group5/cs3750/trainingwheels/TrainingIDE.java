@@ -484,7 +484,7 @@ public class TrainingIDE extends Activity {
                             addExistingProgrammingObject(draggedObject);
                             showParametersDialog(draggedObject);
                         } else {
-                            showParametersDialog(draggedObject);
+                            //showParametersDialog(draggedObject);
                         }
 
                         closestHoverObjectAbove = null;
@@ -733,7 +733,7 @@ public class TrainingIDE extends Activity {
             });
             builder.create().show();
         } else if (programmingObject instanceof For) {
-            View view = View.inflate(TrainingIDE.this, R.layout.for_dialog, null);
+            final View view = View.inflate(TrainingIDE.this, R.layout.for_dialog, null);
             //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
             final EditText startingValue = (EditText) view.findViewById(R.id.startingValue);
             final EditText endingValue = (EditText) view.findViewById(R.id.endingValue);
@@ -747,8 +747,12 @@ public class TrainingIDE extends Activity {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     ((For) programmingObject).setStartingValue(Integer.valueOf(startingValue.getText().toString()));
                     ((For) programmingObject).setEndingValue(Integer.valueOf(endingValue.getText().toString()));
-                    ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.LESS_THAN);
+                    if(((RadioButton) view.findViewById(R.id.increment)).isChecked()){
+                        ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.LESS_THAN);
 
+                    }else{
+                        ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.GREATER_THAN);
+                    }
                     dialogInterface.dismiss();
                 }
             });
@@ -756,14 +760,14 @@ public class TrainingIDE extends Activity {
         } else if (programmingObject instanceof If) {
             View view = View.inflate(TrainingIDE.this, R.layout.if_dialog, null);
             //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
-            final EditText condition = (EditText) view.findViewById(R.id.condition);
+            //final EditText condition = (EditText) view.findViewById(R.id.variableSpinner);
             AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
             builder.setTitle("Enter a true or false statement");
             builder.setView(view);
             builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    ((If) programmingObject).setExpression(condition.getText().toString());
+                    //((If) programmingObject).setExpression(condition.getText().toString());
 
                     dialogInterface.dismiss();
                 }
@@ -798,6 +802,23 @@ public class TrainingIDE extends Activity {
 
                     ((Variable) programmingObject).setName(name.getText().toString());
                     ((Variable) programmingObject).setValue(value.getText().toString());
+
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.create().show();
+        }else if (programmingObject instanceof While) {
+            View view = View.inflate(TrainingIDE.this, R.layout.while_dialog, null);
+            final Spinner condition = (Spinner) view.findViewById(R.id.whileConditionSpinner);
+            final Spinner operand = (Spinner) view.findViewById(R.id.whileOperandSpinner);
+            final Spinner terminatingValue = (Spinner) view.findViewById(R.id.whileTermSpinner);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+            builder.setTitle("Create While");
+            builder.setView(view);
+            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
 
                     dialogInterface.dismiss();
                 }

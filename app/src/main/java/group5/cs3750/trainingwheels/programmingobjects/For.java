@@ -88,10 +88,19 @@ public class For extends ProgrammingObject {
 
     @Override
     public void toScript(StringBuilder stringBuilder) {
+        Boolean down = false;
+        if(getEndingValueComparisonOperator().toString().contentEquals("<")){
+            down = true;
+        }
         String varName = "i" + String.valueOf(For.nextInt++);
         stringBuilder.append("for(var ").append(varName).append(" = ").append(startingValue).append("; ")
                 .append(varName).append(" ").append(endingValueComparisonOperator.toString()).append(endingValue).append("; ")
-                .append(varName).append("++) {\n");
+                .append(varName);
+        if(getEndingValueComparisonOperator().toString().contentEquals("<")){
+            stringBuilder.append("++").append("){");
+        }else{
+            stringBuilder.append("--").append("){");;
+        }
 
         for (ProgrammingObject child : children) {
             child.toScript(stringBuilder);

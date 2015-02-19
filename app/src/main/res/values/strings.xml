@@ -7,6 +7,7 @@
     <string name="title_activity_tutorial">Tutorial</string>
     <string name="training_ide">IDE</string>
     <string name="demo_menu_welcome">Welcome!</string>
+
     <!-- Settings Strings -->
     <string name="settingsSpinnerTitle">Difficulty</string>
     <string name="main_menu">Main Menu</string>
@@ -22,6 +23,29 @@
         <item>Set</item>
         <item>Get</item>
     </string-array>
+
+
+    <string-array name="conditionArray">
+        <item>True</item>
+        <item>False</item>
+        <item>Bool variable</item>
+    </string-array>
+
+    <string-array name="operandArray">
+        <item>Equal</item>
+        <item>Does not equal</item>
+        <item>Less than</item>
+        <item>Greater than</item>
+        <item>Less than or equal</item>
+        <item>Greater than or equal</item>
+    </string-array>
+
+    <string-array name="termArray">
+        <item>True</item>
+        <item>False</item>
+        <item>Bool variable</item>
+    </string-array>
+
 
     <string name="title_activity_user">User</string>
     <string name="remember_me">Remember Me</string>

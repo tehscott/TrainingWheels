@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Condition -->
+    <TextView
+        android:id="@+id/whileConditionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Condition   "
+        android:gravity="center"
+        android:layout_alignTop="@+id/whileConditionSpinner"
+        android:layout_alignBottom="@+id/whileConditionSpinner" />
+
+    <Spinner
+        android:id="@+id/whileConditionSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/conditionArray"
+        android:layout_toRightOf="@+id/whileConditionLabel"
+
+        />
+
+    <!--Operands -->
+    <TextView
+        android:id="@+id/whileOperandLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Operand     "
+        android:gravity="center"
+        android:layout_alignTop="@+id/whileOperandSpinner"
+        android:layout_alignBottom="@+id/whileOperandSpinner" />
+
+    <Spinner
+        android:id="@+id/whileOperandSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/operandArray"
+        android:layout_toRightOf="@+id/whileConditionLabel"
+        android:layout_below="@+id/whileConditionSpinner"
+        />
+
+    <!-- Terminating value -->
+    <TextView
+        android:id="@+id/whileTermLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Terminating\n value"
+        android:gravity="center"
+        android:layout_alignTop="@+id/whileTermSpinner"
+        android:layout_alignBottom="@+id/whileTermSpinner" />
+
+    <Spinner
+        android:id="@+id/whileTermSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/termArray"
+        android:layout_toRightOf="@+id/whileTermLabel"
+        android:layout_below="@+id/whileOperandSpinner"
+        />
+
+</RelativeLayout>
