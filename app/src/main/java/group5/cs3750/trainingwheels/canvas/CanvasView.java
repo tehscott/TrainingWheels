@@ -182,8 +182,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         // TODO: Change the alpha (or something else) of the object if it is being dragged (this should include children)
 
         // Draw the start of this parent object
-        GradientDrawable drawable = new GradientDrawable(GradientDrawable.Orientation.BL_TR, new int[]{pObj.getDrawColor(), pObj.getDrawColor()});
-      drawable.setCornerRadius(12);
+
+        GradientDrawable drawable = new GradientDrawable(GradientDrawable.Orientation.BL_TR, new int[]{getResources().getColor(pObj.getDrawColor()), getResources().getColor(pObj.getDrawColor())});
+        drawable.setCornerRadius(12);
         drawable.setBounds(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y);
         drawable.draw(canvas);
 
