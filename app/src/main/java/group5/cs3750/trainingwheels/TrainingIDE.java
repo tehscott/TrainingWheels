@@ -2,6 +2,7 @@ package group5.cs3750.trainingwheels;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -20,6 +21,8 @@ import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -41,7 +44,7 @@ import group5.cs3750.trainingwheels.programmingobjects.While;
 
 public class TrainingIDE extends Activity {
   public static final String PROGRAMMING_OBJECT_LIST = "group5.cs3750.trainingwheels.TrainingIDE.PROGRAMMING_OBJECT_LIST";
-  private Button bIf, bWhile, bFor, bString, bFunction, bVariable, bPrint;
+  private Button bIf, bWhile, bFor, bFunction, bVariable, bPrint;
   private Button bBack, bRun, bClear;
 
   private CanvasView canvas;
@@ -62,10 +65,10 @@ public class TrainingIDE extends Activity {
   private boolean didDrop;
   private ProgrammingObject draggedObject; // temporary dragged object
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_training_ide_2);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_training_ide);
 
     Bundle extras = getIntent().getExtras();
     if (extras != null && extras.containsKey(PROGRAMMING_OBJECT_LIST)) {
@@ -83,35 +86,30 @@ public class TrainingIDE extends Activity {
         /*
          Programming Object buttons
         */
-    bIf = (Button) findViewById(R.id.bIf);
-    bWhile = (Button) findViewById(R.id.bWhile);
-    bFor = (Button) findViewById(R.id.bFor);
-    bString = (Button) findViewById(R.id.bString);
-    bFunction = (Button) findViewById(R.id.bProcedure);
-    bVariable = (Button) findViewById(R.id.bVariable);
-    bPrint = (Button) findViewById(R.id.bPrint);
+        bIf = (Button) findViewById(R.id.bIf);
+        bWhile = (Button) findViewById(R.id.bWhile);
+        bFor = (Button) findViewById(R.id.bFor);
+        bFunction = (Button) findViewById(R.id.bProcedure);
+        bVariable = (Button) findViewById(R.id.bVariable);
+        bPrint = (Button) findViewById(R.id.bPrint);
 
-    // Long click listeners
-    bWhile.setOnLongClickListener(new CustomOnLongPressListener());
-    bIf.setOnLongClickListener(new CustomOnLongPressListener());
-    bFor.setOnLongClickListener(new CustomOnLongPressListener());
-    bString.setOnLongClickListener(new CustomOnLongPressListener());
-    bVariable.setOnLongClickListener(new CustomOnLongPressListener());
-    bFunction.setOnLongClickListener(new CustomOnLongPressListener());
-    bPrint.setOnLongClickListener(new CustomOnLongPressListener());
+        // Long click listeners
+        bWhile.setOnLongClickListener(new CustomOnLongPressListener());
+        bIf.setOnLongClickListener(new CustomOnLongPressListener());
+        bFor.setOnLongClickListener(new CustomOnLongPressListener());
+        bVariable.setOnLongClickListener(new CustomOnLongPressListener());
+        bFunction.setOnLongClickListener(new CustomOnLongPressListener());
+        bPrint.setOnLongClickListener(new CustomOnLongPressListener());
 
     // Custom backgrounds
     bIf.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_teal, 12));
     bIf.setTag(R.color.button_teal);
-
+    
     bWhile.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_orange, 12));
     bWhile.setTag(R.color.button_orange);
 
     bFor.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_red, 12));
     bFor.setTag(R.color.button_red);
-
-    bString.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_blue, 12));
-    bString.setTag(R.color.button_blue);
 
     bFunction.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
     bFunction.setTag(R.color.button_purple);
@@ -171,7 +169,22 @@ public class TrainingIDE extends Activity {
       public void onClick(View v) {
       }
     });
-  }
+  
+        bClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String container = "<!DOCTYPE html>\n" +
+                        "<html>\n" +
+                        "<body>\n" +
+                        "</body>\n" +
+                        "</html>";
+
+                webView.loadData(container, "text/html", null);
+
+                programmingObjects.clear();
+            }
+        });
+    }
 
   private void showTutorial(String tutorial) {
     SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -364,8 +377,6 @@ public class TrainingIDE extends Activity {
     }
   }
 
-  ;
-
   class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
@@ -480,7 +491,6 @@ public class TrainingIDE extends Activity {
             didDrop = false; // reset this
 
             break; // No need to return anything here
-
           case DragEvent.ACTION_DROP:
             Log.i("IDEA", v.getTag() + " received drop.");
             TextView tv = new TextView(TrainingIDE.this);
@@ -488,269 +498,475 @@ public class TrainingIDE extends Activity {
 
             canvas.setLastDropLocation(new Point((int) event.getX(), (int) event.getY()));
             findCurrentHoveredObject(programmingObjects);
+                        if (draggedObject != null) {
+                            // TODO: I think these will not be necessary any more
+                            deleteProgrammingObject(programmingObjects, draggedObject);
+                            addExistingProgrammingObject(draggedObject);
+                            showParametersDialog(draggedObject);
+                        } else {
+                            //showParametersDialog(draggedObject);
+                        }
 
-            if (draggedObject != null) {
-              // TODO: I think these will not be necessary any more
-              deleteProgrammingObject(programmingObjects, draggedObject);
-              addExistingProgrammingObject(draggedObject);
-            } else {
-              final ProgrammingObject programmingObject = addProgrammingObject((String) event.getClipDescription().getLabel());
-              if (programmingObject instanceof Print) {
-                View view = View.inflate(TrainingIDE.this, R.layout.print_dialog, null);
-                final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
-                AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
-                builder.setTitle("Enter some text");
-                builder.setView(view);
-                builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialogInterface, int i) {
-                    ((Print) programmingObject).setText(editText.getText().toString() + "<br>");
-                    dialogInterface.dismiss();
-                  }
-                });
-                builder.create().show();
-              }
+                        closestHoverObjectAbove = null;
+                        closestHoverObjectBelow = null;
 
+                        showTutorial((String) event.getClipData().getItemAt(0).getText());
+
+                        didDrop = true;
+                        return true; // Return true/false here based on whether or not the drop is valid
+
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                        canvas.setCurrentHoverLocation(new Point((int) event.getX(), (int) event.getY()));
+
+                        findCurrentHoveredObject(programmingObjects);
+
+                        //if(currentHoveredObject == null || !currentHoveredObject.equals(lastHoveredObject)) { // The user has not moved outside of the last object they hovered over, so don't delete it
+//                            if (draggedObject != null) {
+//                                Log.d("IDEa", "Creating new PO");
+//                                deleteProgrammingObject(programmingObjects, draggedObject);
+//                                addExistingProgrammingObject(draggedObject);
+//                            } else {
+//                                draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
+//                            }
+
+                        if (draggedObject != null)
+                            deleteProgrammingObject(programmingObjects, draggedObject);
+                        draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
+
+                        //lastHoveredObject = currentHoveredObject; // being null is fine
+                        closestHoverObjectAbove = null;
+                        closestHoverObjectBelow = null;
+                        findObjectJustAboveHoverLocation(programmingObjects);
+                        //}
+
+                        break;
+                }
+                return false;
             }
+        });
 
-            closestHoverObjectAbove = null;
-            closestHoverObjectBelow = null;
+        canvas.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // They should be able to move or delete it (show a trash can icon, I think)
 
-            showTutorial((String) event.getClipData().getItemAt(0).getText());
-            didDrop = true;
-            return true; // Return true/false here based on whether or not the drop is valid
+                // Get object we are hovered over, if any
+                canvas.setCurrentHoverLocation(new Point((int) canvas.getCurrentTouchLocation().x, (int) canvas.getCurrentTouchLocation().y));
+                findCurrentHoveredObject(programmingObjects);
+                lastHoveredObject = currentHoveredObject; // null is fine
 
-          case DragEvent.ACTION_DRAG_LOCATION:
-            canvas.setCurrentHoverLocation(new Point((int) event.getX(), (int) event.getY()));
+                if (currentHoveredObject != null) {
+                    draggedButton = getButtonForProgrammingObject(currentHoveredObject);
 
-            findCurrentHoveredObject(programmingObjects);
+                    if (draggedButton != null) {
+                        ClipData clipData = ClipData.newPlainText(draggedButton.getTag().toString(), draggedButton.getTag().toString()); // The first value can be gotten from getClipDescription(), the second value can be gotten from getClipData()
+                        View.DragShadowBuilder dsb = new View.DragShadowBuilder(draggedButton);
+                        draggedButton.startDrag(clipData, dsb, draggedButton, 0);
 
-            if (currentHoveredObject == null || !currentHoveredObject.equals(lastHoveredObject)) { // The user has not moved outside of the last object they hovered over, so don't delete it
-              if (draggedObject != null) {
-                Log.d("IDEa", "Creating new PO");
-                deleteProgrammingObject(programmingObjects, draggedObject);
-                addExistingProgrammingObject(draggedObject);
-              } else {
-                draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
-              }
+                        draggedObject = currentHoveredObject;
+                        deleteProgrammingObject(programmingObjects, currentHoveredObject);
+                        currentHoveredObject = null;
+                    } else {
+                        Log.e("IDEa", "Button not found for object being picked up! This should NEVER happen (unless a PO was added).");
+                    }
+                }
 
-              lastHoveredObject = currentHoveredObject; // being null is fine
-              closestHoverObjectAbove = null;
-              closestHoverObjectBelow = null;
-              findObjectJustAboveHoverLocation(programmingObjects);
+                return true;
             }
+        });
+    }
 
-            break;
+    private ProgrammingObject addProgrammingObject(String objectName) {
+        final ProgrammingObject pObj;
+
+        if (objectName.contentEquals("for")) {
+            pObj = new For(0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
+        } else if (objectName.contentEquals("while")) {
+            pObj = new While(new Variable("whileVariable", Variable.VariableType.STRING, "beep"), "boop");
+        } else if (objectName.contentEquals("variable")) {
+            pObj = new Variable("testVariable", Variable.VariableType.STRING, "test");
+        } else if (objectName.contentEquals("if")) {
+            pObj = new If(new Variable("ifLeft", Variable.VariableType.STRING, "left"), "left", Variable.VariableType.STRING, ProgrammingObject.ComparisonOperator.EQUAL);
+        } else if (objectName.contentEquals("print")) {
+            pObj = new Print("");
+        } else {
+            pObj = new Variable("unsupportedType", Variable.VariableType.STRING, "unsupportedType");
         }
-        return false;
-      }
-    });
 
-    canvas.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        // TODO: allow user to pick up a programming object
-        // They should be able to move or delete it (show a trash can icon, I think)
-
-        // Get object we are hovered over, if any
-        canvas.setCurrentHoverLocation(new Point((int) canvas.getCurrentTouchLocation().x, (int) canvas.getCurrentTouchLocation().y));
-        findCurrentHoveredObject(programmingObjects);
-        lastHoveredObject = currentHoveredObject; // null is fine
-
+      pObj.setDrawColor((Integer) draggedButton.getTag());
+      
         if (currentHoveredObject != null) {
-          draggedButton = getButtonForProgrammingObject(currentHoveredObject);
+            synchronized (programmingObjects) {
+                pObj.setParent(currentHoveredObject);
+                currentHoveredObject.addChild(pObj);
+            }
+        } else if (closestHoverObjectAbove != null || closestHoverObjectBelow != null) {
+            insertProgrammingObject(pObj);
+        } else {
+            synchronized (programmingObjects) {
+                programmingObjects.add(pObj);
+            }
+        }
 
-          if (draggedButton != null) {
-            ClipData clipData = ClipData.newPlainText(draggedButton.getTag().toString(), draggedButton.getTag().toString()); // The first value can be gotten from getClipDescription(), the second value can be gotten from getClipData()
-            View.DragShadowBuilder dsb = new View.DragShadowBuilder(draggedButton);
-            draggedButton.startDrag(clipData, dsb, draggedButton, 0);
+        return pObj;
+    }
 
-            draggedObject = currentHoveredObject;
-            deleteProgrammingObject(programmingObjects, currentHoveredObject);
-            currentHoveredObject = null;
-          } else {
-            Log.e("IDEa", "Button not found for object being picked up! This should NEVER happen (unless a PO was added).");
-          }
+    /*
+     * Adds an EXISTING programming object. Particularly useful for moving a PO that has been added previously.
+     */
+    private ProgrammingObject addExistingProgrammingObject(ProgrammingObject programmingObject) {
+        if (currentHoveredObject != null) {
+            synchronized (programmingObjects) {
+                programmingObject.setParent(currentHoveredObject);
+                currentHoveredObject.addChild(programmingObject);
+            }
+        } else if (closestHoverObjectAbove != null || closestHoverObjectBelow != null) {
+            insertProgrammingObject(programmingObject);
+        } else {
+            synchronized (programmingObjects) {
+                programmingObjects.add(programmingObject);
+            }
+        }
+
+        return programmingObject;
+    }
+
+    private void insertProgrammingObject(ProgrammingObject pObj) {
+        // Inserting an object between other objects
+        synchronized (programmingObjects) {
+            if (closestHoverObjectAbove != null) {
+                if (closestHoverObjectAbove.getChildren().size() > 0) {
+                    // The closest object to the hover location has children, so add this new object to the front of chose children
+                    pObj.setParent(closestHoverObjectAbove);
+                    closestHoverObjectAbove.insertChild(0, pObj);
+                } else {
+                    // The closest object to the hover location has no children, so add this new object to the closest object's parent (if it has one),
+                    // inserting the new object just after the closest object
+                    if (closestHoverObjectAbove.getParent() != null) {
+                        pObj.setParent(closestHoverObjectAbove.getParent());
+                        closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove) + 1, pObj);
+                    } else {
+                        programmingObjects.add(pObj);
+                    }
+                }
+            } else if (closestHoverObjectBelow != null) {
+                // This is a less frequent case. When this happens, only insert into the closest object's parent above the closest object
+                if (closestHoverObjectBelow.getParent() != null) {
+                    pObj.setParent(closestHoverObjectBelow.getParent());
+                    closestHoverObjectBelow.getParent().insertChild(closestHoverObjectBelow.getParent().getChildren().indexOf(closestHoverObjectBelow), pObj);
+                } else {
+                    programmingObjects.add(programmingObjects.indexOf(closestHoverObjectBelow), pObj);
+                }
+            }
+        }
+    }
+
+    private Button getButtonForProgrammingObject(ProgrammingObject programmingObject) {
+        // bIf, bWhile, bFor, bFunction, bVariable, bPrint;
+        // TODO: Update this any time a button is added to the left side bar
+        String objectName = programmingObject.getTypeName().toLowerCase();
+
+        if (objectName.contentEquals("for")) {
+            return bFor;
+        } else if (objectName.contentEquals("while")) {
+            return bWhile;
+        } else if (objectName.contentEquals("variable")) {
+            return bVariable;
+        } else if (objectName.contentEquals("if")) {
+            return bIf;
+        } else if (objectName.contentEquals("function")) {
+            return bFunction;
+        } else if (objectName.contentEquals("print")) {
+            return bPrint;
+        }
+
+        return null;
+    }
+
+    /*
+     * Recursively searches for and removes the given programming object
+     */
+    private boolean deleteProgrammingObject(List<ProgrammingObject> programmingObjectList, ProgrammingObject programmingObject) {
+        if (programmingObject != null) {
+            for (ProgrammingObject pObj : programmingObjectList) {
+                if (programmingObject.equals(pObj)) {
+                    synchronized (programmingObjects) {
+                        programmingObjectList.remove(pObj);
+                    }
+
+                    return true;
+                }
+
+                if (pObj.getChildren() != null) // Look through this object's children
+                    deleteProgrammingObject(pObj.getChildren(), programmingObject);
+            }
+
+            return false;
         }
 
         return true;
-      }
-    });
-  }
-
-  private ProgrammingObject addProgrammingObject(String objectName) {
-    final ProgrammingObject pObj;
-
-    if (objectName.contentEquals("for")) {
-      pObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-    } else if (objectName.contentEquals("while")) {
-      pObj = new While(0, new Variable(0, "whileVariable", Variable.VariableType.STRING, "beep"), "boop");
-    } else if (objectName.contentEquals("variable")) {
-      pObj = new Variable(0, "testVariable", Variable.VariableType.STRING, "test");
-    } else if (objectName.contentEquals("if")) {
-      pObj = new If(0, new Variable(0, "ifLeft", Variable.VariableType.STRING, "left"), "left", Variable.VariableType.STRING, ProgrammingObject.ComparisonOperator.EQUAL);
-    } else if (objectName.contentEquals("print")) {
-      pObj = new Print("");
-    } else {
-      pObj = new Variable(0, "unsupportedType", Variable.VariableType.STRING, "unsupportedType");
     }
 
-    pObj.setDrawColor((Integer) draggedButton.getTag());
+    /**
+     * Determines if childPO is a child (directly, or a child of a child, etc) of parentPO.
+     * This is a recursive method.
+     *
+     * @param childPO  the PO to find as a child of parentPO
+     * @param parentPO the PO to search through to find childPO
+     * @return true if childPO is a child of parentPO
+     */
+    private boolean isPOChildOfPO(ProgrammingObject childPO, ProgrammingObject parentPO) {
+        if (childPO != null && parentPO != null && parentPO.getChildren() != null && parentPO.getChildren().size() > 0) {
+            for (ProgrammingObject pObj : parentPO.getChildren()) {
+                if (childPO.equals(pObj))
+                    return true;
 
-    if (currentHoveredObject != null) {
-      //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, currentHoveredObject.getChildren().size(), currentHoveredObject);
-      synchronized (programmingObjects) {
-        pObj.setPositionUnderParent(currentHoveredObject.getChildren().size());
-        pObj.setParent(currentHoveredObject);
-        currentHoveredObject.addChild(pObj);
-      }
-    } else if (closestHoverObjectAbove != null || closestHoverObjectBelow != null) {
-      insertProgrammingObject(pObj);
-    } else {
-      //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-      synchronized (programmingObjects) {
-        programmingObjects.add(pObj);
-      }
-    }
-
-    return pObj;
-  }
-
-  /*
-   * Adds an EXISTING programming object. Particularly useful for moving a PO that has been added previously.
-   */
-  private ProgrammingObject addExistingProgrammingObject(ProgrammingObject programmingObject) {
-    if (currentHoveredObject != null) {
-      //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, currentHoveredObject.getChildren().size(), currentHoveredObject);
-      synchronized (programmingObjects) {
-        programmingObject.setPositionUnderParent(currentHoveredObject.getChildren().size());
-        programmingObject.setParent(currentHoveredObject);
-        currentHoveredObject.addChild(programmingObject);
-      }
-    } else if (closestHoverObjectAbove != null || closestHoverObjectBelow != null) {
-      insertProgrammingObject(programmingObject);
-    } else {
-      //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-      synchronized (programmingObjects) {
-        programmingObjects.add(programmingObject);
-      }
-    }
-
-    return programmingObject;
-  }
-
-  private void insertProgrammingObject(ProgrammingObject pObj) {
-    // Inserting an object between other objects
-    synchronized (programmingObjects) {
-      if (closestHoverObjectAbove != null) {
-        if (closestHoverObjectAbove.getChildren().size() > 0) {
-          // The closest object to the hover location has children, so add this new object to the front of chose children
-          //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove);
-          pObj.setParent(closestHoverObjectAbove);
-          closestHoverObjectAbove.insertChild(0, pObj);
-        } else {
-          // The closest object to the hover location has no children, so add this new object to the closest object's parent (if it has one),
-          // inserting the new object just after the closest object
-          if (closestHoverObjectAbove.getParent() != null) {
-            //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
-            pObj.setParent(closestHoverObjectAbove.getParent());
-            closestHoverObjectAbove.getParent().insertChild(closestHoverObjectAbove.getParent().getChildren().indexOf(closestHoverObjectAbove) + 1, pObj);
-          } else {
-            //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-            programmingObjects.add(pObj);
-          }
-        }
-      } else if (closestHoverObjectBelow != null) {
-        // This is a less frequent case. When this happens, only insert into the closest object's parent above the closest object
-        if (closestHoverObjectBelow.getParent() != null) {
-          //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN, 0, closestHoverObjectAbove.getParent());
-          pObj.setParent(closestHoverObjectBelow.getParent());
-          closestHoverObjectBelow.getParent().insertChild(closestHoverObjectBelow.getParent().getChildren().indexOf(closestHoverObjectBelow), pObj);
-        } else {
-          //For forObj = new For(0, 0, 10, ProgrammingObject.ComparisonOperator.LESS_THAN);
-          programmingObjects.add(programmingObjects.indexOf(closestHoverObjectBelow), pObj);
-        }
-      }
-    }
-  }
-
-  private Button getButtonForProgrammingObject(ProgrammingObject programmingObject) {
-    // bIf, bWhile, bFor, bString, bFunction, bVariable, bPrint;
-    // TODO: Update this any time a button is added to the left side bar
-    String objectName = programmingObject.getTypeName().toLowerCase();
-
-    if (objectName.contentEquals("for")) {
-      return bFor;
-    } else if (objectName.contentEquals("while")) {
-      return bWhile;
-    } else if (objectName.contentEquals("variable")) {
-      return bVariable;
-    } else if (objectName.contentEquals("if")) {
-      return bIf;
-    } else if (objectName.contentEquals("string")) {
-      return bString;
-    } else if (objectName.contentEquals("function")) {
-      return bFunction;
-    } else if (objectName.contentEquals("print")) {
-      return bPrint;
-    }
-
-    return null;
-  }
-
-  /*
-   * Recursively searches for and removes the given programming object
-   */
-  private boolean deleteProgrammingObject(List<ProgrammingObject> programmingObjectList, ProgrammingObject programmingObject) {
-    if (programmingObject != null) {
-      for (ProgrammingObject pObj : programmingObjectList) {
-        if (programmingObject.equals(pObj)) {
-          synchronized (programmingObjects) {
-            programmingObjectList.remove(pObj);
-          }
-
-          return true;
+                if (pObj.getChildren() != null) // Look through this object's children
+                    isPOChildOfPO(childPO, pObj);
+            }
         }
 
-        if (pObj.getChildren() != null) // Look through this object's children
-          deleteProgrammingObject(pObj.getChildren(), programmingObject);
-      }
-
-      return false;
+        return false;
     }
 
-    return true;
-  }
+    public static GradientDrawable getBackgroundGradientDrawable(Resources resources, int colorResourceId, int cornerRadius) {
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColor(resources.getColor(colorResourceId));
+        gd.setCornerRadius(cornerRadius);
 
-  /**
-   * Determines if childPO is a child (directly, or a child of a child, etc) of parentPO.
-   * This is a recursive method.
-   *
-   * @param childPO  the PO to find as a child of parentPO
-   * @param parentPO the PO to search through to find childPO
-   * @return true if childPO is a child of parentPO
-   */
-  private boolean isPOChildOfPO(ProgrammingObject childPO, ProgrammingObject parentPO) {
-    if (childPO != null && parentPO != null && parentPO.getChildren() != null && parentPO.getChildren().size() > 0) {
-      for (ProgrammingObject pObj : parentPO.getChildren()) {
-        if (childPO.equals(pObj))
-          return true;
-
-        if (pObj.getChildren() != null) // Look through this object's children
-          isPOChildOfPO(childPO, pObj);
-      }
+        return gd;
     }
 
-    return false;
-  }
+    public void showParametersDialog(final ProgrammingObject programmingObject) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
 
-  public static GradientDrawable getBackgroundGradientDrawable(Resources resources, int colorResourceId, int cornerRadius) {
-    GradientDrawable gd = new GradientDrawable();
-    gd.setColor(resources.getColor(colorResourceId));
-    gd.setCornerRadius(cornerRadius);
+        if (programmingObject instanceof Print) {
+//            View view = View.inflate(TrainingIDE.this, R.layout.print_dialog, null);
+//            final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+//
+//            builder.setTitle("Enter some text");
+//            builder.setView(view);
+//            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    ((Print) programmingObject).setText(editText.getText().toString());
+//                    dialogInterface.dismiss();
+//                }
+//            });
+//            builder.create().show();
 
-    return gd;
-  }
+            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Print - Enter text to print", R.layout.print_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    // TODO: cancel placement of object
+                }
+            });
+            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EditText editText = (EditText) dialog.getDialog().findViewById(R.id.print_dialog_edit_text);
+                    ((Print) programmingObject).setText(editText.getText().toString());
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        } else if (programmingObject instanceof For) {
+//            final View view = View.inflate(TrainingIDE.this, R.layout.for_dialog, null);
+//            //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+//            final EditText startingValue = (EditText) view.findViewById(R.id.startingValue);
+//            final EditText endingValue = (EditText) view.findViewById(R.id.endingValue);
+//            final RadioButton increment = (RadioButton) view.findViewById(R.id.increment);
+//            final RadioButton decrement = (RadioButton) view.findViewById(R.id.decrement);
+//
+//            builder.setTitle("Enter your parameters");
+//            builder.setView(view);
+//            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    ((For) programmingObject).setStartingValue(Integer.valueOf(startingValue.getText().toString()));
+//                    ((For) programmingObject).setEndingValue(Integer.valueOf(endingValue.getText().toString()));
+//                    if (((RadioButton) view.findViewById(R.id.increment)).isChecked()) {
+//                        ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.LESS_THAN);
+//
+//                    } else {
+//                        ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.GREATER_THAN);
+//                    }
+//                    dialogInterface.dismiss();
+//                }
+//            });
+//            builder.create().show();
+
+            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "For - Enter your parameters", R.layout.for_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    // TODO: cancel placement of object
+                }
+            });
+            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EditText startingValue = (EditText) dialog.getDialog().findViewById(R.id.startingValue);
+                    EditText endingValue = (EditText) dialog.getDialog().findViewById(R.id.endingValue);
+                    RadioButton increment = (RadioButton) dialog.getDialog().findViewById(R.id.increment);
+                    RadioButton decrement = (RadioButton) dialog.getDialog().findViewById(R.id.decrement);
+
+                    ((For) programmingObject).setStartingValue(Integer.valueOf(startingValue.getText().toString()));
+                    ((For) programmingObject).setEndingValue(Integer.valueOf(endingValue.getText().toString()));
+                    if (((RadioButton) dialog.getDialog().findViewById(R.id.increment)).isChecked()) {
+                        ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.LESS_THAN);
+                    } else {
+                        ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.GREATER_THAN);
+                    }
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        } else if (programmingObject instanceof If) {
+//            View view = View.inflate(TrainingIDE.this, R.layout.if_dialog, null);
+//            //final EditText editText = (EditText) view.findViewById(R.id.print_dialog_edit_text);
+//            //final EditText condition = (EditText) view.findViewById(R.id.variableSpinner);
+//
+//            builder.setTitle("Enter a true or false statement");
+//            builder.setView(view);
+//            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    //((If) programmingObject).setExpression(condition.getText().toString());
+//
+//                    dialogInterface.dismiss();
+//                }
+//            });
+//            builder.create().show();
+
+            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "If - Enter a true or false statement", R.layout.if_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    // TODO: cancel placement of object
+                }
+            });
+            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        } else if (programmingObject instanceof Variable) {
+//            View view = View.inflate(TrainingIDE.this, R.layout.variable_dialog, null);
+//            final Spinner action = (Spinner) view.findViewById(R.id.variableActionSpinner);
+//            final Spinner type = (Spinner) view.findViewById(R.id.variableTypeSpinner);
+//            final EditText name = (EditText) view.findViewById(R.id.variableName);
+//            final EditText value = (EditText) view.findViewById(R.id.variableValue);
+//
+//            builder.setTitle("Enter your parameters");
+//            builder.setView(view);
+//            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    if (action.getSelectedItem().equals("Instantiate"))
+//                        ((Variable) programmingObject).setAction(Variable.Action.INSTANTIATE);
+//                    else if (action.getSelectedItem().equals("Set"))
+//                        ((Variable) programmingObject).setAction(Variable.Action.SET);
+//                    else if (action.getSelectedItem().equals("Get"))
+//                        ((Variable) programmingObject).setAction(Variable.Action.GET);
+//
+//                    if (type.getSelectedItem().equals("String"))
+//                        ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
+//                    else if (type.getSelectedItem().equals("Number"))
+//                        ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
+//                    else if (type.getSelectedItem().equals("Boolean"))
+//                        ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
+//
+//                    ((Variable) programmingObject).setName(name.getText().toString());
+//                    ((Variable) programmingObject).setValue(value.getText().toString());
+//
+//                    dialogInterface.dismiss();
+//                }
+//            });
+//            builder.create().show();
+
+            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Variable - Enter your parameters", R.layout.variable_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    // TODO: cancel placement of object
+                }
+            });
+            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Spinner action = (Spinner) dialog.getDialog().findViewById(R.id.variableActionSpinner);
+                    Spinner type = (Spinner) dialog.getDialog().findViewById(R.id.variableTypeSpinner);
+                    EditText name = (EditText) dialog.getDialog().findViewById(R.id.variableName);
+                    EditText value = (EditText) dialog.getDialog().findViewById(R.id.variableValue);
+
+                    if (action.getSelectedItem().equals("Instantiate"))
+                        ((Variable) programmingObject).setAction(Variable.Action.INSTANTIATE);
+                    else if (action.getSelectedItem().equals("Set"))
+                        ((Variable) programmingObject).setAction(Variable.Action.SET);
+                    else if (action.getSelectedItem().equals("Get"))
+                        ((Variable) programmingObject).setAction(Variable.Action.GET);
+
+                    if (type.getSelectedItem().equals("String"))
+                        ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
+                    else if (type.getSelectedItem().equals("Number"))
+                        ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
+                    else if (type.getSelectedItem().equals("Boolean"))
+                        ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
+
+                    ((Variable) programmingObject).setName(name.getText().toString());
+                    ((Variable) programmingObject).setValue(value.getText().toString());
+
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }else if (programmingObject instanceof While) {
+//            View view = View.inflate(TrainingIDE.this, R.layout.while_dialog, null);
+//            final Spinner condition = (Spinner) view.findViewById(R.id.whileConditionSpinner);
+//            final Spinner operand = (Spinner) view.findViewById(R.id.whileOperandSpinner);
+//            final Spinner terminatingValue = (Spinner) view.findViewById(R.id.whileTermSpinner);
+//
+//            builder.setTitle("Create While");
+//            builder.setView(view);
+//            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    dialogInterface.dismiss();
+//                }
+//            });
+//            builder.create().show();
+
+            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "While - Enter your parameters", R.layout.while_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    // TODO: cancel placement of object
+                }
+            });
+            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Spinner condition = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionSpinner);
+                    Spinner operand = (Spinner) dialog.getDialog().findViewById(R.id.whileOperandSpinner);
+                    Spinner terminatingValue = (Spinner) dialog.getDialog().findViewById(R.id.whileTermSpinner);
+
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
+    }
 
   public void doSave(View view) {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);

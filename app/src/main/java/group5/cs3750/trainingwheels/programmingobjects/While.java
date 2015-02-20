@@ -9,22 +9,23 @@ import group5.cs3750.trainingwheels.R;
 public class While extends ProgrammingObject {
   private Variable conditionVariable; // The variable to check when looping
   private Object terminationValue; // The value the variable should be to terminate the loop
+  // TODO: Needs a ComparisonOperator
   private List<ProgrammingObjectType> allowedChildTypes = new ArrayList( // The types of programming objects that can be children to this programming object, can be null
       Arrays.asList(
           ProgrammingObjectType.WHILE, ProgrammingObjectType.IF, ProgrammingObjectType.FOR, ProgrammingObjectType.PRINT,
-          ProgrammingObjectType.INT, ProgrammingObjectType.FUNCTION, ProgrammingObjectType.STRING)
+          ProgrammingObjectType.FUNCTION, ProgrammingObjectType.VARIABLE)
   );
   private int drawColor = R.color.button_orange;
 
-  public While(int listPosition, Variable conditionVariable, Object terminationValue) {
-    super(ProgrammingObjectType.WHILE, listPosition);
+  public While(Variable conditionVariable, Object terminationValue) {
+    super(ProgrammingObjectType.WHILE);
 
     this.conditionVariable = conditionVariable;
     this.terminationValue = terminationValue;
   }
 
-  public While(int listPosition, Variable conditionVariable, Object terminationValue, int positionUnderParent, ProgrammingObject parent) {
-    super(ProgrammingObjectType.WHILE, listPosition, positionUnderParent, parent);
+  public While(Variable conditionVariable, Object terminationValue, ProgrammingObject parent) {
+    super(ProgrammingObjectType.WHILE, parent);
 
     this.conditionVariable = conditionVariable;
     this.terminationValue = terminationValue;
@@ -32,7 +33,7 @@ public class While extends ProgrammingObject {
 
   @Override
   public String toString() {
-    return "Loop until '" + conditionVariable.getName() + "' equals '" + terminationValue;
+    return "until '" + conditionVariable.getName() + "' = '" + terminationValue;
   }
 
   @Override

@@ -12,7 +12,7 @@
     android:hint="Enter starting value"/>
 
   <EditText
-    android:id="@+id/editText3"
+    android:id="@+id/endingValue"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:inputType="number"
@@ -29,11 +29,13 @@
     android:layout_height="wrap_content">
 
     <RadioButton
+      android:id="@+id/increment"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="Count Up"/>
 
     <RadioButton
+      android:id="@+id/decrement"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="Count Down"/>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <!-- Action -->
+    <TextView
+        android:id="@+id/variableActionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Action"
+        android:gravity="center"
+        android:layout_alignTop="@+id/variableActionSpinner"
+        android:layout_alignBottom="@+id/variableActionSpinner" />
+
+    <Spinner
+        android:id="@+id/variableActionSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/variableActionArray"
+        android:layout_toRightOf="@+id/variableActionLabel"/>
+
+    <!-- Variable type -->
+    <TextView
+        android:id="@+id/variableTypeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type"
+        android:gravity="center"
+        android:layout_alignTop="@+id/variableTypeSpinner"
+        android:layout_alignBottom="@+id/variableTypeSpinner" />
+
+    <Spinner
+        android:id="@+id/variableTypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/variableTypeArray"
+        android:layout_toRightOf="@+id/variableTypeLabel"
+        android:layout_alignLeft="@+id/variableActionSpinner"
+        android:layout_below="@+id/variableActionSpinner"/>
+
+    <!-- Variable name -->
+    <EditText
+        android:id="@+id/variableName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter variable name"
+        android:layout_below="@+id/variableTypeSpinner"/>
+
+    <!-- Variable value -->
+    <EditText
+        android:id="@+id/variableValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter value"
+        android:layout_below="@+id/variableName"/>
+
+</RelativeLayout>

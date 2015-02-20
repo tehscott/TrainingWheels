@@ -8,6 +8,9 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.text.TextPaint;
+import android.text.TextUtils;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -192,11 +195,24 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
         paint.setAlpha(255);
         paint.setColor(Color.WHITE);
-        paint.setTextSize(40);
+        paint.setTextSize(34);
         paint.setAntiAlias(true);
-        // TODO: The location to draw the text needs to be calculated rather than static (to support all devices)
-        canvas.drawText(pObj.getTypeName(), left - drawOffset.x + 35, top - drawOffset.y + 55, paint);
-        //canvas.drawText(pObj.toString(), left - drawOffset.x + 5, top - drawOffset.y + 30, paint);
+        Rect objectNameBounds = new Rect();
+        paint.getTextBounds(pObj.getTypeName(), 0, pObj.getTypeName().length(), objectNameBounds);
+
+        int xPadding = 10;
+        int yPadding = objectNameBounds.height() + 5;
+
+        // Draw object name
+        canvas.drawText(pObj.getTypeName(), left - drawOffset.x + xPadding, top - drawOffset.y + yPadding, paint);
+
+        // Draw object subtext
+        paint.setTextSize(20);
+        String objectSubText = TextUtils.ellipsize(pObj.toString(), new TextPaint(paint), right - left, TextUtils.TruncateAt.END).toString(); // TODO: This doesn't truncate far enough to the left
+
+        Rect objectSubtextBounds = new Rect();
+        paint.getTextBounds(objectSubText, 0, objectSubText.length(), objectSubtextBounds);
+        canvas.drawText(objectSubText, left - drawOffset.x + xPadding + 2, top - drawOffset.y + yPadding + objectSubtextBounds.height() + 5, paint);
 
         // Draw any children
         //

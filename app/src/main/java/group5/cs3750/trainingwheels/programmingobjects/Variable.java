@@ -10,22 +10,27 @@ public class Variable extends ProgrammingObject {
         NUMBER, STRING, BOOLEAN
     }
 
+    public static enum Action {
+        INSTANTIATE, SET, GET
+    }
+
     private String name;
     private VariableType variableType;
     private Object value;
+    private Action action;
     private List<ProgrammingObjectType> allowedChildTypes = new ArrayList(); // The types of programming objects that can be children to this programming object, can be null
     private int drawColor = R.color.button_green;
 
-    public Variable(int listPosition, String name, VariableType variableType, Object value) {
-        super(ProgrammingObjectType.VARIABLE, listPosition);
+    public Variable(String name, VariableType variableType, Object value) {
+        super(ProgrammingObjectType.VARIABLE);
 
         this.name = name;
         this.variableType = variableType;
         this.value = value;
     }
 
-    public Variable(int listPosition, String name, VariableType variableType, Object value, int positionUnderParent, ProgrammingObject parent) {
-        super(ProgrammingObjectType.VARIABLE, listPosition, positionUnderParent, parent);
+    public Variable(String name, VariableType variableType, Object value, ProgrammingObject parent) {
+        super(ProgrammingObjectType.VARIABLE, parent);
 
         this.name = name;
         this.variableType = variableType;
@@ -38,19 +43,19 @@ public class Variable extends ProgrammingObject {
 
         switch (variableType) {
             case NUMBER:
-                type = "Number";
+                type = "number";
                 break;
 
             case STRING:
-                type = "String";
+                type = "string";
                 break;
 
             case BOOLEAN:
-                type = "Boolean";
+                type = "boolean";
                 break;
         }
 
-        return type + " variable '" + name + "': " + value;
+        return type + " '" + name + "': '" + value + "'";
     }
 
     @Override
@@ -92,8 +97,28 @@ public class Variable extends ProgrammingObject {
         this.name = name;
     }
 
-  @Override
-  public void toScript(StringBuilder stringBuilder) {
+    public Action getAction() {
+        return action;
+    }
 
-  }
+    public void setAction(Action action) {
+        this.action = action;
+    }
+
+    @Override
+    public ProgrammingObjectType getType() {
+        return ProgrammingObjectType.VARIABLE;
+    }
+
+    @Override
+    public void toScript(StringBuilder stringBuilder) {
+        stringBuilder.append("var " + name);
+
+        if(value != null) {
+            if (variableType == VariableType.BOOLEAN || variableType == VariableType.NUMBER)
+                stringBuilder.append(" = " + value + ";\n");
+            else if(variableType == VariableType.STRING)
+                stringBuilder.append(" = '" + value + "';\n");
+        }
+    }
 }

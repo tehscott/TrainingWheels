@@ -1,40 +1,62 @@
 package group5.cs3750.trainingwheels.programmingobjects;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import group5.cs3750.trainingwheels.R;
 
 /**
  * Created by Jeff on 07-Feb-15.
  */
 public class Print extends ProgrammingObject {
+    private String text;
+    private List<ProgrammingObjectType> allowedChildTypes = new ArrayList(); // The types of programming objects that can be children to this programming object, can be null
+    private int drawColor = R.color.button_purple;
 
-  private String text;
+    public Print(String string) {
+        super(ProgrammingObjectType.PRINT);
+        text = string;
+    }
 
-  public Print(String string) {
+    public Print(ProgrammingObject parent) {
+        super(ProgrammingObjectType.PRINT, parent);
+    }
 
-    text = string;
-    setDrawColor(Color.YELLOW);
-  }
+    public String getText() {
+        return text;
+    }
 
-  public Print(int listPosition) {
-    super(ProgrammingObjectType.PRINT, listPosition);
-  }
+    public void setText(String text) {
+        this.text = text;
+    }
 
-  public Print(int listPosition, int positionUnderParent, ProgrammingObject parent) {
-    super(ProgrammingObjectType.PRINT, listPosition, positionUnderParent, parent);
-  }
+    @Override
+    public void toScript(StringBuilder stringBuilder) {
+        stringBuilder.append("document.getElementById(\"{field}\").innerHTML += \"");
+        stringBuilder.append(text + "<br>");
+        stringBuilder.append("\";\n");
+    }
 
-  public String getText() {
-    return text;
-  }
+    @Override
+    public String toString() {
+        return "'" + text + "'";
+    }
 
-  public void setText(String text) {
-    this.text = text;
-  }
+    @Override
+    public List<ProgrammingObjectType> getAllowedChildTypes() {
+        return allowedChildTypes;
+    }
 
-  @Override
-  public void toScript(StringBuilder stringBuilder) {
-    stringBuilder.append("document.getElementById(\"{field}\").innerHTML += \"");
-    stringBuilder.append(text);
-    stringBuilder.append("\";\n");
-  }
+    @Override
+    public String getTypeName() {
+        return "Print";
+    }
+
+    @Override
+    public int getDrawColor() {
+        return drawColor;
+    }
 }

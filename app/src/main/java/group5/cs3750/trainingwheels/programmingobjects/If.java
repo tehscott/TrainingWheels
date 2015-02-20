@@ -11,9 +11,10 @@ public class If extends ProgrammingObject {
     private Object conditionRightSide; // Right side of the conditional statement, can be a manually-entered value or a Variable
     private Variable.VariableType conditionRightSideType;
     private ComparisonOperator comparisonOperator;
+    private String expression = "";
 
-    public If(int position, Variable conditionLeftSide, Object conditionRightSide, Variable.VariableType conditionRightSideType, ComparisonOperator comparisonOperator) {
-        super(ProgrammingObjectType.IF, position);
+    public If(Variable conditionLeftSide, Object conditionRightSide, Variable.VariableType conditionRightSideType, ComparisonOperator comparisonOperator) {
+        super(ProgrammingObjectType.IF);
 
         this.conditionLeftSide = conditionLeftSide;
         this.conditionRightSide = conditionRightSide;
@@ -23,8 +24,8 @@ public class If extends ProgrammingObject {
         setFields();
     }
 
-    public If(int position, Variable conditionLeftSide, Object conditionRightSide, Variable.VariableType conditionRightSideType, ComparisonOperator comparisonOperator, int positionUnderParent, ProgrammingObject parent) {
-        super(ProgrammingObjectType.IF, position, positionUnderParent, parent);
+    public If(Variable conditionLeftSide, Object conditionRightSide, Variable.VariableType conditionRightSideType, ComparisonOperator comparisonOperator, ProgrammingObject parent) {
+        super(ProgrammingObjectType.IF, parent);
 
         this.conditionLeftSide = conditionLeftSide;
         this.conditionRightSide = conditionRightSide;
@@ -38,7 +39,7 @@ public class If extends ProgrammingObject {
         allowedChildTypes = new ArrayList<ProgrammingObjectType>( // The types of programming objects that can be children to this programming object, can be null
                 Arrays.asList(
                         ProgrammingObjectType.WHILE, ProgrammingObjectType.IF, ProgrammingObjectType.FOR, ProgrammingObjectType.PRINT,
-                        ProgrammingObjectType.INT, ProgrammingObjectType.FUNCTION, ProgrammingObjectType.STRING)
+                        ProgrammingObjectType.FUNCTION, ProgrammingObjectType.VARIABLE)
         );
 
         drawColor = R.color.button_blue;
@@ -46,7 +47,7 @@ public class If extends ProgrammingObject {
 
     @Override
     public String toString() {
-        return "If ...";
+        return expression;
     }
 
     @Override
@@ -98,12 +99,20 @@ public class If extends ProgrammingObject {
 
     @Override
     public void toScript(StringBuilder stringBuilder) {
-        //stringBuilder.append("for(var i = 0; i < 5; i++) {\n");
+        stringBuilder.append("if(" + getExpression() + ") {\n");
 
         for (ProgrammingObject child : children) {
             child.toScript(stringBuilder);
         }
 
         stringBuilder.append("}\n");
+    }
+
+    public String getExpression() {
+        return expression;
+    }
+
+    public void setExpression(String expression) {
+        this.expression = expression;
     }
 }

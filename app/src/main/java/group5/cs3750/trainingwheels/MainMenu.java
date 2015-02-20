@@ -56,6 +56,7 @@ public class MainMenu extends Activity {
                 startActivity(user);
             }
         });
+
     }
 
   private void loadSavedFilesList() {
