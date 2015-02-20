@@ -1,19 +1,19 @@
 package group5.cs3750.trainingwheels.programmingobjects;
 
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import group5.cs3750.trainingwheels.R;
 
-public abstract class ProgrammingObject {
-  public static enum ProgrammingObjectType {
+public abstract class ProgrammingObject implements Serializable {
+  public static enum ProgrammingObjectType implements Serializable {
     WHILE, IF, FOR, PRINT, FUNCTION, VARIABLE
   }
 
-  public static enum ComparisonOperator {
+  public static enum ComparisonOperator implements Serializable {
     EQUAL("=="),
     DOES_NOT_EQUAL("!="),
     LESS_THAN("<"),
@@ -48,10 +48,9 @@ public abstract class ProgrammingObject {
   private ProgrammingObject parent; // Can be null, meaning this IS the parent
   protected List<ProgrammingObjectType> allowedChildTypes; // The types of programming objects that can be children to this programming object, can be null
   protected ArrayList<ProgrammingObject> children = new ArrayList<ProgrammingObject>(); // Children of this programming object, cannot be null, but can be of 0 length
-  private Drawable buttonDrawable; // This should be a copy of the drawable assigned to the button corresponding to this object
 
   // Drawing vars
-  private Rect currentDrawnLocation; // Location of the object drawn on the canvas. Can be null, but probably never will be
+  private int[] currentDrawnLocation = new int[4]; // Location of the object drawn on the canvas. Can be null, but probably never will be
   protected int drawColor = R.color.button_green; // Color to draw the object. The getter for this should be overridden by sub classes
 
   public ProgrammingObject() {
@@ -97,11 +96,11 @@ public abstract class ProgrammingObject {
   }
 
   public Rect getCurrentDrawnLocation() {
-    return currentDrawnLocation;
+    return new Rect(currentDrawnLocation[0], currentDrawnLocation[1], currentDrawnLocation[2], currentDrawnLocation[3]);
   }
 
   public void setCurrentDrawnLocation(Rect currentDrawnLocation) {
-    this.currentDrawnLocation = currentDrawnLocation;
+    this.currentDrawnLocation = new int[]{currentDrawnLocation.left, currentDrawnLocation.top, currentDrawnLocation.right, currentDrawnLocation.bottom};
   }
 
   public int getDrawColor() {
@@ -144,14 +143,6 @@ public abstract class ProgrammingObject {
 
   public String getTypeName() {
     return "ERROR: Unimplemented for this object type.";
-  }
-
-  public Drawable getButtonDrawable() {
-    return buttonDrawable;
-  }
-
-  public void setButtonDrawable(Drawable buttonDrawable) {
-    this.buttonDrawable = buttonDrawable;
   }
 
   public void toScript(StringBuilder stringBuilder) {

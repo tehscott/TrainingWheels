@@ -1,80 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg"
+  >
+
+  <ImageButton
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/settings_selector"
+    android:background="@android:color/transparent"
+    android:id="@+id/btnSettings"
+    android:layout_alignParentRight="true"
+    android:layout_margin="5dp"/>
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textAppearance="?android:attr/textAppearanceLargeInverse"
+    android:textStyle="bold"
+    android:text="Welcome to IDEA!"
+    android:id="@+id/txtWelcomeUser"
+    android:layout_below="@+id/btnSettings"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="5dp"/>
+
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/ide_bg">
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/txtWelcomeUser"
+    android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/btnSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_margin="5dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/settings_selector" />
+    <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Continue Game"
+      android:id="@+id/btnContinueGame"
+      android:layout_gravity="center_horizontal"/>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" >
+    <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Start New Game"
+      android:id="@+id/btnStartNewGame"
+      android:layout_gravity="center_horizontal"/>
 
-        <TextView
-            android:id="@+id/txtWelcomeUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="5dp"
-            android:text="WELCOME TO"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:textSize="22sp"/>
+    <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Stats"
+      android:id="@+id/btnStats"
+      android:layout_gravity="center_horizontal"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/app_name"
-            android:id="@+id/app_name_image"
-            android:layout_below="@+id/txtWelcomeUser"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/app_name_image"
-            android:orientation="vertical"
-            android:layout_centerHorizontal="true" >
-
-            <Button
-                android:id="@+id/btnNewProgram"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="NEW PROGRAM"
-                android:textColor="@color/ide_button_text"
-                android:textStyle="bold"
-                android:padding="20dp"
-                android:layout_marginBottom="10dp" />
-
-            <Button
-                android:id="@+id/btnOpenProgram"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="OPEN PROGRAM"
-                android:textColor="@color/ide_button_text"
-                android:textStyle="bold"
-                android:padding="20dp"
-                android:layout_marginBottom="10dp" />
-
-            <Button
-                android:id="@+id/javascript_demo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="JavaScript Demo"
-                android:textColor="@color/ide_button_text"
-                android:textStyle="bold"
-                android:visibility="gone"/>
-        </LinearLayout>
-    </RelativeLayout>
+  </LinearLayout>
 </RelativeLayout>
