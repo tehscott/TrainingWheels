@@ -1,7 +1,6 @@
 package group5.cs3750.trainingwheels.programmingobjects;
 
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 
 /**
  * Created by Jeff on 07-Feb-15.
@@ -13,7 +12,7 @@ public class Print extends ProgrammingObject {
   public Print(String string) {
 
     text = string;
-    setButtonDrawable(new ColorDrawable(Color.YELLOW));
+    setDrawColor(Color.YELLOW);
   }
 
   public Print(int listPosition) {

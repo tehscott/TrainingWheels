@@ -8,7 +8,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -179,7 +179,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         // TODO: Change the alpha (or something else) of the object if it is being dragged (this should include children)
 
         // Draw the start of this parent object
-        Drawable drawable = pObj.getButtonDrawable().getConstantState().newDrawable();
+        GradientDrawable drawable = new GradientDrawable(GradientDrawable.Orientation.BL_TR, new int[]{pObj.getDrawColor(), pObj.getDrawColor()});
+      drawable.setCornerRadius(12);
         drawable.setBounds(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y);
         drawable.draw(canvas);
 
