@@ -1,45 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-  <EditText
-    android:id="@+id/startingValue"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:inputType="number"
-    android:hint="Enter starting value"/>
+    android:layout_height="match_parent">
 
-  <EditText
-    android:id="@+id/endingValue"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:inputType="number"
-    android:hint="Enter ending value"/>
+    <!-- Variable name -->
+    <TextView
+        android:id="@+id/labelLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Label"
+        android:gravity="center"
+        android:layout_alignTop="@+id/labelEditText"
+        android:layout_alignBottom="@+id/labelEditText" />
 
-  <TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="20dp"
-    android:text="Do you want to count up or down?"/>
+    <EditText
+        android:id="@+id/labelEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/labelLabel"/>
 
-  <RadioGroup
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    <!-- Starting value -->
+    <TextView
+        android:id="@+id/startingValueLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Starting Value"
+        android:gravity="center"
+        android:layout_alignTop="@+id/startingValueSpinner"
+        android:layout_alignBottom="@+id/startingValueSpinner"/>
 
-    <RadioButton
-      android:id="@+id/increment"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="Count Up"/>
+    <Spinner
+        android:id="@+id/startingValueSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/labelEditText"
+        android:layout_toRightOf="@+id/startingValueLabel"
+        android:layout_toLeftOf="@+id/startValueContainer"/>
 
-    <RadioButton
-      android:id="@+id/decrement"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="Count Down"/>
+    <LinearLayout
+        android:id="@+id/startValueContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_alignTop="@+id/startingValueSpinner"
+        android:layout_alignBottom="@+id/startingValueSpinner"
+        android:layout_alignParentRight="true"
+        android:visibility="gone">
 
+        <TextView
+            android:id="@+id/startValueLeftParen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="("
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/startValueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/startValueRightParen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=")"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <!-- End value type (manual entry or variable -->
+    <TextView
+        android:id="@+id/endValueLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ending Value"
+        android:gravity="center"
+        android:layout_alignTop="@+id/endValueSpinner"
+        android:layout_alignBottom="@+id/endValueSpinner" />
+
+    <Spinner
+        android:id="@+id/endValueSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/startingValueSpinner"
+        android:layout_alignLeft="@+id/startingValueSpinner"
+        android:layout_toLeftOf="@+id/endValueContainer"/>
+
+    <LinearLayout
+        android:id="@+id/endValueContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_alignTop="@+id/endValueSpinner"
+        android:layout_alignBottom="@+id/endValueSpinner"
+        android:layout_alignParentRight="true"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/endValueLeftParen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="("
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/endValueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/endValueRightParen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=")"
+            android:gravity="center"/>
+    </LinearLayout>
+
+
+    <!-- End value type (manual entry or variable -->
+    <TextView
+        android:id="@+id/endValueOperatorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ending Value Operator"
+        android:gravity="center"
+        android:layout_alignTop="@+id/endValueOperatorSpinner"
+        android:layout_alignBottom="@+id/endValueOperatorSpinner" />
+
+    <Spinner
+        android:id="@+id/endValueOperatorSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/operatorArray"
+        android:entryValues="@array/operatorSymbolArray"
+        android:layout_below="@+id/endValueSpinner"
+        android:layout_toRightOf="@+id/endValueOperatorLabel"/>
+
+    <RadioGroup
+        android:id="@+id/countUpDownRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/endValueOperatorSpinner">
+
+        <RadioButton
+            android:id="@+id/countUpRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Count Up"
+            android:checked="true"/>
+
+        <RadioButton
+            android:id="@+id/countDownRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Count Down"
+            android:checked="false"/>
     </RadioGroup>
 
-</LinearLayout>
+    <!-- Hidden field to track the starting value if the user enters it manually -->
+
+
+    <TextView
+        android:id="@+id/endingValue_Hidden"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+</RelativeLayout>

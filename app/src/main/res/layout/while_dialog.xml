@@ -27,7 +27,7 @@
         android:id="@+id/whileOperandLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Operand     "
+        android:text="Operator     "
         android:gravity="center"
         android:layout_alignTop="@+id/whileOperandSpinner"
         android:layout_alignBottom="@+id/whileOperandSpinner" />
@@ -36,7 +36,7 @@
         android:id="@+id/whileOperandSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/operandArray"
+        android:entries="@array/operatorArray"
         android:layout_toRightOf="@+id/whileConditionLabel"
         android:layout_below="@+id/whileConditionSpinner"
         />

@@ -31,7 +31,16 @@
         <item>Bool variable</item>
     </string-array>
 
-    <string-array name="operandArray">
+    <string-array name="operatorSymbolArray">
+        <item>==</item>
+        <item>!=</item>
+        <item>&lt;</item>
+        <item>&gt;</item>
+        <item>&lt;=</item>
+        <item>&gt;=</item>
+    </string-array>
+
+    <string-array name="operatorArray">
         <item>Equal</item>
         <item>Does not equal</item>
         <item>Less than</item>
@@ -45,7 +54,6 @@
         <item>False</item>
         <item>Bool variable</item>
     </string-array>
-
 
     <string name="title_activity_user">User</string>
     <string name="remember_me">Remember Me</string>
