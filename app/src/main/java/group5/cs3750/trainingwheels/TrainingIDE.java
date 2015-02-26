@@ -753,320 +753,108 @@ public class TrainingIDE extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
 
         if (programmingObject instanceof Print) {
-            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Print - Enter text to print", R.layout.print_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
-            final EditText editText = (EditText) dialog.getDialog().findViewById(R.id.print_dialog_edit_text);
-            editText.setText(((Print) programmingObject).getText());
-
-            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(!editingExistingObject)
-                        deleteProgrammingObject(programmingObjects, programmingObject);
-
-                    editingExistingObject = false;
-
-                    dialog.dismiss();
-                }
-            });
-            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    ((Print) programmingObject).setText(editText.getText().toString());
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
+            showPrintDialog(programmingObject);
         } else if (programmingObject instanceof For) {
-            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "For - Enter your parameters", R.layout.for_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
-            final EditText labelET = (EditText) dialog.getDialog().findViewById(R.id.labelEditText);
-            final LinearLayout startingValueContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.startValueContainer);
-            final TextView startingValueTV = (TextView) dialog.getDialog().findViewById(R.id.startValueTextView);
-            final Spinner startingValueSpinner = (Spinner) dialog.getDialog().findViewById(R.id.startingValueSpinner);
-            final LinearLayout endingValueContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.endValueContainer);
-            final TextView endingValueTV = (TextView) dialog.getDialog().findViewById(R.id.endValueTextView);
-            final Spinner endingValueSpinner = (Spinner) dialog.getDialog().findViewById(R.id.endValueSpinner);
-            final Spinner endingValueOperatorSpinner = (Spinner) dialog.getDialog().findViewById(R.id.endValueOperatorSpinner);
-            final RadioButton countUpRB = (RadioButton) dialog.getDialog().findViewById(R.id.countUpRadioButton);
-            final RadioButton countDownRB = (RadioButton) dialog.getDialog().findViewById(R.id.countDownRadioButton);
-
-            // init fields
-            final String[] operatorSymbols = getResources().getStringArray(R.array.operatorSymbolArray);
-            ArrayList<String> variableObjectNames = new ArrayList<String>();
-            getVariableNamesAsList(variableObjectNames, programmingObjects, Variable.VariableType.NUMBER); // only get number variables
-            variableObjectNames.add(0, ""); // Blank value
-            variableObjectNames.add(1, "--Manual Entry--");
-
-            labelET.setText(((For) programmingObject).getLabel());
-
-            startingValueSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
-            endingValueSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
-
-            if(((For) programmingObject).getStartingValue() != null) {
-                startingValueTV.setText(((For) programmingObject).getStartingValue());
-                startingValueContainer.setVisibility(View.VISIBLE);
-                startingValueSpinner.setSelection(1); // manual entry
-            } else if(((For) programmingObject).getStartingValueVariable() != null) {
-                startingValueContainer.setVisibility(View.GONE); // should be gone already, but be sure
-                startingValueSpinner.setSelection(variableObjectNames.indexOf(((For) programmingObject).getStartingValueVariable().getName())); // manual entry
-            }
-
-            if(((For) programmingObject).getEndingValue() != null) {
-                endingValueTV.setText(((For) programmingObject).getEndingValue());
-                endingValueContainer.setVisibility(View.VISIBLE);
-                endingValueSpinner.setSelection(1); // manual entry
-            } else if(((For) programmingObject).getStartingValueVariable() != null) {
-                endingValueContainer.setVisibility(View.GONE); // should be gone already, but be sure
-                endingValueSpinner.setSelection(variableObjectNames.indexOf(((For) programmingObject).getEndValueVariable().getName())); // manual entry
-            }
-
-            endingValueOperatorSpinner.setSelection(Arrays.asList(operatorSymbols).indexOf(((For) programmingObject).getEndingValueComparisonOperator().toString()));
-
-            countUpRB.setChecked(((For) programmingObject).isCountUp());
-            countDownRB.setChecked(!((For) programmingObject).isCountUp());
-
-            startingValueSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if(position == 1) {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(TrainingIDE.this);
-                        alert.setTitle("Enter starting value");
-
-                        // Set an EditText view to get user input
-                        final EditText input = new EditText(TrainingIDE.this);
-                        input.setRawInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_SIGNED); // class = this is numbers, flag = allow negative numbers
-
-                        alert.setView(input);
-
-                        if (((For) programmingObject).getStartingValue() != null) {
-                            input.setText(((For) programmingObject).getStartingValue().toString());
-                        }
-
-                        alert.setPositiveButton("Ok",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        ((For) programmingObject).setStartingValue(Integer.valueOf(input.getText().toString()));
-                                        startingValueTV.setText(input.getText().toString());
-                                        startingValueContainer.setVisibility(View.VISIBLE);
-                                    }
-                                });
-
-                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                startingValueSpinner.setSelection(0);
-                            }
-                        });
-                        alert.show();
-                    } else {
-                        startingValueContainer.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override public void onNothingSelected(AdapterView<?> parent) {}
-            });
-
-            endingValueSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if(position == 1) {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(TrainingIDE.this);
-                        alert.setTitle("Enter ending value");
-
-                        // Set an EditText view to get user input
-                        final EditText input = new EditText(TrainingIDE.this);
-                        input.setRawInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_SIGNED); // class = this is numbers, flag = allow decimal numbs
-
-                        alert.setView(input);
-
-                        if (((For) programmingObject).getEndingValue() != null) {
-                            input.setText(((For) programmingObject).getEndingValue().toString());
-                        }
-
-                        alert.setPositiveButton("Ok",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        ((For) programmingObject).setEndingValue(Integer.valueOf(input.getText().toString()));
-                                        endingValueTV.setText(input.getText().toString());
-                                        endingValueContainer.setVisibility(View.VISIBLE);
-                                    }
-                                });
-
-                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                endingValueSpinner.setSelection(0);
-                            }
-                        });
-                        alert.show();
-                    } else {
-                        endingValueContainer.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override public void onNothingSelected(AdapterView<?> parent) {}
-            });
-
-            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(!editingExistingObject)
-                        deleteProgrammingObject(programmingObjects, programmingObject);
-
-                    dialog.dismiss();
-                }
-            });
-            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((For) programmingObject).setLabel(labelET.getText().toString());
-
-                    // starting value
-                    if(startingValueSpinner.getSelectedItemPosition() == 0) {
-                        // nothing selected, should not be allowed
-                    } else if(startingValueSpinner.getSelectedItemPosition() == 1) {
-                        // manual entry selected
-                        ((For) programmingObject).setStartingValue(Integer.valueOf(startingValueTV.getText().toString()));
-                    } else {
-                        // variable selected
-                        ((For) programmingObject).setStartingValueVariable((Variable) getVariableByName(startingValueSpinner.getSelectedItem().toString(), programmingObjects));
-                    }
-
-                    // ending value
-                    if(endingValueSpinner.getSelectedItemPosition() == 0) {
-                        // nothing selected, should not be allowed
-                    } else if(endingValueSpinner.getSelectedItemPosition() == 1) {
-                        // manual entry selected
-                        ((For) programmingObject).setEndingValue(Integer.valueOf(endingValueTV.getText().toString()));
-                    } else {
-                        // variable selected
-                        ((For) programmingObject).setEndValueVariable((Variable) getVariableByName(endingValueSpinner.getSelectedItem().toString(), programmingObjects));
-                    }
-
-                    ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.fromString(operatorSymbols[endingValueOperatorSpinner.getSelectedItemPosition()]));
-
-                    ((For) programmingObject).setCountUp(countUpRB.isChecked());
-
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
+            showForDialog(programmingObject);
         } else if (programmingObject instanceof If) {
-            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "If - Enter a true or false statement", R.layout.if_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
-            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(!editingExistingObject)
-                        deleteProgrammingObject(programmingObjects, programmingObject);
-
-                    editingExistingObject = false;
-
-                    dialog.dismiss();
-                }
-            });
-            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
+            showIfDialog(programmingObject);
         } else if (programmingObject instanceof Variable) {
-            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Variable - Enter your parameters", R.layout.variable_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
-            final Spinner type = (Spinner) dialog.getDialog().findViewById(R.id.variableTypeSpinner);
-            final EditText name = (EditText) dialog.getDialog().findViewById(R.id.variableName);
-            final EditText value = (EditText) dialog.getDialog().findViewById(R.id.variableValue);
-            final LinearLayout booleanContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.variableBooleanValueContainer);
-            final RadioButton trueRB = (RadioButton) dialog.getDialog().findViewById(R.id.variableTrueRadioButton);
-            final RadioButton falseRB = (RadioButton) dialog.getDialog().findViewById(R.id.variableFalseRadioButton);
+            showVariableDialog(programmingObject);
+        } else if (programmingObject instanceof While) {
+            showWhileDialog(programmingObject);
+        }
+    }
 
-            didVariableTypeChange = false;
+    private void showIfDialog(final ProgrammingObject programmingObject) {
+        final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "If - Enter your parameters", R.layout.if_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+        final Spinner conditionTypeSpinner = (Spinner) dialog.getDialog().findViewById(R.id.ifConditionTypeSpinner);
 
-            if(((Variable) programmingObject).getVariableType() == Variable.VariableType.STRING)
-                type.setSelection(0);
-            else if(((Variable) programmingObject).getVariableType() == Variable.VariableType.NUMBER)
-                type.setSelection(1);
-            else if(((Variable) programmingObject).getVariableType() == Variable.VariableType.BOOLEAN)
-                type.setSelection(2);
+        final LinearLayout conditionCustomExpressionContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.ifConditionCustomExpressionContainer);
+        final EditText conditionCustomExpressionET = (EditText) dialog.getDialog().findViewById(R.id.ifConditionCustomExpressionEditText);
 
-            name.setText(((Variable) programmingObject).getName());
-            value.setText(((Variable) programmingObject).getValue().toString());
+        final TextView conditionVariableLabel = (TextView) dialog.getDialog().findViewById(R.id.ifConditionVariableLabel);
+        final Spinner conditionVariableSpinner = (Spinner) dialog.getDialog().findViewById(R.id.ifConditionVariableSpinner);
 
-            if(((Variable) programmingObject).getVariableType() == Variable.VariableType.BOOLEAN) {
-                trueRB.setChecked((Boolean) ((Variable) programmingObject).getValue());
-                falseRB.setChecked(!(Boolean) ((Variable) programmingObject).getValue());
+        final TextView terminatingValueTypeLabel = (TextView) dialog.getDialog().findViewById(R.id.ifTerminatingValueTypeLabel);
+        final Spinner terminatingValueTypeSpinner = (Spinner) dialog.getDialog().findViewById(R.id.ifTerminatingValueTypeSpinner);
+
+        final TextView terminatingValueVariableLabel = (TextView) dialog.getDialog().findViewById(R.id.ifTerminatingValueVariableLabel);
+        final Spinner terminatingValueVariableSpinner = (Spinner) dialog.getDialog().findViewById(R.id.ifTerminatingValueVariableSpinner);
+
+        final TextView comparisonOperatorLabel = (TextView) dialog.getDialog().findViewById(R.id.ifComparisonOperatorLabel);
+        final Spinner comparisonOperatorSpinner = (Spinner) dialog.getDialog().findViewById(R.id.ifComparisonOperatorSpinner);
+
+        final LinearLayout customTerminatingValueContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.ifTerminatingValueCustomContainer);
+        final EditText customTerminatingValueET = (EditText) dialog.getDialog().findViewById(R.id.ifTerminatingValueCustomEditText);
+
+        ArrayList<String> variableObjectNames = new ArrayList<String>();
+        getVariableNamesAsList(variableObjectNames, programmingObjects, null); // get all variable types
+
+        conditionTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            //<item>Variable</item>
+            //<item>Custom Expression</item>
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                conditionVariableLabel.setVisibility(position == 0 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                conditionVariableSpinner.setVisibility(position == 0 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+
+                terminatingValueTypeLabel.setVisibility(position == 0 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                terminatingValueTypeSpinner.setVisibility(position == 0 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+
+                terminatingValueVariableLabel.setVisibility((position == 0 && terminatingValueTypeSpinner.getSelectedItemPosition() == 2) ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                terminatingValueVariableSpinner.setVisibility((position == 0 && terminatingValueTypeSpinner.getSelectedItemPosition() == 2) ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+
+                comparisonOperatorLabel.setVisibility(position == 0 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                comparisonOperatorSpinner.setVisibility(position == 0 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+
+                customTerminatingValueContainer.setVisibility((position < 1 && terminatingValueTypeSpinner.getSelectedItemPosition() == 3) ? View.VISIBLE : View.GONE); // not visible for 'True' selection
+
+                conditionCustomExpressionContainer.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Custom Expression' selection
             }
 
-            type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    booleanContainer.setVisibility(position == 2 ? View.VISIBLE : View.GONE);
-                    value.setVisibility(position == 2 ? View.GONE : View.VISIBLE);
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
-                    if(didVariableTypeChange)
-                        value.setText(""); // clear this out so we don't save weird values
+        terminatingValueTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                terminatingValueVariableLabel.setVisibility(position == 2 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                terminatingValueVariableSpinner.setVisibility(position == 2 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
 
-                    didVariableTypeChange = true; // set to true AFTER the check on purpose, otherwise it'll wipe out the value when the dialog is first opened
+                customTerminatingValueContainer.setVisibility(position == 3 ? View.VISIBLE : View.GONE); // only visible for 'Custom Value' selection
+            }
 
-                    if(position == 0) {
-                        // String
-                        value.setInputType(InputType.TYPE_CLASS_TEXT);
-                    } else if(position == 1) {
-                        // Number
-                        value.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL); // class = this is numbers, flag = allow decimal numbs
-                    } else if(position == 2) {
-                        // Boolean
-                    }
-                }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
-                @Override public void onNothingSelected(AdapterView<?> parent) {}
-            });
+        conditionVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+        terminatingValueVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+        conditionTypeSpinner.setSelection(0); // 'Variable' selection
 
-            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(!editingExistingObject)
-                        deleteProgrammingObject(programmingObjects, programmingObject);
+        dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!editingExistingObject)
+                    deleteProgrammingObject(programmingObjects, programmingObject);
 
-                    editingExistingObject = false;
+                editingExistingObject = false;
 
-                    dialog.dismiss();
-                }
-            });
-            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    boolean canSave = true;
+                dialog.dismiss();
+            }
+        });
+        dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                    canSave = !name.getText().toString().equals("");
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
 
-                    if(canSave) {
-                        if (type.getSelectedItem().equals("String") || type.getSelectedItem().equals("Number"))
-                            canSave = !value.getText().toString().equals("");
-
-                        if(canSave) {
-                            if (type.getSelectedItem().equals("String")) {
-                                ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
-                                ((Variable) programmingObject).setValue(value.getText().toString());
-                            } else if (type.getSelectedItem().equals("Number")) {
-                                ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
-                                ((Variable) programmingObject).setValue(Float.parseFloat(value.getText().toString()));
-                            } else if (type.getSelectedItem().equals("Boolean")) {
-                                ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
-                                ((Variable) programmingObject).setValue(trueRB.isChecked());
-                            }
-
-                            ((Variable) programmingObject).setName(name.getText().toString());
-
-                            dialog.dismiss();
-                        } else
-                            Toast.makeText(TrainingIDE.this, "Please enter a value", Toast.LENGTH_SHORT).show();
-                    } else
-                        Toast.makeText(TrainingIDE.this, "Please enter a variable name", Toast.LENGTH_SHORT).show();
-                }
-            });
-            dialog.show();
-        } else if (programmingObject instanceof While) {
-//
+    private void showWhileDialog(final ProgrammingObject programmingObject) {
+        //
 //            /*final ArrayList<String> variableObjectNames = new ArrayList<String>();
 //            getVariableNamesAsList(variableObjectNames, programmingObjects, Variable.VariableType.BOOLEAN); // only get number variables
 //            variableObjectNames.add(0, ""); // Blank value
@@ -1112,93 +900,393 @@ public class TrainingIDE extends Activity {
 //            });
 //            dialog.show();
 
-            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "While - Enter your parameters", R.layout.while_dialog_alternate, getString(android.R.string.cancel), getString(android.R.string.ok));
-            final Spinner conditionTypeSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionTypeSpinner);
+        final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "While - Enter your parameters", R.layout.while_dialog_alternate, getString(android.R.string.cancel), getString(android.R.string.ok));
+        final Spinner conditionTypeSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionTypeSpinner);
 
-            final LinearLayout conditionCustomExpressionContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.whileConditionCustomExpressionContainer);
-            final EditText conditionCustomExpressionET = (EditText) dialog.getDialog().findViewById(R.id.whileConditionCustomExpressionEditText);
+        final LinearLayout conditionCustomExpressionContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.whileConditionCustomExpressionContainer);
+        final EditText conditionCustomExpressionET = (EditText) dialog.getDialog().findViewById(R.id.whileConditionCustomExpressionEditText);
 
-            final TextView conditionVariableLabel = (TextView) dialog.getDialog().findViewById(R.id.whileConditionVariableLabel);
-            final Spinner conditionVariableSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionVariableSpinner);
+        final TextView conditionVariableLabel = (TextView) dialog.getDialog().findViewById(R.id.whileConditionVariableLabel);
+        final Spinner conditionVariableSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionVariableSpinner);
 
-            final TextView terminatingValueTypeLabel = (TextView) dialog.getDialog().findViewById(R.id.whileTerminatingValueTypeLabel);
-            final Spinner terminatingValueTypeSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileTerminatingValueTypeSpinner);
+        final TextView terminatingValueTypeLabel = (TextView) dialog.getDialog().findViewById(R.id.whileTerminatingValueTypeLabel);
+        final Spinner terminatingValueTypeSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileTerminatingValueTypeSpinner);
 
-            final TextView terminatingValueVariableLabel = (TextView) dialog.getDialog().findViewById(R.id.whileTerminatingValueVariableLabel);
-            final Spinner terminatingValueVariableSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileTerminatingValueVariableSpinner);
+        final TextView terminatingValueVariableLabel = (TextView) dialog.getDialog().findViewById(R.id.whileTerminatingValueVariableLabel);
+        final Spinner terminatingValueVariableSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileTerminatingValueVariableSpinner);
 
-            final TextView comparisonOperatorLabel = (TextView) dialog.getDialog().findViewById(R.id.whileComparisonOperatorLabel);
-            final Spinner comparisonOperatorSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileComparisonOperatorSpinner);
+        final TextView comparisonOperatorLabel = (TextView) dialog.getDialog().findViewById(R.id.whileComparisonOperatorLabel);
+        final Spinner comparisonOperatorSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileComparisonOperatorSpinner);
 
-            final LinearLayout customTerminatingValueContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.whileTerminatingValueCustomContainer);
-            final EditText customTerminatingValueET = (EditText) dialog.getDialog().findViewById(R.id.whileTerminatingValueCustomEditText);
+        final LinearLayout customTerminatingValueContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.whileTerminatingValueCustomContainer);
+        final EditText customTerminatingValueET = (EditText) dialog.getDialog().findViewById(R.id.whileTerminatingValueCustomEditText);
 
-            ArrayList<String> variableObjectNames = new ArrayList<String>();
-            getVariableNamesAsList(variableObjectNames, programmingObjects, null); // get all variable types
+        ArrayList<String> variableObjectNames = new ArrayList<String>();
+        getVariableNamesAsList(variableObjectNames, programmingObjects, null); // get all variable types
 
-            conditionTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                //<item>True</item>
-                //<item>Variable</item>
-                //<item>Custom Expression</item>
+        conditionTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            //<item>True</item>
+            //<item>Variable</item>
+            //<item>Custom Expression</item>
 
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    conditionVariableLabel.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
-                    conditionVariableSpinner.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                conditionVariableLabel.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                conditionVariableSpinner.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
 
-                    terminatingValueTypeLabel.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
-                    terminatingValueTypeSpinner.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                terminatingValueTypeLabel.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                terminatingValueTypeSpinner.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
 
-                    terminatingValueVariableLabel.setVisibility((position == 1 && terminatingValueTypeSpinner.getSelectedItemPosition() == 2) ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
-                    terminatingValueVariableSpinner.setVisibility((position == 1 && terminatingValueTypeSpinner.getSelectedItemPosition() == 2) ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                terminatingValueVariableLabel.setVisibility((position == 1 && terminatingValueTypeSpinner.getSelectedItemPosition() == 2) ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                terminatingValueVariableSpinner.setVisibility((position == 1 && terminatingValueTypeSpinner.getSelectedItemPosition() == 2) ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
 
-                    comparisonOperatorLabel.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
-                    comparisonOperatorSpinner.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                comparisonOperatorLabel.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                comparisonOperatorSpinner.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
 
-                    customTerminatingValueContainer.setVisibility((position < 2 && terminatingValueTypeSpinner.getSelectedItemPosition() == 3) ? View.VISIBLE : View.GONE); // not visible for 'True' selection
+                customTerminatingValueContainer.setVisibility((position < 2 && terminatingValueTypeSpinner.getSelectedItemPosition() == 3) ? View.VISIBLE : View.GONE); // not visible for 'True' selection
 
-                    conditionCustomExpressionContainer.setVisibility(position == 2 ? View.VISIBLE : View.GONE); // only visible for 'Custom Expression' selection
-                }
+                conditionCustomExpressionContainer.setVisibility(position == 2 ? View.VISIBLE : View.GONE); // only visible for 'Custom Expression' selection
+            }
 
-                @Override public void onNothingSelected(AdapterView<?> parent) {}
-            });
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
-            terminatingValueTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    terminatingValueVariableLabel.setVisibility(position == 2 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
-                    terminatingValueVariableSpinner.setVisibility(position == 2 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+        terminatingValueTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                terminatingValueVariableLabel.setVisibility(position == 2 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                terminatingValueVariableSpinner.setVisibility(position == 2 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
 
-                    customTerminatingValueContainer.setVisibility(position == 3 ? View.VISIBLE : View.GONE); // only visible for 'Custom Value' selection
-                }
+                customTerminatingValueContainer.setVisibility(position == 3 ? View.VISIBLE : View.GONE); // only visible for 'Custom Value' selection
+            }
 
-                @Override public void onNothingSelected(AdapterView<?> parent) {}
-            });
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
-            conditionVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
-            terminatingValueVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
-            conditionTypeSpinner.setSelection(1); // 'Variable' selection
+        conditionVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+        terminatingValueVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+        conditionTypeSpinner.setSelection(1); // 'Variable' selection
 
-            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(!editingExistingObject)
-                        deleteProgrammingObject(programmingObjects, programmingObject);
+        dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!editingExistingObject)
+                    deleteProgrammingObject(programmingObjects, programmingObject);
 
-                    editingExistingObject = false;
+                editingExistingObject = false;
 
-                    dialog.dismiss();
-                }
-            });
-            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+    
+    private void showVariableDialog(final ProgrammingObject programmingObject) {
+        final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Variable - Enter your parameters", R.layout.variable_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+        final Spinner type = (Spinner) dialog.getDialog().findViewById(R.id.variableTypeSpinner);
+        final EditText name = (EditText) dialog.getDialog().findViewById(R.id.variableName);
+        final EditText value = (EditText) dialog.getDialog().findViewById(R.id.variableValue);
+        final LinearLayout booleanContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.variableBooleanValueContainer);
+        final RadioButton trueRB = (RadioButton) dialog.getDialog().findViewById(R.id.variableTrueRadioButton);
+        final RadioButton falseRB = (RadioButton) dialog.getDialog().findViewById(R.id.variableFalseRadioButton);
+
+        didVariableTypeChange = false;
+
+        if(((Variable) programmingObject).getVariableType() == Variable.VariableType.STRING)
+            type.setSelection(0);
+        else if(((Variable) programmingObject).getVariableType() == Variable.VariableType.NUMBER)
+            type.setSelection(1);
+        else if(((Variable) programmingObject).getVariableType() == Variable.VariableType.BOOLEAN)
+            type.setSelection(2);
+
+        name.setText(((Variable) programmingObject).getName());
+        value.setText(((Variable) programmingObject).getValue().toString());
+
+        if(((Variable) programmingObject).getVariableType() == Variable.VariableType.BOOLEAN) {
+            trueRB.setChecked((Boolean) ((Variable) programmingObject).getValue());
+            falseRB.setChecked(!(Boolean) ((Variable) programmingObject).getValue());
         }
+
+        type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                booleanContainer.setVisibility(position == 2 ? View.VISIBLE : View.GONE);
+                value.setVisibility(position == 2 ? View.GONE : View.VISIBLE);
+
+                if(didVariableTypeChange)
+                    value.setText(""); // clear this out so we don't save weird values
+
+                didVariableTypeChange = true; // set to true AFTER the check on purpose, otherwise it'll wipe out the value when the dialog is first opened
+
+                if(position == 0) {
+                    // String
+                    value.setInputType(InputType.TYPE_CLASS_TEXT);
+                } else if(position == 1) {
+                    // Number
+                    value.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL); // class = this is numbers, flag = allow decimal numbs
+                } else if(position == 2) {
+                    // Boolean
+                }
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!editingExistingObject)
+                    deleteProgrammingObject(programmingObjects, programmingObject);
+
+                editingExistingObject = false;
+
+                dialog.dismiss();
+            }
+        });
+        dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean canSave = true;
+
+                canSave = !name.getText().toString().equals("");
+
+                if(canSave) {
+                    if (type.getSelectedItem().equals("String") || type.getSelectedItem().equals("Number"))
+                        canSave = !value.getText().toString().equals("");
+
+                    if(canSave) {
+                        if (type.getSelectedItem().equals("String")) {
+                            ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
+                            ((Variable) programmingObject).setValue(value.getText().toString());
+                        } else if (type.getSelectedItem().equals("Number")) {
+                            ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
+                            ((Variable) programmingObject).setValue(Float.parseFloat(value.getText().toString()));
+                        } else if (type.getSelectedItem().equals("Boolean")) {
+                            ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
+                            ((Variable) programmingObject).setValue(trueRB.isChecked());
+                        }
+
+                        ((Variable) programmingObject).setName(name.getText().toString());
+
+                        dialog.dismiss();
+                    } else
+                        Toast.makeText(TrainingIDE.this, "Please enter a value", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(TrainingIDE.this, "Please enter a variable name", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showPrintDialog(final ProgrammingObject programmingObject) {
+        final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Print - Enter text to print", R.layout.print_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+        final EditText editText = (EditText) dialog.getDialog().findViewById(R.id.print_dialog_edit_text);
+        editText.setText(((Print) programmingObject).getText());
+
+        dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!editingExistingObject)
+                    deleteProgrammingObject(programmingObjects, programmingObject);
+
+                editingExistingObject = false;
+
+                dialog.dismiss();
+            }
+        });
+        dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ((Print) programmingObject).setText(editText.getText().toString());
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showForDialog(final ProgrammingObject programmingObject) {
+        final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "For - Enter your parameters", R.layout.for_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+        final EditText labelET = (EditText) dialog.getDialog().findViewById(R.id.labelEditText);
+        final LinearLayout startingValueContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.startValueContainer);
+        final TextView startingValueTV = (TextView) dialog.getDialog().findViewById(R.id.startValueTextView);
+        final Spinner startingValueSpinner = (Spinner) dialog.getDialog().findViewById(R.id.startingValueSpinner);
+        final LinearLayout endingValueContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.endValueContainer);
+        final TextView endingValueTV = (TextView) dialog.getDialog().findViewById(R.id.endValueTextView);
+        final Spinner endingValueSpinner = (Spinner) dialog.getDialog().findViewById(R.id.endValueSpinner);
+        final Spinner endingValueOperatorSpinner = (Spinner) dialog.getDialog().findViewById(R.id.endValueOperatorSpinner);
+        final RadioButton countUpRB = (RadioButton) dialog.getDialog().findViewById(R.id.countUpRadioButton);
+        final RadioButton countDownRB = (RadioButton) dialog.getDialog().findViewById(R.id.countDownRadioButton);
+
+        // init fields
+        final String[] operatorSymbols = getResources().getStringArray(R.array.operatorSymbolArray);
+        ArrayList<String> variableObjectNames = new ArrayList<String>();
+        getVariableNamesAsList(variableObjectNames, programmingObjects, Variable.VariableType.NUMBER); // only get number variables
+        variableObjectNames.add(0, ""); // Blank value
+        variableObjectNames.add(1, "--Manual Entry--");
+
+        labelET.setText(((For) programmingObject).getLabel());
+
+        startingValueSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+        endingValueSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+
+        if(((For) programmingObject).getStartingValue() != null) {
+            startingValueTV.setText(((For) programmingObject).getStartingValue());
+            startingValueContainer.setVisibility(View.VISIBLE);
+            startingValueSpinner.setSelection(1); // manual entry
+        } else if(((For) programmingObject).getStartingValueVariable() != null) {
+            startingValueContainer.setVisibility(View.GONE); // should be gone already, but be sure
+            startingValueSpinner.setSelection(variableObjectNames.indexOf(((For) programmingObject).getStartingValueVariable().getName())); // manual entry
+        }
+
+        if(((For) programmingObject).getEndingValue() != null) {
+            endingValueTV.setText(((For) programmingObject).getEndingValue());
+            endingValueContainer.setVisibility(View.VISIBLE);
+            endingValueSpinner.setSelection(1); // manual entry
+        } else if(((For) programmingObject).getStartingValueVariable() != null) {
+            endingValueContainer.setVisibility(View.GONE); // should be gone already, but be sure
+            endingValueSpinner.setSelection(variableObjectNames.indexOf(((For) programmingObject).getEndValueVariable().getName())); // manual entry
+        }
+
+        endingValueOperatorSpinner.setSelection(Arrays.asList(operatorSymbols).indexOf(((For) programmingObject).getEndingValueComparisonOperator().toString()));
+
+        countUpRB.setChecked(((For) programmingObject).isCountUp());
+        countDownRB.setChecked(!((For) programmingObject).isCountUp());
+
+        startingValueSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 1) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(TrainingIDE.this);
+                    alert.setTitle("Enter starting value");
+
+                    // Set an EditText view to get user input
+                    final EditText input = new EditText(TrainingIDE.this);
+                    input.setRawInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_SIGNED); // class = this is numbers, flag = allow negative numbers
+
+                    alert.setView(input);
+
+                    if (((For) programmingObject).getStartingValue() != null) {
+                        input.setText(((For) programmingObject).getStartingValue().toString());
+                    }
+
+                    alert.setPositiveButton("Ok",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    ((For) programmingObject).setStartingValue(Integer.valueOf(input.getText().toString()));
+                                    startingValueTV.setText(input.getText().toString());
+                                    startingValueContainer.setVisibility(View.VISIBLE);
+                                }
+                            });
+
+                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            startingValueSpinner.setSelection(0);
+                        }
+                    });
+                    alert.show();
+                } else {
+                    startingValueContainer.setVisibility(View.GONE);
+                }
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        endingValueSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 1) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(TrainingIDE.this);
+                    alert.setTitle("Enter ending value");
+
+                    // Set an EditText view to get user input
+                    final EditText input = new EditText(TrainingIDE.this);
+                    input.setRawInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_SIGNED); // class = this is numbers, flag = allow decimal numbs
+
+                    alert.setView(input);
+
+                    if (((For) programmingObject).getEndingValue() != null) {
+                        input.setText(((For) programmingObject).getEndingValue().toString());
+                    }
+
+                    alert.setPositiveButton("Ok",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    ((For) programmingObject).setEndingValue(Integer.valueOf(input.getText().toString()));
+                                    endingValueTV.setText(input.getText().toString());
+                                    endingValueContainer.setVisibility(View.VISIBLE);
+                                }
+                            });
+
+                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            endingValueSpinner.setSelection(0);
+                        }
+                    });
+                    alert.show();
+                } else {
+                    endingValueContainer.setVisibility(View.GONE);
+                }
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!editingExistingObject)
+                    deleteProgrammingObject(programmingObjects, programmingObject);
+
+                dialog.dismiss();
+            }
+        });
+        dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((For) programmingObject).setLabel(labelET.getText().toString());
+
+                // starting value
+                if(startingValueSpinner.getSelectedItemPosition() == 0) {
+                    // nothing selected, should not be allowed
+                } else if(startingValueSpinner.getSelectedItemPosition() == 1) {
+                    // manual entry selected
+                    ((For) programmingObject).setStartingValue(Integer.valueOf(startingValueTV.getText().toString()));
+                } else {
+                    // variable selected
+                    ((For) programmingObject).setStartingValueVariable((Variable) getVariableByName(startingValueSpinner.getSelectedItem().toString(), programmingObjects));
+                }
+
+                // ending value
+                if(endingValueSpinner.getSelectedItemPosition() == 0) {
+                    // nothing selected, should not be allowed
+                } else if(endingValueSpinner.getSelectedItemPosition() == 1) {
+                    // manual entry selected
+                    ((For) programmingObject).setEndingValue(Integer.valueOf(endingValueTV.getText().toString()));
+                } else {
+                    // variable selected
+                    ((For) programmingObject).setEndValueVariable((Variable) getVariableByName(endingValueSpinner.getSelectedItem().toString(), programmingObjects));
+                }
+
+                ((For) programmingObject).setEndingValueComparisonOperator(ProgrammingObject.ComparisonOperator.fromString(operatorSymbols[endingValueOperatorSpinner.getSelectedItemPosition()]));
+
+                ((For) programmingObject).setCountUp(countUpRB.isChecked());
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     private ProgrammingObject getVariableByName(String name, ArrayList<ProgrammingObject> programmingObjects) {

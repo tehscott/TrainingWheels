@@ -62,6 +62,18 @@
         <item>Custom Value</item>
     </string-array>
 
+    <string-array name="ifConditionTypeArray">
+        <item>Variable</item>
+        <item>Custom Expression</item>
+    </string-array>
+
+    <string-array name="ifTerminatingValueTypeArray">
+        <item>True</item>
+        <item>False</item>
+        <item>Variable</item>
+        <item>Custom Value</item>
+    </string-array>
+
     <string name="title_activity_user">User</string>
     <string name="remember_me">Remember Me</string>
     <string name="hints_tips">Hints/Tips:</string>

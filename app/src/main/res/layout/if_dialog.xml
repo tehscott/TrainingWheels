@@ -1,39 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Variable type -->
+    <!-- Condition Type -->
     <TextView
-        android:id="@+id/variableTypeLabel"
+        android:id="@+id/ifConditionTypeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Type"
+        android:text="Condition Type"
         android:gravity="center"
-        android:layout_alignTop="@+id/variableTypeSpinner"
-        android:layout_alignBottom="@+id/variableTypeSpinner" />
+        android:layout_alignTop="@+id/ifConditionTypeSpinner"
+        android:layout_alignBottom="@+id/ifConditionTypeSpinner" />
 
     <Spinner
-        android:id="@+id/variableTypeSpinner"
+        android:id="@+id/ifConditionTypeSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ifConditionTypeLabel"
+        android:entries="@array/ifConditionTypeArray"/>
+
+    <!-- Custom Expression (Condition) -->
+    <LinearLayout
+        android:id="@+id/ifConditionCustomExpressionContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/variableTypeArray"
-        android:layout_toRightOf="@+id/variableTypeLabel"/>
+        android:layout_below="@+id/ifConditionTypeSpinner"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-    <!-- Variable name -->
-    <EditText
-        android:id="@+id/variableName"
+        <TextView
+            android:id="@+id/ifConditionCustomExpressionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Custom Condition Expression"
+            android:gravity="center"/>
+
+        <EditText
+            android:id="@+id/ifConditionCustomExpressionEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- Condition Variable -->
+    <TextView
+        android:id="@+id/ifConditionVariableLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Condition Variable"
+        android:gravity="center"
+        android:layout_alignTop="@+id/ifConditionVariableSpinner"
+        android:layout_alignBottom="@+id/ifConditionVariableSpinner" />
+
+    <Spinner
+        android:id="@+id/ifConditionVariableSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ifConditionVariableLabel"
+        android:layout_below="@+id/ifConditionCustomExpressionContainer"/>
+
+    <!-- Comparison Operator -->
+    <TextView
+        android:id="@+id/ifComparisonOperatorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comparison Operator"
+        android:gravity="center"
+        android:layout_alignTop="@+id/ifComparisonOperatorSpinner"
+        android:layout_alignBottom="@+id/ifComparisonOperatorSpinner" />
+
+    <Spinner
+        android:id="@+id/ifComparisonOperatorSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ifComparisonOperatorLabel"
+        android:layout_below="@+id/ifConditionVariableSpinner"
+        android:entries="@array/operatorArray"/>
+
+    <!-- Terminating Value Type -->
+    <TextView
+        android:id="@+id/ifTerminatingValueTypeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Terminating Value Type"
+        android:gravity="center"
+        android:layout_alignTop="@+id/ifTerminatingValueTypeSpinner"
+        android:layout_alignBottom="@+id/ifTerminatingValueTypeSpinner" />
+
+    <Spinner
+        android:id="@+id/ifTerminatingValueTypeSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ifTerminatingValueTypeLabel"
+        android:layout_below="@+id/ifComparisonOperatorLabel"
+        android:entries="@array/ifTerminatingValueTypeArray"/>
+
+    <!-- Terminating Value Variable -->
+    <TextView
+        android:id="@+id/ifTerminatingValueVariableLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Terminating Value Variable"
+        android:gravity="center"
+        android:layout_alignTop="@+id/ifTerminatingValueVariableSpinner"
+        android:layout_alignBottom="@+id/ifTerminatingValueVariableSpinner"
+        android:visibility="gone"/>
+
+    <Spinner
+        android:id="@+id/ifTerminatingValueVariableSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ifTerminatingValueVariableLabel"
+        android:layout_below="@+id/ifTerminatingValueTypeSpinner"
+        android:visibility="gone"/>
+
+    <!-- Custom Terminating Value -->
+    <LinearLayout
+        android:id="@+id/ifTerminatingValueCustomContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter variable name"
-        android:layout_below="@+id/variableTypeSpinner"/>
+        android:layout_below="@+id/ifTerminatingValueTypeSpinner"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-    <!-- Variable value -->
-    <EditText
-        android:id="@+id/variableValue"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter value"
-        android:layout_below="@+id/variableName"/>
+        <TextView
+            android:id="@+id/ifTerminatingValueCustomLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Custom Terminating Value"
+            android:gravity="center"/>
 
+        <EditText
+            android:id="@+id/ifTerminatingValueCustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </RelativeLayout>
