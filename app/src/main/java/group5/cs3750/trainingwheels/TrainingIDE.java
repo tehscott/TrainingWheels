@@ -32,6 +32,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
@@ -73,8 +74,11 @@ public class TrainingIDE extends Activity {
     // Drag/drop variables
     private View draggedButton;
     private WebView webView;
-    private boolean didDrop = false, draggingExistingObject = false;
+    private boolean didDrop = false, draggingExistingObject = false, editingExistingObject = false;
     private ProgrammingObject draggedObject; // temporary dragged object
+
+    // Object dialog variables
+    private boolean didVariableTypeChange = false; // used to track if the user changed the type of a variable, used exclusively on the Variable entry dialog
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -592,11 +596,11 @@ public class TrainingIDE extends Activity {
         if (objectName.contentEquals("for")) {
             pObj = new For("for", ProgrammingObject.ComparisonOperator.LESS_THAN, true);
         } else if (objectName.contentEquals("while")) {
-            pObj = new While(new Variable("whileVariable", Variable.VariableType.STRING, "beep"), "boop");
+            pObj = new While(new Variable("", Variable.VariableType.STRING, ""), "");
         } else if (objectName.contentEquals("variable")) {
-            pObj = new Variable("testVariable", Variable.VariableType.STRING, "test");
+            pObj = new Variable("", Variable.VariableType.STRING, "");
         } else if (objectName.contentEquals("if")) {
-            pObj = new If(new Variable("ifLeft", Variable.VariableType.STRING, "left"), "left", Variable.VariableType.STRING, ProgrammingObject.ComparisonOperator.EQUAL);
+            pObj = new If(new Variable("", Variable.VariableType.STRING, ""), "", Variable.VariableType.STRING, ProgrammingObject.ComparisonOperator.EQUAL);
         } else if (objectName.contentEquals("print")) {
             pObj = new Print("");
         } else {
@@ -750,10 +754,16 @@ public class TrainingIDE extends Activity {
 
         if (programmingObject instanceof Print) {
             final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Print - Enter text to print", R.layout.print_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            final EditText editText = (EditText) dialog.getDialog().findViewById(R.id.print_dialog_edit_text);
+            editText.setText(((Print) programmingObject).getText());
+
             dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteProgrammingObject(programmingObjects, programmingObject);
+                    if(!editingExistingObject)
+                        deleteProgrammingObject(programmingObjects, programmingObject);
+
+                    editingExistingObject = false;
 
                     dialog.dismiss();
                 }
@@ -761,7 +771,7 @@ public class TrainingIDE extends Activity {
             dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EditText editText = (EditText) dialog.getDialog().findViewById(R.id.print_dialog_edit_text);
+
                     ((Print) programmingObject).setText(editText.getText().toString());
                     dialog.dismiss();
                 }
@@ -824,7 +834,7 @@ public class TrainingIDE extends Activity {
 
                         // Set an EditText view to get user input
                         final EditText input = new EditText(TrainingIDE.this);
-                        input.setRawInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
+                        input.setRawInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_SIGNED); // class = this is numbers, flag = allow negative numbers
 
                         alert.setView(input);
 
@@ -864,7 +874,7 @@ public class TrainingIDE extends Activity {
 
                         // Set an EditText view to get user input
                         final EditText input = new EditText(TrainingIDE.this);
-                        input.setRawInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
+                        input.setRawInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_SIGNED); // class = this is numbers, flag = allow decimal numbs
 
                         alert.setView(input);
 
@@ -898,7 +908,8 @@ public class TrainingIDE extends Activity {
             dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteProgrammingObject(programmingObjects, programmingObject);
+                    if(!editingExistingObject)
+                        deleteProgrammingObject(programmingObjects, programmingObject);
 
                     dialog.dismiss();
                 }
@@ -943,7 +954,10 @@ public class TrainingIDE extends Activity {
             dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteProgrammingObject(programmingObjects, programmingObject);
+                    if(!editingExistingObject)
+                        deleteProgrammingObject(programmingObjects, programmingObject);
+
+                    editingExistingObject = false;
 
                     dialog.dismiss();
                 }
@@ -958,10 +972,62 @@ public class TrainingIDE extends Activity {
             dialog.show();
         } else if (programmingObject instanceof Variable) {
             final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Variable - Enter your parameters", R.layout.variable_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            final Spinner type = (Spinner) dialog.getDialog().findViewById(R.id.variableTypeSpinner);
+            final EditText name = (EditText) dialog.getDialog().findViewById(R.id.variableName);
+            final EditText value = (EditText) dialog.getDialog().findViewById(R.id.variableValue);
+            final LinearLayout booleanContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.variableBooleanValueContainer);
+            final RadioButton trueRB = (RadioButton) dialog.getDialog().findViewById(R.id.variableTrueRadioButton);
+            final RadioButton falseRB = (RadioButton) dialog.getDialog().findViewById(R.id.variableFalseRadioButton);
+
+            didVariableTypeChange = false;
+
+            if(((Variable) programmingObject).getVariableType() == Variable.VariableType.STRING)
+                type.setSelection(0);
+            else if(((Variable) programmingObject).getVariableType() == Variable.VariableType.NUMBER)
+                type.setSelection(1);
+            else if(((Variable) programmingObject).getVariableType() == Variable.VariableType.BOOLEAN)
+                type.setSelection(2);
+
+            name.setText(((Variable) programmingObject).getName());
+            value.setText(((Variable) programmingObject).getValue().toString());
+
+            if(((Variable) programmingObject).getVariableType() == Variable.VariableType.BOOLEAN) {
+                trueRB.setChecked((Boolean) ((Variable) programmingObject).getValue());
+                falseRB.setChecked(!(Boolean) ((Variable) programmingObject).getValue());
+            }
+
+            type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    booleanContainer.setVisibility(position == 2 ? View.VISIBLE : View.GONE);
+                    value.setVisibility(position == 2 ? View.GONE : View.VISIBLE);
+
+                    if(didVariableTypeChange)
+                        value.setText(""); // clear this out so we don't save weird values
+
+                    didVariableTypeChange = true; // set to true AFTER the check on purpose, otherwise it'll wipe out the value when the dialog is first opened
+
+                    if(position == 0) {
+                        // String
+                        value.setInputType(InputType.TYPE_CLASS_TEXT);
+                    } else if(position == 1) {
+                        // Number
+                        value.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL); // class = this is numbers, flag = allow decimal numbs
+                    } else if(position == 2) {
+                        // Boolean
+                    }
+                }
+
+                @Override public void onNothingSelected(AdapterView<?> parent) {}
+            });
+
             dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteProgrammingObject(programmingObjects, programmingObject);
+                    if(!editingExistingObject)
+                        deleteProgrammingObject(programmingObjects, programmingObject);
+
+                    editingExistingObject = false;
 
                     dialog.dismiss();
                 }
@@ -969,29 +1035,33 @@ public class TrainingIDE extends Activity {
             dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Spinner action = (Spinner) dialog.getDialog().findViewById(R.id.variableActionSpinner);
-                    Spinner type = (Spinner) dialog.getDialog().findViewById(R.id.variableTypeSpinner);
-                    EditText name = (EditText) dialog.getDialog().findViewById(R.id.variableName);
-                    EditText value = (EditText) dialog.getDialog().findViewById(R.id.variableValue);
+                    boolean canSave = true;
 
-                    if (action.getSelectedItem().equals("Instantiate"))
-                        ((Variable) programmingObject).setAction(Variable.Action.INSTANTIATE);
-                    else if (action.getSelectedItem().equals("Set"))
-                        ((Variable) programmingObject).setAction(Variable.Action.SET);
-                    else if (action.getSelectedItem().equals("Get"))
-                        ((Variable) programmingObject).setAction(Variable.Action.GET);
+                    canSave = !name.getText().toString().equals("");
 
-                    if (type.getSelectedItem().equals("String"))
-                        ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
-                    else if (type.getSelectedItem().equals("Number"))
-                        ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
-                    else if (type.getSelectedItem().equals("Boolean"))
-                        ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
+                    if(canSave) {
+                        if (type.getSelectedItem().equals("String") || type.getSelectedItem().equals("Number"))
+                            canSave = !value.getText().toString().equals("");
 
-                    ((Variable) programmingObject).setName(name.getText().toString());
-                    ((Variable) programmingObject).setValue(value.getText().toString());
+                        if(canSave) {
+                            if (type.getSelectedItem().equals("String")) {
+                                ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
+                                ((Variable) programmingObject).setValue(value.getText().toString());
+                            } else if (type.getSelectedItem().equals("Number")) {
+                                ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
+                                ((Variable) programmingObject).setValue(Float.parseFloat(value.getText().toString()));
+                            } else if (type.getSelectedItem().equals("Boolean")) {
+                                ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
+                                ((Variable) programmingObject).setValue(trueRB.isChecked());
+                            }
 
-                    dialog.dismiss();
+                            ((Variable) programmingObject).setName(name.getText().toString());
+
+                            dialog.dismiss();
+                        } else
+                            Toast.makeText(TrainingIDE.this, "Please enter a value", Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(TrainingIDE.this, "Please enter a variable name", Toast.LENGTH_SHORT).show();
                 }
             });
             dialog.show();
@@ -1112,7 +1182,11 @@ public class TrainingIDE extends Activity {
             dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteProgrammingObject(programmingObjects, programmingObject);
+                    if(!editingExistingObject)
+                        deleteProgrammingObject(programmingObjects, programmingObject);
+
+                    editingExistingObject = false;
+
                     dialog.dismiss();
                 }
             });
@@ -1151,6 +1225,16 @@ public class TrainingIDE extends Activity {
 
             if (pObj.getChildren() != null) // Look through this object's children
                 getVariableNamesAsList(list, pObj.getChildren(), variableType);
+        }
+    }
+
+    public void handleDoubleTap(int x, int y) {
+        canvas.setCurrentHoverLocation(new Point(x, y));
+        findCurrentHoveredObject(programmingObjects);
+
+        if(currentHoveredObject != null) {
+            editingExistingObject = true;
+            showParametersDialog(currentHoveredObject);
         }
     }
 

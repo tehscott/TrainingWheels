@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -31,6 +32,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
     private int drawnObjectHorizontalSpacing = 20; // pixel width of the space each level of depth adds to a drawn object
     private int drawnObjectHeight = 80; // pixel height of drawn objects
     private int drawnObjectWidth = 200; // pixel width of drawn objects
+    private int topMargin = -20; // margin at the top of the canvas to allow the user to drag an object to the top. negative on purpose.
     private Point drawnObjectsAreaSize = new Point(); // the width and height (unadjusted by offset) of the area containing drawn objects
 
     private Point currentHoverLocation; // location of the users finger when they are hovering (by dragging a programming object)
@@ -38,7 +40,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
     private Point lastDropLocation; // location of where the user last dropped an object
     private Point drawOffset = new Point(); // offset of the canvas origin when drawing objects. dragging the drawing area (canvas) will simulate scrolling by using the offset
 
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
+
+    private GestureDetector gestureDetector;
 
     public CanvasView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -50,9 +54,13 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         if(!isInEditMode())
             setZOrderOnTop(true);
 
+        drawOffset.y = topMargin; // add space above so the user can drag an object to the top
+
         // adding the callback (this) to the surface holder to intercept events
         getHolder().addCallback(this);
         getHolder().setFormat(PixelFormat.TRANSPARENT);
+
+        gestureDetector = new GestureDetector(context, new GestureListener());
 
         // make the GamePanel focusable so it can handle events
         setFocusable(true);
@@ -88,6 +96,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
                 break;
         }
+
+        gestureDetector.onTouchEvent(event); // handle a double-tap event
 
         return true;
     }
@@ -215,33 +225,34 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         paint.getTextBounds(objectSubText, 0, objectSubText.length(), objectSubtextBounds);
         canvas.drawText(objectSubText, left - drawOffset.x + xPadding + 2, top - drawOffset.y + yPadding + objectSubtextBounds.height() + 5, paint);
 
-        // Draw any children
-        //
-        for (ProgrammingObject programmingObject : pObj.getChildren()) {
-            height = drawProgrammingObject(programmingObject, canvas, height + 1, depth + 1);
+        if(pObj.getAllowedChildTypes().size() > 0) {
+            // Draw any children
+            //
+            for (ProgrammingObject programmingObject : pObj.getChildren()) {
+                height = drawProgrammingObject(programmingObject, canvas, height + 1, depth + 1);
+            }
+            //
+            //
+
+            // End of this parent object, draw its second half
+            height++;
+            top = (height * drawnObjectHeight) + (drawnObjectVerticalSpacing * height);
+            left = depth * drawnObjectHorizontalSpacing;
+            right = left + drawnObjectWidth;
+            bottom = top + drawnObjectHeight;
+
+            //paint.setColor(pObj.getDrawColor());
+            //canvas.drawRect(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y, paint);
+            drawable.setBounds(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y);
+            drawable.draw(canvas);
+
+            // Draw the bar that connects the parent and child
+            paint.setColor(getResources().getColor(pObj.getDrawColor()));
+            canvas.drawRect(parentObjectStartX, parentObjectStartY, parentObjectStartX + 10, bottom - drawOffset.y, paint);
+
+            //paint.setColor(Color.WHITE);
+            //canvas.drawText("End " + pObj.getTypeName(), left - drawOffset.x + 5, top - drawOffset.y + 15, paint);
         }
-        //
-        //
-
-        // End of this parent object, draw its second half
-        height++;
-        top = (height * drawnObjectHeight) + (drawnObjectVerticalSpacing * height);
-        left = depth * drawnObjectHorizontalSpacing;
-        right = left + drawnObjectWidth;
-        bottom = top + drawnObjectHeight;
-
-        //paint.setColor(pObj.getDrawColor());
-        //canvas.drawRect(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y, paint);
-        drawable.setBounds(left - drawOffset.x, top - drawOffset.y, right - drawOffset.x, bottom - drawOffset.y);
-        drawable.draw(canvas);
-
-        // Draw the bar that connects the parent and child
-        paint.setColor(getResources().getColor(pObj.getDrawColor()));
-        canvas.drawRect(parentObjectStartX, parentObjectStartY, parentObjectStartX + 10, bottom - drawOffset.y, paint);
-
-        //paint.setColor(Color.WHITE);
-        //canvas.drawText("End " + pObj.getTypeName(), left - drawOffset.x + 5, top - drawOffset.y + 15, paint);
-
         // Update the size of the area that contains the drawn objects
         if((depth * drawnObjectHorizontalSpacing) + drawnObjectWidth > drawnObjectsAreaSize.x) // only update the width if this section is wider than any other
             drawnObjectsAreaSize.x = (depth * drawnObjectHorizontalSpacing) + drawnObjectWidth; // width
@@ -327,14 +338,14 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
                 drawOffset.x = 0;
 
             // Adjust y offset
-            if(drawOffset.y < 0) drawOffset.y = 0;
+            if(drawOffset.y < topMargin) drawOffset.y = topMargin; // maintain the gap at the top of the screen
 
             if(drawnObjectsAreaSize.y > getHeight()) {
-                // Not sure why this request an adjustment of 1, but it works
+                // Not sure why this requires an adjustment of 1, but it works
                 if (getHeight() + drawOffset.y - 1 > drawnObjectsAreaSize.y)
                     drawOffset.y = drawnObjectsAreaSize.y - getHeight() + 1;
             } else
-                drawOffset.y = 0;
+                drawOffset.y = topMargin; // maintain the gap at the top of the screen
         }
     }
 
@@ -394,11 +405,25 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         return drawnObjectHeight;
     }
 
-  public TrainingIDE getTrainingIDE() {
-    return trainingIDE;
-  }
+    public TrainingIDE getTrainingIDE() {
+        return trainingIDE;
+    }
 
-  public void setTrainingIDE(TrainingIDE trainingIDE) {
-    this.trainingIDE = trainingIDE;
-  }
+    public void setTrainingIDE(TrainingIDE trainingIDE) {
+        this.trainingIDE = trainingIDE;
+    }
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+        // event when double tap occurs
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            trainingIDE.handleDoubleTap((int)e.getX(), (int)e.getY());
+
+            return true;
+        }
+    }
 }

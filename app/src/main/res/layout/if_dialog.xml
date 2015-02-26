@@ -3,23 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Action -->
-    <TextView
-        android:id="@+id/variableLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Variable"
-        android:gravity="center"
-        android:layout_alignTop="@+id/variableSpinner"
-        android:layout_alignBottom="@+id/variableSpinner" />
-
-    <Spinner
-        android:id="@+id/variableSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/variableActionArray"
-        android:layout_toRightOf="@+id/variableLabel"/>
-
     <!-- Variable type -->
     <TextView
         android:id="@+id/variableTypeLabel"
@@ -35,9 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:entries="@array/variableTypeArray"
-        android:layout_toRightOf="@+id/variableTypeLabel"
-        android:layout_alignLeft="@+id/variableSpinner"
-        android:layout_below="@+id/variableSpinner"/>
+        android:layout_toRightOf="@+id/variableTypeLabel"/>
 
     <!-- Variable name -->
     <EditText
