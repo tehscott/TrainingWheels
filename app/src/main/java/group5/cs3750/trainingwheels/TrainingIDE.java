@@ -996,24 +996,118 @@ public class TrainingIDE extends Activity {
             });
             dialog.show();
         } else if (programmingObject instanceof While) {
+//
+//            /*final ArrayList<String> variableObjectNames = new ArrayList<String>();
+//            getVariableNamesAsList(variableObjectNames, programmingObjects, Variable.VariableType.BOOLEAN); // only get number variables
+//            variableObjectNames.add(0, ""); // Blank value
+//            variableObjectNames.add(1, "\"--Manual Entry--\"");*/
+//
+//
+//            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "While - Enter your parameters", R.layout.while_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+//            final Spinner condition = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionSpinner);
+//            final Spinner operand = (Spinner) dialog.getDialog().findViewById(R.id.whileOperandSpinner);
+//            final Spinner terminatingValue = (Spinner) dialog.getDialog().findViewById(R.id.whileTermSpinner);
+//            final Switch trueSwitch = (Switch) dialog.getDialog().findViewById(R.id.sTrue);
+//            final Switch operandOnOff = (Switch) dialog.getDialog().findViewById(R.id.operatorSwitch);
+//
+//
+//            //condition.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+//            //operand.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+//
+//
+//            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    deleteProgrammingObject(programmingObjects, programmingObject);
+//                    dialog.dismiss();
+//                }
+//            });
+//            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Variable varTrue = new Variable();
+//                    varTrue.setName("trueTest");
+//                    varTrue.setValue(condition.getSelectedItem().toString().toLowerCase());
+//                    varTrue.setVariableType(Variable.VariableType.BOOLEAN);
+//                    Variable varFalse = new Variable();
+//                    varFalse.setName("falseTest");
+//                    varFalse.setValue(terminatingValue.getSelectedItem().toString().toLowerCase());
+//                    varFalse.setVariableType(Variable.VariableType.BOOLEAN);
+//
+//                   ((While)programmingObject).setConditionVariable(varTrue);
+//                   ((While)programmingObject).setTerminationValue(varFalse);
+//
+//                    dialog.dismiss();
+//                }
+//            });
+//            dialog.show();
 
-            /*final ArrayList<String> variableObjectNames = new ArrayList<String>();
-            getVariableNamesAsList(variableObjectNames, programmingObjects, Variable.VariableType.BOOLEAN); // only get number variables
-            variableObjectNames.add(0, ""); // Blank value
-            variableObjectNames.add(1, "\"--Manual Entry--\"");*/
+            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "While - Enter your parameters", R.layout.while_dialog_alternate, getString(android.R.string.cancel), getString(android.R.string.ok));
+            final Spinner conditionTypeSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionTypeSpinner);
 
+            final LinearLayout conditionCustomExpressionContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.whileConditionCustomExpressionContainer);
+            final EditText conditionCustomExpressionET = (EditText) dialog.getDialog().findViewById(R.id.whileConditionCustomExpressionEditText);
 
-            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "While - Enter your parameters", R.layout.while_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
-            final Spinner condition = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionSpinner);
-            final Spinner operand = (Spinner) dialog.getDialog().findViewById(R.id.whileOperandSpinner);
-            final Spinner terminatingValue = (Spinner) dialog.getDialog().findViewById(R.id.whileTermSpinner);
-            final Switch trueSwitch = (Switch) dialog.getDialog().findViewById(R.id.sTrue);
-            final Switch operandOnOff = (Switch) dialog.getDialog().findViewById(R.id.operatorSwitch);
+            final TextView conditionVariableLabel = (TextView) dialog.getDialog().findViewById(R.id.whileConditionVariableLabel);
+            final Spinner conditionVariableSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionVariableSpinner);
 
+            final TextView terminatingValueTypeLabel = (TextView) dialog.getDialog().findViewById(R.id.whileTerminatingValueTypeLabel);
+            final Spinner terminatingValueTypeSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileTerminatingValueTypeSpinner);
 
-            //condition.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
-            //operand.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+            final TextView terminatingValueVariableLabel = (TextView) dialog.getDialog().findViewById(R.id.whileTerminatingValueVariableLabel);
+            final Spinner terminatingValueVariableSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileTerminatingValueVariableSpinner);
 
+            final TextView comparisonOperatorLabel = (TextView) dialog.getDialog().findViewById(R.id.whileComparisonOperatorLabel);
+            final Spinner comparisonOperatorSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileComparisonOperatorSpinner);
+
+            final LinearLayout customTerminatingValueContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.whileTerminatingValueCustomContainer);
+            final EditText customTerminatingValueET = (EditText) dialog.getDialog().findViewById(R.id.whileTerminatingValueCustomEditText);
+
+            ArrayList<String> variableObjectNames = new ArrayList<String>();
+            getVariableNamesAsList(variableObjectNames, programmingObjects, null); // get all variable types
+
+            conditionTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                //<item>True</item>
+                //<item>Variable</item>
+                //<item>Custom Expression</item>
+
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    conditionVariableLabel.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                    conditionVariableSpinner.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+
+                    terminatingValueTypeLabel.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                    terminatingValueTypeSpinner.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+
+                    terminatingValueVariableLabel.setVisibility((position == 1 && terminatingValueTypeSpinner.getSelectedItemPosition() == 2) ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                    terminatingValueVariableSpinner.setVisibility((position == 1 && terminatingValueTypeSpinner.getSelectedItemPosition() == 2) ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+
+                    comparisonOperatorLabel.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                    comparisonOperatorSpinner.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+
+                    customTerminatingValueContainer.setVisibility((position < 2 && terminatingValueTypeSpinner.getSelectedItemPosition() == 3) ? View.VISIBLE : View.GONE); // not visible for 'True' selection
+
+                    conditionCustomExpressionContainer.setVisibility(position == 2 ? View.VISIBLE : View.GONE); // only visible for 'Custom Expression' selection
+                }
+
+                @Override public void onNothingSelected(AdapterView<?> parent) {}
+            });
+
+            terminatingValueTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    terminatingValueVariableLabel.setVisibility(position == 2 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+                    terminatingValueVariableSpinner.setVisibility(position == 2 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
+
+                    customTerminatingValueContainer.setVisibility(position == 3 ? View.VISIBLE : View.GONE); // only visible for 'Custom Value' selection
+                }
+
+                @Override public void onNothingSelected(AdapterView<?> parent) {}
+            });
+
+            conditionVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+            terminatingValueVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+            conditionTypeSpinner.setSelection(1); // 'Variable' selection
 
             dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1025,17 +1119,6 @@ public class TrainingIDE extends Activity {
             dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Variable varTrue = new Variable();
-                    varTrue.setName("trueTest");
-                    varTrue.setValue(condition.getSelectedItem().toString().toLowerCase());
-                    varTrue.setVariableType(Variable.VariableType.BOOLEAN);
-                    Variable varFalse = new Variable();
-                    varFalse.setName("falseTest");
-                    varFalse.setValue(terminatingValue.getSelectedItem().toString().toLowerCase());
-                    varFalse.setVariableType(Variable.VariableType.BOOLEAN);
-
-                   ((While)programmingObject).setConditionVariable(varTrue);
-                   ((While)programmingObject).setTerminationValue(varFalse);
 
                     dialog.dismiss();
                 }

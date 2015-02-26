@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Condition Type -->
+    <TextView
+        android:id="@+id/whileConditionTypeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Condition Type"
+        android:gravity="center"
+        android:layout_alignTop="@+id/whileConditionTypeSpinner"
+        android:layout_alignBottom="@+id/whileConditionTypeSpinner" />
+
+    <Spinner
+        android:id="@+id/whileConditionTypeSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/whileConditionTypeLabel"
+        android:entries="@array/whileConditionTypeArray"/>
+
+    <!-- Custom Expression (Condition) -->
+    <LinearLayout
+        android:id="@+id/whileConditionCustomExpressionContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/whileConditionTypeSpinner"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/whileConditionCustomExpressionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Custom Condition Expression"
+            android:gravity="center"/>
+
+        <EditText
+            android:id="@+id/whileConditionCustomExpressionEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- Condition Variable -->
+    <TextView
+        android:id="@+id/whileConditionVariableLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Condition Variable"
+        android:gravity="center"
+        android:layout_alignTop="@+id/whileConditionVariableSpinner"
+        android:layout_alignBottom="@+id/whileConditionVariableSpinner" />
+
+    <Spinner
+        android:id="@+id/whileConditionVariableSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/whileConditionVariableLabel"
+        android:layout_below="@+id/whileConditionCustomExpressionContainer"/>
+
+    <!-- Comparison Operator -->
+    <TextView
+        android:id="@+id/whileComparisonOperatorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comparison Operator"
+        android:gravity="center"
+        android:layout_alignTop="@+id/whileComparisonOperatorSpinner"
+        android:layout_alignBottom="@+id/whileComparisonOperatorSpinner" />
+
+    <Spinner
+        android:id="@+id/whileComparisonOperatorSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/whileComparisonOperatorLabel"
+        android:layout_below="@+id/whileConditionVariableSpinner"
+        android:entries="@array/operatorArray"/>
+
+    <!-- Terminating Value Type -->
+    <TextView
+        android:id="@+id/whileTerminatingValueTypeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Terminating Value Type"
+        android:gravity="center"
+        android:layout_alignTop="@+id/whileTerminatingValueTypeSpinner"
+        android:layout_alignBottom="@+id/whileTerminatingValueTypeSpinner" />
+
+    <Spinner
+        android:id="@+id/whileTerminatingValueTypeSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/whileTerminatingValueTypeLabel"
+        android:layout_below="@+id/whileComparisonOperatorLabel"
+        android:entries="@array/whileTerminatingValueTypeArray"/>
+
+    <!-- Terminating Value Variable -->
+    <TextView
+        android:id="@+id/whileTerminatingValueVariableLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Terminating Value Variable"
+        android:gravity="center"
+        android:layout_alignTop="@+id/whileTerminatingValueVariableSpinner"
+        android:layout_alignBottom="@+id/whileTerminatingValueVariableSpinner"
+        android:visibility="gone"/>
+
+    <Spinner
+        android:id="@+id/whileTerminatingValueVariableSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/whileTerminatingValueVariableLabel"
+        android:layout_below="@+id/whileTerminatingValueTypeSpinner"
+        android:visibility="gone"/>
+
+    <!-- Custom Terminating Value -->
+    <LinearLayout
+        android:id="@+id/whileTerminatingValueCustomContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/whileTerminatingValueTypeSpinner"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/whileTerminatingValueCustomLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Custom Terminating Value"
+            android:gravity="center"/>
+
+        <EditText
+            android:id="@+id/whileTerminatingValueCustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>
