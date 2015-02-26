@@ -16,6 +16,8 @@ public class For extends ProgrammingObject {
     private ComparisonOperator endingValueComparisonOperator;
     private boolean countUp = true; // true by default, this will be 99% of cases
 
+    public For() { setFields(); }
+
     public For(String label, ComparisonOperator endingValueComparisonOperator, boolean countUp) {
         super(ProgrammingObjectType.FOR);
 

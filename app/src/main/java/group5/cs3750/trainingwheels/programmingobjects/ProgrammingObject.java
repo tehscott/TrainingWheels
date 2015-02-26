@@ -51,7 +51,7 @@ public abstract class ProgrammingObject implements Serializable {
 
   // Drawing vars
   private int[] currentDrawnLocation = new int[4]; // Location of the object drawn on the canvas. Can be null, but probably never will be
-  protected int drawColor = R.color.button_green; // Color to draw the object. The getter for this should be overridden by sub classes
+  public int drawColor = R.color.button_green; // Color to draw the object. The getter for this should be overridden by sub classes
 
   public ProgrammingObject() {
 

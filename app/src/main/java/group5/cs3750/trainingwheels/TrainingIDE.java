@@ -117,12 +117,12 @@ public class TrainingIDE extends Activity {
         bPrint.setOnLongClickListener(new CustomOnLongPressListener());
 
         // Custom backgrounds
-        bIf.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_teal, 12));
-        bWhile.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_orange, 12));
-        bFor.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_red, 12));
-        bFunction.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
-        bVariable.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_green, 12));
-        bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
+        bIf.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new If().getDrawColor(), 12));
+        bWhile.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new While().getDrawColor(), 12));
+        bFor.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new For().getDrawColor(), 12));
+        //bFunction.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
+        bVariable.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new Variable().getDrawColor(), 12));
+        bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new Print().getDrawColor(), 12));
 
         /*
          Back, Run, Clear buttons

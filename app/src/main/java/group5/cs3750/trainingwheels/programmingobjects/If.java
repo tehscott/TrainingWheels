@@ -13,6 +13,8 @@ public class If extends ProgrammingObject {
     private ComparisonOperator comparisonOperator;
     private String expression = "";
 
+    public If() { setFields(); }
+
     public If(Variable conditionLeftSide, Object conditionRightSide, Variable.VariableType conditionRightSideType, ComparisonOperator comparisonOperator) {
         super(ProgrammingObjectType.IF);
 

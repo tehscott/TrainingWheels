@@ -11,18 +11,15 @@ public class While extends ProgrammingObject {
     private Variable terminatingVariable;
     private Object terminationValue; // The value the variable should be to terminate the loop
     // TODO: Needs a ComparisonOperator
-    private List<ProgrammingObjectType> allowedChildTypes = new ArrayList( // The types of programming objects that can be children to this programming object, can be null
-            Arrays.asList(
-                    ProgrammingObjectType.WHILE, ProgrammingObjectType.IF, ProgrammingObjectType.FOR, ProgrammingObjectType.PRINT,
-                    ProgrammingObjectType.FUNCTION, ProgrammingObjectType.VARIABLE)
-    );
-    private int drawColor = R.color.button_orange;
-    public While(){}
+
+    public While() { setFields(); }
+
     public While(Variable conditionVariable, Object terminationValue) {
         super(ProgrammingObjectType.WHILE);
 
         this.conditionVariable = conditionVariable;
         this.terminationValue = terminationValue;
+        setFields();
     }
 
     public While(Variable conditionVariable, Object terminationValue, ProgrammingObject parent) {
@@ -30,12 +27,24 @@ public class While extends ProgrammingObject {
 
         this.conditionVariable = conditionVariable;
         this.terminationValue = terminationValue;
+        setFields();
     }
     public While(Variable conditionVariable, Variable terminatingVariable) {
         super(ProgrammingObjectType.WHILE);
 
         this.conditionVariable = conditionVariable;
         this.terminatingVariable = terminatingVariable;
+        setFields();
+    }
+
+    private void setFields() {
+        allowedChildTypes = new ArrayList( // The types of programming objects that can be children to this programming object, can be null
+                Arrays.asList(
+                        ProgrammingObjectType.WHILE, ProgrammingObjectType.IF, ProgrammingObjectType.FOR, ProgrammingObjectType.PRINT,
+                        ProgrammingObjectType.FUNCTION, ProgrammingObjectType.VARIABLE)
+        );
+
+        drawColor = R.color.button_orange;
     }
 
     @Override
@@ -98,8 +107,5 @@ public class While extends ProgrammingObject {
         stringBuilder.append(" = ");
         stringBuilder.append(terminatingVariable.getName()).append(";");
         stringBuilder.append("}");
-
-
-
     }
 }
