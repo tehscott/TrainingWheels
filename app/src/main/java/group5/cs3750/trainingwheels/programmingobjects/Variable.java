@@ -20,7 +20,7 @@ public class Variable extends ProgrammingObject {
     private Action action;
     private List<ProgrammingObjectType> allowedChildTypes = new ArrayList(); // The types of programming objects that can be children to this programming object, can be null
     private int drawColor = R.color.button_green;
-
+    public Variable(){}
     public Variable(String name, VariableType variableType, Object value) {
         super(ProgrammingObjectType.VARIABLE);
 

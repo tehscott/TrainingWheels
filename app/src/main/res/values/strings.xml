@@ -53,6 +53,7 @@
         <item>True</item>
         <item>False</item>
         <item>Bool variable</item>
+        <item>Break</item>
     </string-array>
 
     <string name="title_activity_user">User</string>

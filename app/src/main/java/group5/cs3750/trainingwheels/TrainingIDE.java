@@ -30,12 +30,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -993,21 +996,46 @@ public class TrainingIDE extends Activity {
             });
             dialog.show();
         } else if (programmingObject instanceof While) {
+
+            /*final ArrayList<String> variableObjectNames = new ArrayList<String>();
+            getVariableNamesAsList(variableObjectNames, programmingObjects, Variable.VariableType.BOOLEAN); // only get number variables
+            variableObjectNames.add(0, ""); // Blank value
+            variableObjectNames.add(1, "\"--Manual Entry--\"");*/
+
+
             final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "While - Enter your parameters", R.layout.while_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
+            final Spinner condition = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionSpinner);
+            final Spinner operand = (Spinner) dialog.getDialog().findViewById(R.id.whileOperandSpinner);
+            final Spinner terminatingValue = (Spinner) dialog.getDialog().findViewById(R.id.whileTermSpinner);
+            final Switch trueSwitch = (Switch) dialog.getDialog().findViewById(R.id.sTrue);
+            final Switch operandOnOff = (Switch) dialog.getDialog().findViewById(R.id.operatorSwitch);
+
+
+            //condition.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+            //operand.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+
+
             dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     deleteProgrammingObject(programmingObjects, programmingObject);
-
                     dialog.dismiss();
                 }
             });
             dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Spinner condition = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionSpinner);
-                    Spinner operand = (Spinner) dialog.getDialog().findViewById(R.id.whileOperandSpinner);
-                    Spinner terminatingValue = (Spinner) dialog.getDialog().findViewById(R.id.whileTermSpinner);
+                    Variable varTrue = new Variable();
+                    varTrue.setName("trueTest");
+                    varTrue.setValue(condition.getSelectedItem().toString().toLowerCase());
+                    varTrue.setVariableType(Variable.VariableType.BOOLEAN);
+                    Variable varFalse = new Variable();
+                    varFalse.setName("falseTest");
+                    varFalse.setValue(terminatingValue.getSelectedItem().toString().toLowerCase());
+                    varFalse.setVariableType(Variable.VariableType.BOOLEAN);
+
+                   ((While)programmingObject).setConditionVariable(varTrue);
+                   ((While)programmingObject).setTerminationValue(varFalse);
 
                     dialog.dismiss();
                 }

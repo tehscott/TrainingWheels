@@ -21,6 +21,16 @@
         android:layout_toRightOf="@+id/whileConditionLabel"
 
         />
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="true"
+        android:id="@+id/sTrue"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/whileOperandSpinner"
+        android:checked="false" />
 
     <!--Operands -->
     <TextView
@@ -36,10 +46,23 @@
         android:id="@+id/whileOperandSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/operatorArray"
+        android:entries="@array/operatorSymbolArray"
         android:layout_toRightOf="@+id/whileConditionLabel"
         android:layout_below="@+id/whileConditionSpinner"
         />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="true"
+        android:id="@+id/switch1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/whileOperandSpinner"
+        android:checked="false" />
+
+
 
     <!-- Terminating value -->
     <TextView
@@ -53,11 +76,21 @@
 
     <Spinner
         android:id="@+id/whileTermSpinner"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:entries="@array/termArray"
         android:layout_toRightOf="@+id/whileTermLabel"
         android:layout_below="@+id/whileOperandSpinner"
         />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="On/Off"
+        android:id="@+id/operatorSwitch"
+        android:layout_alignBottom="@+id/whileOperandSpinner"
+        android:layout_alignLeft="@+id/sTrue"
+        android:layout_alignStart="@+id/sTrue"
+        android:checked="false" />
 
 </RelativeLayout>

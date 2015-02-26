@@ -8,6 +8,18 @@ import group5.cs3750.trainingwheels.R;
 
 public class While extends ProgrammingObject {
   private Variable conditionVariable; // The variable to check when looping
+
+    public Variable getTerminatingVariable() {
+        return terminatingVariable;
+    }
+
+    public void setTerminatingVariable(Variable terminatingVariable) {
+        this.terminatingVariable = terminatingVariable;
+    }
+
+
+
+    private Variable terminatingVariable;
   private Object terminationValue; // The value the variable should be to terminate the loop
   // TODO: Needs a ComparisonOperator
   private List<ProgrammingObjectType> allowedChildTypes = new ArrayList( // The types of programming objects that can be children to this programming object, can be null
@@ -16,7 +28,7 @@ public class While extends ProgrammingObject {
           ProgrammingObjectType.FUNCTION, ProgrammingObjectType.VARIABLE)
   );
   private int drawColor = R.color.button_orange;
-
+    public While(){}
   public While(Variable conditionVariable, Object terminationValue) {
     super(ProgrammingObjectType.WHILE);
 
@@ -30,6 +42,13 @@ public class While extends ProgrammingObject {
     this.conditionVariable = conditionVariable;
     this.terminationValue = terminationValue;
   }
+    public While(Variable conditionVariable, Variable terminatingVariable) {
+        super(ProgrammingObjectType.WHILE);
+
+        this.conditionVariable = conditionVariable;
+        this.terminatingVariable = terminatingVariable;
+    }
+
 
   @Override
   public String toString() {
@@ -70,5 +89,22 @@ public class While extends ProgrammingObject {
   @Override
   public void toScript(StringBuilder stringBuilder) {
 
+//    stringBuilder.append("var ").append(conditionVariable.getName()).append(" = true;");
+//    stringBuilder.append("var ").append(terminatingVariable.getName()).append(" = false;");
+
+    stringBuilder.append("while(");
+    stringBuilder.append(conditionVariable.getName());
+    stringBuilder.append("){");
+        for (ProgrammingObject child : children) {
+            child.toScript(stringBuilder);
+        }
+        stringBuilder.append(conditionVariable.getName());
+        stringBuilder.append(" = ");
+        stringBuilder.append(terminatingVariable.getName()).append(";");
+    stringBuilder.append("}");
+
+
+
   }
+
 }
