@@ -342,7 +342,7 @@ public class TrainingIDE extends Activity {
         final VerticalTextView bShowOutput = (VerticalTextView) findViewById(R.id.handle);
         final SlidingDrawer slidingDrawer = (SlidingDrawer) findViewById(R.id.output_drawer);
 
-        bShowOutput.setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12, 2));
+        bShowOutput.setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_light_blue, 12, 2));
 
         slidingDrawer.setOnDrawerOpenListener(new SlidingDrawer.OnDrawerOpenListener() {
             @Override

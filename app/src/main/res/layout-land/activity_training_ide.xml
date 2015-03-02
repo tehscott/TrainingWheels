@@ -77,7 +77,7 @@
       android:id="@+id/button_container"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_weight="7"
+      android:layout_weight="4"
       android:orientation="vertical">
 
       <ScrollView
@@ -181,7 +181,7 @@
       android:id="@+id/canvas_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_margin="5dp"
+      android:padding="5dp"
       android:layout_weight="1"/>
   </LinearLayout>
 
@@ -194,26 +194,23 @@
         android:orientation="horizontal"
         android:layout_below="@+id/top_bar_container"
         android:layout_above="@+id/bottom_bar_container"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="5dp">
+        android:layout_marginLeft="20dp">
 
         <group5.cs3750.trainingwheels.VerticalTextView
             android:id="@+id/handle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Show Output"
-            android:textSize="20sp"
-            android:textColor="@color/ide_button_text"
-            android:padding="7dp"
-            android:background="@drawable/rounded_bg"/>
+            android:padding="4dp"
+            android:textSize="12sp"
+            android:textColor="@color/ide_button_text"/>
 
         <ScrollView
             android:id="@+id/content"
             android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:background="@drawable/rounded_bg"
-            android:padding="10dp">
+            android:padding="5dp"
+            android:background="@drawable/output_bg">
 
             <WebView
                 android:id="@+id/webView"
