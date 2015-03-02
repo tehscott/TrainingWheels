@@ -6,7 +6,9 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
@@ -29,6 +31,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.SlidingDrawer;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -85,16 +88,29 @@ public class TrainingIDE extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training_ide);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.containsKey(PROGRAMMING_OBJECT_LIST)) {
-            programmingObjects = (ArrayList<ProgrammingObject>) extras.getSerializable(PROGRAMMING_OBJECT_LIST);
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            programmingObjects = (ArrayList<ProgrammingObject>) savedInstanceState.getSerializable("POs");
+        } else {
+            Bundle extras = getIntent().getExtras();
+            if (extras != null && extras.containsKey(PROGRAMMING_OBJECT_LIST)) {
+                programmingObjects = (ArrayList<ProgrammingObject>) extras.getSerializable(PROGRAMMING_OBJECT_LIST);
+            }
         }
 
         initButtons();
         initCanvas();
+        initOutputWindow();
 
         canvasThread = new CanvasThread(canvas.getHolder(), canvas);
         canvasThread.start();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable("POs", programmingObjects);
+
+        super.onSaveInstanceState(outState);
     }
 
     private void initButtons() {
@@ -117,12 +133,12 @@ public class TrainingIDE extends Activity {
         bPrint.setOnLongClickListener(new CustomOnLongPressListener());
 
         // Custom backgrounds
-        bIf.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new If().getDrawColor(), 12));
-        bWhile.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new While().getDrawColor(), 12));
-        bFor.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new For().getDrawColor(), 12));
-        //bFunction.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
-        bVariable.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new Variable().getDrawColor(), 12));
-        bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new Print().getDrawColor(), 12));
+        bIf.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new If().getDrawColor(), 12, 0));
+        bWhile.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new While().getDrawColor(), 12, 0));
+        bFor.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new For().getDrawColor(), 12, 0));
+        //bFunction.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12, 0));
+        bVariable.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new Variable().getDrawColor(), 12, 0));
+        bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new Print().getDrawColor(), 12, 0));
 
         /*
          Back, Run, Clear buttons
@@ -165,6 +181,8 @@ public class TrainingIDE extends Activity {
                 String finalContainer = String.format(container, content);
 
                 webView.loadData(finalContainer, "text/html", null);
+
+                ((SlidingDrawer) findViewById(R.id.output_drawer)).open();
             }
         });
 
@@ -316,6 +334,29 @@ public class TrainingIDE extends Activity {
                 }
 
                 return true;
+            }
+        });
+    }
+
+    private void initOutputWindow() {
+        final VerticalTextView bShowOutput = (VerticalTextView) findViewById(R.id.handle);
+        final SlidingDrawer slidingDrawer = (SlidingDrawer) findViewById(R.id.output_drawer);
+
+        bShowOutput.setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12, 2));
+
+        slidingDrawer.setOnDrawerOpenListener(new SlidingDrawer.OnDrawerOpenListener() {
+            @Override
+            public void onDrawerOpened() {
+                bShowOutput.setText("Hide Output");
+                bShowOutput.setTopDown(false);
+            }
+        });
+
+        slidingDrawer.setOnDrawerCloseListener(new SlidingDrawer.OnDrawerCloseListener() {
+            @Override
+            public void onDrawerClosed() {
+                bShowOutput.setText("Show Output");
+                bShowOutput.setTopDown(true);
             }
         });
     }
@@ -741,10 +782,11 @@ public class TrainingIDE extends Activity {
         return false;
     }
 
-    public static GradientDrawable getBackgroundGradientDrawable(Resources resources, int colorResourceId, int cornerRadius) {
+    public static GradientDrawable getBackgroundGradientDrawable(Resources resources, int colorResourceId, int cornerRadius, int strokeSize) {
         GradientDrawable gd = new GradientDrawable();
         gd.setColor(resources.getColor(colorResourceId));
         gd.setCornerRadius(cornerRadius);
+        gd.setStroke(strokeSize, Color.BLACK);
 
         return gd;
     }

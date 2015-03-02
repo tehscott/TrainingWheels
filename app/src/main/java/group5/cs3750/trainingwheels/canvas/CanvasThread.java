@@ -85,8 +85,6 @@ public class CanvasThread extends Thread {
                 synchronized (surfaceHolder) {
                     beginTime = System.currentTimeMillis();
                     framesSkipped = 0;	// resetting the frames skipped
-                    // update game state
-                    this.canvas.update();
                     // render state to the screen
                     // draws the canvas on the panel
                     this.canvas.render(canvas);
@@ -106,7 +104,6 @@ public class CanvasThread extends Thread {
 
                     while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
                         // we need to catch up
-                        this.canvas.update(); // update without rendering
                         sleepTime += FRAME_PERIOD;	// add frame period to check if in next frame
                         framesSkipped++;
                     }

@@ -33,7 +33,7 @@ public class CustomDialog {
                 dismiss();
             }
         });
-        leftButton.setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(context.getResources(), R.color.button_red, 12));
+        leftButton.setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(context.getResources(), R.color.button_red, 12, 0));
 
         rightButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -41,7 +41,7 @@ public class CustomDialog {
                 dismiss();
             }
         });
-        rightButton.setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(context.getResources(), R.color.button_blue, 12));
+        rightButton.setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(context.getResources(), R.color.button_blue, 12, 0));
 
         if(dialogText != null)
             text.setText(dialogText);

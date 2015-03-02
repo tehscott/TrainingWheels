@@ -49,8 +49,8 @@ public class MainMenu extends Activity {
             }
         });
 
-        findViewById(R.id.btnNewProgram).setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_green, 12));
-        findViewById(R.id.btnOpenProgram).setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12));
+        findViewById(R.id.btnNewProgram).setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_green, 12, 0));
+        findViewById(R.id.btnOpenProgram).setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12, 0));
     }
 
     private void loadSavedFilesList() {

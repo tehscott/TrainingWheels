@@ -34,6 +34,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
     private int drawnObjectWidth = 200; // pixel width of drawn objects
     private int topMargin = -20; // margin at the top of the canvas to allow the user to drag an object to the top. negative on purpose.
     private Point drawnObjectsAreaSize = new Point(); // the width and height (unadjusted by offset) of the area containing drawn objects
+    private float screenDensityMultiplier = 1.0f;
 
     private Point currentHoverLocation; // location of the users finger when they are hovering (by dragging a programming object)
     private Point currentTouchLocation, lastTouchLocation; // current and previous locations of where the user is/was touching
@@ -51,24 +52,44 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
     public CanvasView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        if(!isInEditMode())
-            setZOrderOnTop(true);
+        //if(!isInEditMode())
+        //    setZOrderOnTop(true);
 
-        drawOffset.y = topMargin; // add space above so the user can drag an object to the top
+        init();
 
-        // adding the callback (this) to the surface holder to intercept events
-        getHolder().addCallback(this);
-        getHolder().setFormat(PixelFormat.TRANSPARENT);
-
-        gestureDetector = new GestureDetector(context, new GestureListener());
-
-        // make the GamePanel focusable so it can handle events
+        // make the canvas focusable so it can handle events
         setFocusable(true);
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                               int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width,int height) { }
+
+    private void init() {
+        // adding the callback (this) to the surface holder to intercept events
+        getHolder().addCallback(this);
+        getHolder().setFormat(PixelFormat.TRANSPARENT);
+
+        // init top margin
+        // TODO: This is supposed to make it easier/possible to drag an object to the top, but it does not work well.
+        drawOffset.y = topMargin; // add space above so the user can drag an object to the top
+
+        // init gestures, for double tapping an object to edit
+        gestureDetector = new GestureDetector(getContext(), new GestureListener());
+
+        /* init density scaling
+         * 0.75 - ldpi
+         * 1.0 - mdpi
+         * 1.5 - hdpi
+         * 2.0 - xhdpi
+         * 3.0 - xxhdpi
+         * 4.0 - xxxhdpi
+         */
+        screenDensityMultiplier = getResources().getDisplayMetrics().density;
+
+        drawnObjectWidth *= screenDensityMultiplier;
+        drawnObjectHeight *= screenDensityMultiplier;
+        //drawnObjectVerticalSpacing *= screenDensityMultiplier;
+        //drawnObjectHorizontalSpacing *= screenDensityMultiplier;
     }
 
     // This listener will be used to move the canvas around (to allow you to scroll, etc)
@@ -131,9 +152,17 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         Log.d(TAG, "Thread was shut down cleanly");
     }
 
+    /**
+     * Called by the canvas thread to draw on the canvas
+     *
+     * @param canvas
+     */
     public void render(Canvas canvas) {
         if(canvas != null) {
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            //canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            Paint paint = new Paint();
+            paint.setColor(Color.WHITE);
+            canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
 
             // Draw the top-most objects, their children will be drawn recursively
             int height = 0;
@@ -144,13 +173,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
 
+            // Debug functions
             drawHoverLocation(canvas); // Debug function, show where the user is dragging
             drawDebugInfo(canvas); // Debug function, show various variable values
         }
-    }
-
-    public void update() {
-
     }
 
     /**
@@ -206,7 +232,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
         paint.setAlpha(255);
         paint.setColor(Color.WHITE);
-        paint.setTextSize(34);
+        paint.setTextSize(34 * screenDensityMultiplier);
         paint.setAntiAlias(true);
         Rect objectNameBounds = new Rect();
         paint.getTextBounds(pObj.getTypeName(), 0, pObj.getTypeName().length(), objectNameBounds);
@@ -218,7 +244,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawText(pObj.getTypeName(), left - drawOffset.x + xPadding, top - drawOffset.y + yPadding, paint);
 
         // Draw object subtext
-        paint.setTextSize(20);
+        paint.setTextSize(20 * screenDensityMultiplier);
         String objectSubText = TextUtils.ellipsize(pObj.toString(), new TextPaint(paint), right - left, TextUtils.TruncateAt.END).toString(); // TODO: This doesn't truncate far enough to the left
 
         Rect objectSubtextBounds = new Rect();
@@ -259,15 +285,6 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         drawnObjectsAreaSize.y = (height * drawnObjectHeight) + ((drawnObjectVerticalSpacing * height) + drawnObjectHeight); // height
 
         return height;
-    }
-
-    /*
-     * This method will draw a line where the user is attempting to drop a programming object.
-     * This line is only drawn if the user is dragging an object and if they are not hovering
-     * over an existing programming object.
-     */
-    private void drawDropLine(Canvas canvas) {
-
     }
 
     private void drawHoverLocation(Canvas canvas) {
@@ -349,6 +366,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    /**********************************************************************************************
+     **********************************GETTERS AND SETTERS*****************************************
+     **********************************************************************************************/
     public Point getCurrentHoverLocation() {
         return currentHoverLocation;
     }
@@ -412,6 +432,10 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
     public void setTrainingIDE(TrainingIDE trainingIDE) {
         this.trainingIDE = trainingIDE;
     }
+
+    /**********************************************************************************************
+     ************************************NESTED CLASSES********************************************
+     **********************************************************************************************/
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
