@@ -121,7 +121,7 @@ public class While extends ProgrammingObject {
          */
 
         if(conditionType == WhileConditionType.TRUE) {
-            //This needs to break at some point - Jamie
+            //This needs to break at some point
             stringBuilder.append("while(true) {\n");
 
         } else if(conditionType == WhileConditionType.VARIABLE) {
