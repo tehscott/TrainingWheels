@@ -111,6 +111,7 @@ public class While extends ProgrammingObject {
     public void toScript(StringBuilder stringBuilder) {
 
         /* this is how i thought the while was supposed to work
+
             while (conditionType || comparisonOperator ){
                 do something
 
@@ -118,6 +119,15 @@ public class While extends ProgrammingObject {
                         //terminatingValueType could be conditionType == false or comparisonOperator++
             }
 
+         */
+
+        /*
+            Ok, now I think I see what you are doing.
+            while (conditionType comparisonOperator terminatingValue){
+                do Something
+           }
+
+            so all we need to do is incorporate the basecase or break statement.
          */
 
         if(conditionType == WhileConditionType.TRUE) {
@@ -133,6 +143,7 @@ public class While extends ProgrammingObject {
 
              //I was thinking that the terminating value was the basecase.
             //this would have to be set inside the while loop.
+
             if(terminatingValueType == WhileTerminatingValueType.TRUE) {
                 stringBuilder.append("true) {\n");
             } else if(terminatingValueType == WhileTerminatingValueType.FALSE) {
@@ -158,7 +169,7 @@ public class While extends ProgrammingObject {
         /*
         while(variable){
             do someting
-            variable = false
+            variable = false;
         }
         or
         while (variable < someOtherVariable){
