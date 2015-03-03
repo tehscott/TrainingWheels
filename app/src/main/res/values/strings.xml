@@ -39,6 +39,7 @@
     </string-array>
 
     <string-array name="operatorArray">
+        <item></item>
         <item>Equal</item>
         <item>Does not equal</item>
         <item>Less than</item>

@@ -922,9 +922,6 @@ public class TrainingIDE extends Activity {
         getVariableNamesAsList(variableObjectNames, programmingObjects, null); // get all variable types
 
         conditionTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            //<item>True</item>
-            //<item>Variable</item>
-            //<item>Custom Expression</item>
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

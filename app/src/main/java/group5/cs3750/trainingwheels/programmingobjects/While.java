@@ -109,19 +109,39 @@ public class While extends ProgrammingObject {
 
     @Override
     public void toScript(StringBuilder stringBuilder) {
+
+        /* this is how i thought the while was supposed to work
+            while (conditionType || comparisonOperator ){
+                do something
+
+                (conditionType || comparisonOperator) == terminatingValueType;
+                        //terminatingValueType could be conditionType == false or comparisonOperator++
+            }
+
+         */
+
         if(conditionType == WhileConditionType.TRUE) {
+            //This needs to break at some point - Jamie
             stringBuilder.append("while(true) {\n");
+
         } else if(conditionType == WhileConditionType.VARIABLE) {
             stringBuilder.append("while(");
             stringBuilder.append(conditionVariable.getName());
+
+            //This wont always be coupled to a comparison operator
             stringBuilder.append(comparisonOperator.toString());
 
+             //I was thinking that the terminating value was the basecase.
+            //this would have to be set inside the while loop.
             if(terminatingValueType == WhileTerminatingValueType.TRUE) {
                 stringBuilder.append("true) {\n");
             } else if(terminatingValueType == WhileTerminatingValueType.FALSE) {
                 stringBuilder.append("false) {\n");
+
+
             } else if(terminatingValueType == WhileTerminatingValueType.VARIABLE) {
                 stringBuilder.append(terminatingVariable.getName() + ") {\n");
+
             } if(terminatingValueType == WhileTerminatingValueType.CUSTOM_VALUE) {
                 stringBuilder.append(customTerminatingValue + ") {\n");
             }
@@ -129,8 +149,25 @@ public class While extends ProgrammingObject {
             stringBuilder.append("while(" + customConditionExpression + ") {\n");
         }
 
-        for (ProgrammingObject child : children)
+        for (ProgrammingObject child : children) {
             child.toScript(stringBuilder);
+        }
+
+        //I think that we should be able to set a variable to something down here:
+        //For example
+        /*
+        while(variable){
+            do someting
+            variable = false
+        }
+        or
+        while (variable < someOtherVariable){
+            do something
+            variable = variable + 1;
+        }
+         */
+
+
 
         stringBuilder.append("}\n");
     }
