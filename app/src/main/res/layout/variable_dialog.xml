@@ -5,6 +5,23 @@
 
     <!-- Variable type -->
     <TextView
+        android:id="@+id/variableActionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Action"
+        android:gravity="center"
+        android:layout_alignTop="@+id/variableActionSpinner"
+        android:layout_alignBottom="@+id/variableActionSpinner" />
+
+    <Spinner
+        android:id="@+id/variableActionSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/variableActionArray"
+        android:layout_alignLeft="@+id/variableTypeSpinner"/>
+
+    <!-- Variable type -->
+    <TextView
         android:id="@+id/variableTypeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,7 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:entries="@array/variableTypeArray"
-        android:layout_toRightOf="@+id/variableTypeLabel"/>
+        android:layout_toRightOf="@+id/variableTypeLabel"
+        android:layout_below="@+id/variableActionSpinner"/>
 
     <!-- Variable name -->
     <EditText
@@ -28,6 +46,25 @@
         android:hint="Variable name"
         android:layout_below="@+id/variableTypeSpinner"
         android:singleLine="true"/>
+
+    <!-- Variable name selection -->
+    <TextView
+        android:id="@+id/variableNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Variable name"
+        android:gravity="center"
+        android:layout_alignTop="@+id/variableNameSpinner"
+        android:layout_alignBottom="@+id/variableNameSpinner"
+        android:visibility="gone"/>
+
+    <Spinner
+        android:id="@+id/variableNameSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/variableTypeSpinner"
+        android:layout_below="@+id/variableActionSpinner"
+        android:visibility="gone"/>
 
     <!-- Variable value -->
     <EditText

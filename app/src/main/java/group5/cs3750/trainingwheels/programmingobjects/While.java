@@ -1,5 +1,6 @@
 package group5.cs3750.trainingwheels.programmingobjects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,33 +8,52 @@ import java.util.List;
 import group5.cs3750.trainingwheels.R;
 
 public class While extends ProgrammingObject {
-    private Variable conditionVariable; // The variable to check when looping
+    public static enum WhileConditionType implements Serializable {
+        TRUE, VARIABLE, CUSTOM_EXPRESSION
+    }
+
+    public static enum WhileTerminatingValueType implements Serializable {
+        TRUE, FALSE, VARIABLE, CUSTOM_VALUE
+    }
+
+    private WhileConditionType conditionType = WhileConditionType.VARIABLE; // default to variable
+    private Variable conditionVariable;
+    private String customConditionExpression;
+    private ComparisonOperator comparisonOperator = ComparisonOperator.EQUAL; // default to equal
+    private WhileTerminatingValueType terminatingValueType = WhileTerminatingValueType.TRUE; // default to true
     private Variable terminatingVariable;
-    private Object terminationValue; // The value the variable should be to terminate the loop
-    // TODO: Needs a ComparisonOperator
+    private String customTerminatingValue;
 
     public While() { setFields(); }
 
-    public While(Variable conditionVariable, Object terminationValue) {
+    // Constructor for the TRUE condition type
+    public While(WhileConditionType conditionType) {
         super(ProgrammingObjectType.WHILE);
 
-        this.conditionVariable = conditionVariable;
-        this.terminationValue = terminationValue;
+        this.conditionType = conditionType;
         setFields();
     }
 
-    public While(Variable conditionVariable, Object terminationValue, ProgrammingObject parent) {
-        super(ProgrammingObjectType.WHILE, parent);
-
-        this.conditionVariable = conditionVariable;
-        this.terminationValue = terminationValue;
-        setFields();
-    }
-    public While(Variable conditionVariable, Variable terminatingVariable) {
+    // Constructor for the CUSTOM_EXPRESSION condition type
+    public While(WhileConditionType conditionType, String customConditionExpression) {
         super(ProgrammingObjectType.WHILE);
 
+        this.conditionType = conditionType;
+        this.customConditionExpression = customConditionExpression;
+        setFields();
+    }
+
+    // Constructor for the VARIABLE condition type
+    public While(WhileConditionType conditionType, Variable conditionVariable, ComparisonOperator comparisonOperator,
+                 WhileTerminatingValueType terminatingValueType, Variable terminatingVariable, String customTerminatingValue) {
+        super(ProgrammingObjectType.WHILE);
+
+        this.conditionType = conditionType;
         this.conditionVariable = conditionVariable;
+        this.comparisonOperator = comparisonOperator;
+        this.terminatingValueType = terminatingValueType;
         this.terminatingVariable = terminatingVariable;
+        this.customTerminatingValue = customTerminatingValue;
         setFields();
     }
 
@@ -49,7 +69,27 @@ public class While extends ProgrammingObject {
 
     @Override
     public String toString() {
-        return "until '" + conditionVariable.getName() + "' = '" + terminationValue;
+        if(conditionType == WhileConditionType.TRUE) {
+            return "loop forever";
+        } else if(conditionType == WhileConditionType.VARIABLE) {
+            String text = "loop while var '" + conditionVariable.getName() + "' " + comparisonOperator.toString() + " ";
+
+            if(terminatingValueType == WhileTerminatingValueType.TRUE) {
+                text += "'true'";
+            } else if(terminatingValueType == WhileTerminatingValueType.FALSE) {
+                text += "'false'";
+            } else if(terminatingValueType == WhileTerminatingValueType.VARIABLE) {
+                text += "var '" + terminatingVariable.getName() + "'";
+            } if(terminatingValueType == WhileTerminatingValueType.CUSTOM_VALUE) {
+                text += "var '" + customTerminatingValue + "'";
+            }
+
+            return text;
+        } else if(conditionType == WhileConditionType.CUSTOM_EXPRESSION) {
+            return "loop while " + customConditionExpression;
+        }
+
+        return "";
     }
 
     @Override
@@ -67,6 +107,42 @@ public class While extends ProgrammingObject {
         return drawColor;
     }
 
+    @Override
+    public void toScript(StringBuilder stringBuilder) {
+        if(conditionType == WhileConditionType.TRUE) {
+            stringBuilder.append("while(true) {\n");
+        } else if(conditionType == WhileConditionType.VARIABLE) {
+            stringBuilder.append("while(");
+            stringBuilder.append(conditionVariable.getName());
+            stringBuilder.append(comparisonOperator.toString());
+
+            if(terminatingValueType == WhileTerminatingValueType.TRUE) {
+                stringBuilder.append("true) {\n");
+            } else if(terminatingValueType == WhileTerminatingValueType.FALSE) {
+                stringBuilder.append("false) {\n");
+            } else if(terminatingValueType == WhileTerminatingValueType.VARIABLE) {
+                stringBuilder.append(terminatingVariable.getName() + ") {\n");
+            } if(terminatingValueType == WhileTerminatingValueType.CUSTOM_VALUE) {
+                stringBuilder.append(customTerminatingValue + ") {\n");
+            }
+        } else if(conditionType == WhileConditionType.CUSTOM_EXPRESSION) {
+            stringBuilder.append("while(" + customConditionExpression + ") {\n");
+        }
+
+        for (ProgrammingObject child : children)
+            child.toScript(stringBuilder);
+
+        stringBuilder.append("}\n");
+    }
+
+    public WhileConditionType getConditionType() {
+        return conditionType;
+    }
+
+    public void setConditionType(WhileConditionType conditionType) {
+        this.conditionType = conditionType;
+    }
+
     public Variable getConditionVariable() {
         return conditionVariable;
     }
@@ -75,12 +151,28 @@ public class While extends ProgrammingObject {
         this.conditionVariable = conditionVariable;
     }
 
-    public Object getTerminationValue() {
-        return terminationValue;
+    public String getCustomConditionExpression() {
+        return customConditionExpression;
     }
 
-    public void setTerminationValue(Object terminationValue) {
-        this.terminationValue = terminationValue;
+    public void setCustomConditionExpression(String customConditionExpression) {
+        this.customConditionExpression = customConditionExpression;
+    }
+
+    public ComparisonOperator getComparisonOperator() {
+        return comparisonOperator;
+    }
+
+    public void setComparisonOperator(ComparisonOperator comparisonOperator) {
+        this.comparisonOperator = comparisonOperator;
+    }
+
+    public WhileTerminatingValueType getTerminatingValueType() {
+        return terminatingValueType;
+    }
+
+    public void setTerminatingValueType(WhileTerminatingValueType terminatingValueType) {
+        this.terminatingValueType = terminatingValueType;
     }
 
     public Variable getTerminatingVariable() {
@@ -91,21 +183,11 @@ public class While extends ProgrammingObject {
         this.terminatingVariable = terminatingVariable;
     }
 
-    @Override
-    public void toScript(StringBuilder stringBuilder) {
+    public String getCustomTerminatingValue() {
+        return customTerminatingValue;
+    }
 
-//    stringBuilder.append("var ").append(conditionVariable.getName()).append(" = true;");
-//    stringBuilder.append("var ").append(terminatingVariable.getName()).append(" = false;");
-
-        stringBuilder.append("while(");
-        stringBuilder.append(conditionVariable.getName());
-        stringBuilder.append("){");
-        for (ProgrammingObject child : children) {
-            child.toScript(stringBuilder);
-        }
-        stringBuilder.append(conditionVariable.getName());
-        stringBuilder.append(" = ");
-        stringBuilder.append(terminatingVariable.getName()).append(";");
-        stringBuilder.append("}");
+    public void setCustomTerminatingValue(String customTerminatingValue) {
+        this.customTerminatingValue = customTerminatingValue;
     }
 }

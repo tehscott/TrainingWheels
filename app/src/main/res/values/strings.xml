@@ -18,6 +18,11 @@
         <item>Boolean</item>
     </string-array>
 
+    <string-array name="variableActionArray">
+        <item>Create</item>
+        <item>Set</item>
+    </string-array>
+
     <string-array name="conditionArray">
         <item>True</item>
         <item>False</item>

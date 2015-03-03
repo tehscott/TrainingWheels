@@ -637,15 +637,15 @@ public class TrainingIDE extends Activity {
         if (objectName.contentEquals("for")) {
             pObj = new For("for", ProgrammingObject.ComparisonOperator.LESS_THAN, true);
         } else if (objectName.contentEquals("while")) {
-            pObj = new While(new Variable("", Variable.VariableType.STRING, ""), "");
+            pObj = new While(While.WhileConditionType.TRUE);
         } else if (objectName.contentEquals("variable")) {
-            pObj = new Variable("", Variable.VariableType.STRING, "");
+            pObj = new Variable("", Variable.VariableType.STRING, Variable.VariableActionType.CREATE, "");
         } else if (objectName.contentEquals("if")) {
-            pObj = new If(new Variable("", Variable.VariableType.STRING, ""), "", Variable.VariableType.STRING, ProgrammingObject.ComparisonOperator.EQUAL);
+            pObj = new If(new Variable("", Variable.VariableType.STRING, Variable.VariableActionType.CREATE, ""), "", Variable.VariableType.STRING, ProgrammingObject.ComparisonOperator.EQUAL);
         } else if (objectName.contentEquals("print")) {
             pObj = new Print("");
         } else {
-            pObj = new Variable("unsupportedType", Variable.VariableType.STRING, "unsupportedType");
+            pObj = new Variable("unsupportedType", Variable.VariableType.STRING, Variable.VariableActionType.CREATE, "unsupportedType");
         }
 
         if (currentHoveredObject != null) {
@@ -896,52 +896,6 @@ public class TrainingIDE extends Activity {
     }
 
     private void showWhileDialog(final ProgrammingObject programmingObject) {
-        //
-//            /*final ArrayList<String> variableObjectNames = new ArrayList<String>();
-//            getVariableNamesAsList(variableObjectNames, programmingObjects, Variable.VariableType.BOOLEAN); // only get number variables
-//            variableObjectNames.add(0, ""); // Blank value
-//            variableObjectNames.add(1, "\"--Manual Entry--\"");*/
-//
-//
-//            final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "While - Enter your parameters", R.layout.while_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
-//            final Spinner condition = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionSpinner);
-//            final Spinner operand = (Spinner) dialog.getDialog().findViewById(R.id.whileOperandSpinner);
-//            final Spinner terminatingValue = (Spinner) dialog.getDialog().findViewById(R.id.whileTermSpinner);
-//            final Switch trueSwitch = (Switch) dialog.getDialog().findViewById(R.id.sTrue);
-//            final Switch operandOnOff = (Switch) dialog.getDialog().findViewById(R.id.operatorSwitch);
-//
-//
-//            //condition.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
-//            //operand.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
-//
-//
-//            dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    deleteProgrammingObject(programmingObjects, programmingObject);
-//                    dialog.dismiss();
-//                }
-//            });
-//            dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Variable varTrue = new Variable();
-//                    varTrue.setName("trueTest");
-//                    varTrue.setValue(condition.getSelectedItem().toString().toLowerCase());
-//                    varTrue.setVariableType(Variable.VariableType.BOOLEAN);
-//                    Variable varFalse = new Variable();
-//                    varFalse.setName("falseTest");
-//                    varFalse.setValue(terminatingValue.getSelectedItem().toString().toLowerCase());
-//                    varFalse.setVariableType(Variable.VariableType.BOOLEAN);
-//
-//                   ((While)programmingObject).setConditionVariable(varTrue);
-//                   ((While)programmingObject).setTerminationValue(varFalse);
-//
-//                    dialog.dismiss();
-//                }
-//            });
-//            dialog.show();
-
         final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "While - Enter your parameters", R.layout.while_dialog_alternate, getString(android.R.string.cancel), getString(android.R.string.ok));
         final Spinner conditionTypeSpinner = (Spinner) dialog.getDialog().findViewById(R.id.whileConditionTypeSpinner);
 
@@ -963,6 +917,7 @@ public class TrainingIDE extends Activity {
         final LinearLayout customTerminatingValueContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.whileTerminatingValueCustomContainer);
         final EditText customTerminatingValueET = (EditText) dialog.getDialog().findViewById(R.id.whileTerminatingValueCustomEditText);
 
+        final String[] operatorSymbols = getResources().getStringArray(R.array.operatorSymbolArray);
         ArrayList<String> variableObjectNames = new ArrayList<String>();
         getVariableNamesAsList(variableObjectNames, programmingObjects, null); // get all variable types
 
@@ -985,7 +940,7 @@ public class TrainingIDE extends Activity {
                 comparisonOperatorLabel.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
                 comparisonOperatorSpinner.setVisibility(position == 1 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
 
-                customTerminatingValueContainer.setVisibility((position < 2 && terminatingValueTypeSpinner.getSelectedItemPosition() == 3) ? View.VISIBLE : View.GONE); // not visible for 'True' selection
+                customTerminatingValueContainer.setVisibility((position == 1 && terminatingValueTypeSpinner.getSelectedItemPosition() == 3) ? View.VISIBLE : View.GONE); // only visible for the 'Variable' selection
 
                 conditionCustomExpressionContainer.setVisibility(position == 2 ? View.VISIBLE : View.GONE); // only visible for 'Custom Expression' selection
             }
@@ -1007,7 +962,35 @@ public class TrainingIDE extends Activity {
 
         conditionVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
         terminatingValueVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
-        conditionTypeSpinner.setSelection(1); // 'Variable' selection
+        conditionTypeSpinner.setSelection(1);
+
+        if(((While) programmingObject).getConditionType() == While.WhileConditionType.TRUE)
+            conditionTypeSpinner.setSelection(0);
+        else if(((While) programmingObject).getConditionType() == While.WhileConditionType.VARIABLE) {
+            conditionTypeSpinner.setSelection(1);
+
+            if(((While) programmingObject).getConditionVariable() != null)
+                conditionVariableSpinner.setSelection(variableObjectNames.indexOf(((While) programmingObject).getConditionVariable().getName()));
+
+            comparisonOperatorSpinner.setSelection(Arrays.asList(operatorSymbols).indexOf(((While) programmingObject).getComparisonOperator().toString()));
+
+            if(((While) programmingObject).getTerminatingValueType() == While.WhileTerminatingValueType.TRUE) {
+                terminatingValueVariableSpinner.setSelection(0);
+            } else if(((While) programmingObject).getTerminatingValueType() == While.WhileTerminatingValueType.FALSE) {
+                terminatingValueVariableSpinner.setSelection(1);
+            } else if(((While) programmingObject).getTerminatingValueType() == While.WhileTerminatingValueType.VARIABLE) {
+                terminatingValueVariableSpinner.setSelection(2);
+
+                if(((While) programmingObject).getTerminatingVariable() != null)
+                    terminatingValueVariableSpinner.setSelection(variableObjectNames.indexOf(((While) programmingObject).getTerminatingVariable().getName()));
+            } if(((While) programmingObject).getTerminatingValueType() == While.WhileTerminatingValueType.CUSTOM_VALUE) {
+                terminatingValueVariableSpinner.setSelection(3);
+                customTerminatingValueET.setText(((While) programmingObject).getCustomTerminatingValue());
+            }
+        } else if(((While) programmingObject).getConditionType() == While.WhileConditionType.CUSTOM_EXPRESSION) {
+            conditionTypeSpinner.setSelection(2);
+            conditionCustomExpressionET.setText(((While) programmingObject).getCustomConditionExpression());
+        }
 
         dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1023,6 +1006,28 @@ public class TrainingIDE extends Activity {
         dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(conditionTypeSpinner.getSelectedItemPosition() == 0) {
+                    ((While) programmingObject).setConditionType(While.WhileConditionType.TRUE);
+                } else if(conditionTypeSpinner.getSelectedItemPosition() == 1) {
+                    ((While) programmingObject).setConditionType(While.WhileConditionType.VARIABLE);
+                    ((While) programmingObject).setConditionVariable((Variable) getVariableByName(conditionVariableSpinner.getSelectedItem().toString(), programmingObjects));
+
+                } else if(conditionTypeSpinner.getSelectedItemPosition() == 2) {
+                    ((While) programmingObject).setConditionType(While.WhileConditionType.CUSTOM_EXPRESSION);
+                    ((While) programmingObject).setCustomConditionExpression(conditionCustomExpressionET.getText().toString());
+
+                    if(terminatingValueTypeSpinner.getSelectedItemPosition() == 0) {
+                        ((While) programmingObject).setTerminatingValueType(While.WhileTerminatingValueType.TRUE);
+                    } else if(terminatingValueTypeSpinner.getSelectedItemPosition() == 1) {
+                        ((While) programmingObject).setTerminatingValueType(While.WhileTerminatingValueType.FALSE);
+                    } else if(terminatingValueTypeSpinner.getSelectedItemPosition() == 2) {
+                        ((While) programmingObject).setTerminatingValueType(While.WhileTerminatingValueType.VARIABLE);
+                        ((While) programmingObject).setTerminatingVariable((Variable) getVariableByName(terminatingValueVariableSpinner.getSelectedItem().toString(), programmingObjects));
+                    } else if(terminatingValueTypeSpinner.getSelectedItemPosition() == 3) {
+                        ((While) programmingObject).setTerminatingValueType(While.WhileTerminatingValueType.CUSTOM_VALUE);
+                        ((While) programmingObject).setCustomTerminatingValue(customTerminatingValueET.getText().toString());
+                    }
+                }
 
                 dialog.dismiss();
             }
@@ -1038,6 +1043,8 @@ public class TrainingIDE extends Activity {
         final LinearLayout booleanContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.variableBooleanValueContainer);
         final RadioButton trueRB = (RadioButton) dialog.getDialog().findViewById(R.id.variableTrueRadioButton);
         final RadioButton falseRB = (RadioButton) dialog.getDialog().findViewById(R.id.variableFalseRadioButton);
+
+        // TODO: Add ACTION back in
 
         didVariableTypeChange = false;
 

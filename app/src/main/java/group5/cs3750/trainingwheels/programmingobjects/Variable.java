@@ -1,36 +1,44 @@
 package group5.cs3750.trainingwheels.programmingobjects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import group5.cs3750.trainingwheels.R;
 
 public class Variable extends ProgrammingObject {
-    public static enum VariableType {
+    public static enum VariableType implements Serializable {
         NUMBER, STRING, BOOLEAN
     }
 
+    public static enum VariableActionType implements Serializable {
+        CREATE, SET
+    }
+
     private String name;
-    private VariableType variableType;
+    private VariableType variableType = VariableType.STRING;
+    private VariableActionType variableActionType = VariableActionType.CREATE;
     private Object value;
 
     public Variable() { setFields(); }
 
-    public Variable(String name, VariableType variableType, Object value) {
+    public Variable(String name, VariableType variableType, VariableActionType variableActionType, Object value) {
         super(ProgrammingObjectType.VARIABLE);
 
         this.name = name;
         this.variableType = variableType;
+        this.variableActionType = variableActionType;
         this.value = value;
 
         setFields();
     }
 
-    public Variable(String name, VariableType variableType, Object value, ProgrammingObject parent) {
+    public Variable(String name, VariableType variableType, VariableActionType variableActionType, Object value, ProgrammingObject parent) {
         super(ProgrammingObjectType.VARIABLE, parent);
 
         this.name = name;
         this.variableType = variableType;
+        this.variableActionType = variableActionType;
         this.value = value;
 
         setFields();
@@ -44,23 +52,31 @@ public class Variable extends ProgrammingObject {
 
     @Override
     public String toString() {
-        String type = "";
+        String text = "";
 
-        switch (variableType) {
-            case NUMBER:
-                type = "number";
-                break;
+        if(variableActionType == VariableActionType.CREATE) {
+            text = "create ";
 
-            case STRING:
-                type = "string";
-                break;
+            switch (variableType) {
+                case NUMBER:
+                    text += "number";
+                    break;
 
-            case BOOLEAN:
-                type = "boolean";
-                break;
+                case STRING:
+                    text += "string";
+                    break;
+
+                case BOOLEAN:
+                    text += "boolean";
+                    break;
+            }
+
+            text += " '" + name + "': '" + value + "'";
+        } else {
+            text = "set '" + name + "': '" + value + "'";
         }
 
-        return type + " '" + name + "': '" + value + "'";
+        return text;
     }
 
     @Override
@@ -102,6 +118,14 @@ public class Variable extends ProgrammingObject {
         this.name = name;
     }
 
+    public VariableActionType getVariableActionType() {
+        return variableActionType;
+    }
+
+    public void setVariableActionType(VariableActionType variableActionType) {
+        this.variableActionType = variableActionType;
+    }
+
     @Override
     public ProgrammingObjectType getType() {
         return ProgrammingObjectType.VARIABLE;
@@ -109,13 +133,26 @@ public class Variable extends ProgrammingObject {
 
     @Override
     public void toScript(StringBuilder stringBuilder) {
-        stringBuilder.append("var " + name);
+        if(variableActionType == VariableActionType.CREATE) {
+            stringBuilder.append("var " + name);
 
-        if(value != null) {
-            if (variableType == VariableType.BOOLEAN || variableType == VariableType.NUMBER)
-                stringBuilder.append(" = " + value + ";\n");
-            else if(variableType == VariableType.STRING)
-                stringBuilder.append(" = '" + value + "';\n");
+            if(value != null) {
+                if (variableType == VariableType.BOOLEAN || variableType == VariableType.NUMBER)
+                    stringBuilder.append(" = " + value + ";\n");
+                else if(variableType == VariableType.STRING)
+                    stringBuilder.append(" = '" + value + "';\n");
+            }
+        } else if(variableActionType == VariableActionType.SET) {
+            stringBuilder.append(name);
+
+            if(value != null) {
+                if (variableType == VariableType.BOOLEAN || variableType == VariableType.NUMBER)
+                    stringBuilder.append(" = " + value + ";\n");
+                else if(variableType == VariableType.STRING)
+                    stringBuilder.append(" = '" + value + "';\n");
+            }
         }
+
+
     }
 }
