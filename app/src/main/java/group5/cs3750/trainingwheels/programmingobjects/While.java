@@ -130,6 +130,15 @@ public class While extends ProgrammingObject {
             so all we need to do is incorporate the basecase or break statement.
          */
 
+        /*
+            we could do something like this:
+            while (variable conditionOperator variable){
+                do something
+                terminatingVariable event to break the while (either iterative incrementation/break/var = false/etc...)
+            }
+
+         */
+
         if(conditionType == WhileConditionType.TRUE) {
             //This needs to break at some point
             stringBuilder.append("while(true) {\n");
