@@ -110,16 +110,7 @@ public class While extends ProgrammingObject {
     @Override
     public void toScript(StringBuilder stringBuilder) {
 
-        /* this is how i thought the while was supposed to work
 
-            while (conditionType || comparisonOperator ){
-                do something
-
-                (conditionType || comparisonOperator) == terminatingValueType;
-                        //terminatingValueType could be conditionType == false or comparisonOperator++
-            }
-
-         */
 
         /*
             Ok, now I think I see what you are doing.
