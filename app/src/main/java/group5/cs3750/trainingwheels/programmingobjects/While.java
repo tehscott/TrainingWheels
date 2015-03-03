@@ -176,6 +176,13 @@ public class While extends ProgrammingObject {
             do something
             variable = variable + 1;
         }
+        or
+        while(true){
+            if(something)
+                break;
+           }
+
+           or any one of the million other scenarios we could do : -)
          */
 
 
