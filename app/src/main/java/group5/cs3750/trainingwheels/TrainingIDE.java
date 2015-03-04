@@ -174,6 +174,7 @@ public class TrainingIDE extends Activity {
                 StringBuilder stringBuilder = new StringBuilder();
                 for (ProgrammingObject programmingObject : programmingObjects) {
                     programmingObject.toScript(stringBuilder);
+                    System.out.println(stringBuilder.toString());
                 }
 
                 String content = stringBuilder.toString();
@@ -921,6 +922,7 @@ public class TrainingIDE extends Activity {
         ArrayList<String> variableObjectNames = new ArrayList<String>();
         getVariableNamesAsList(variableObjectNames, programmingObjects, null); // get all variable types
 
+        //conditon type spinner listener
         conditionTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -944,6 +946,7 @@ public class TrainingIDE extends Activity {
 
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
+
 
         terminatingValueTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -1003,6 +1006,7 @@ public class TrainingIDE extends Activity {
         dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //setting while parameters
                 if(conditionTypeSpinner.getSelectedItemPosition() == 0) {
                     ((While) programmingObject).setConditionType(While.WhileConditionType.TRUE);
                 } else if(conditionTypeSpinner.getSelectedItemPosition() == 1) {
@@ -1135,12 +1139,36 @@ public class TrainingIDE extends Activity {
     private void showPrintDialog(final ProgrammingObject programmingObject) {
         final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Print - Enter text to print", R.layout.print_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
         final EditText editText = (EditText) dialog.getDialog().findViewById(R.id.print_dialog_edit_text);
-        editText.setText(((Print) programmingObject).getText());
+        final Spinner printSpinner = (Spinner) dialog.getDialog().findViewById(R.id.printSpinner);
+        final Spinner printVariableSpinner = (Spinner) dialog.getDialog().findViewById(R.id.print_variable_spinner);
+
+        //if position is on 0 show edit text
+        //if position is on 1 show variable spinner
+
+        final String[] printTypes = getResources().getStringArray(R.array.printVariableArray);
+        ArrayList<String> variableObjectNames = new ArrayList<String>();
+        getVariableNamesAsList(variableObjectNames, programmingObjects, null); // get all variable types
+
+
+        printSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+           @Override
+           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                editText.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
+           }
+
+           @Override
+           public void onNothingSelected(AdapterView<?> parent) {
+
+           }
+       });
+       printSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+       printSpinner.setSelection(1);
+       printSpinner.setSelection(Arrays.asList(printTypes).indexOf(0));
 
         dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!editingExistingObject)
+                if (!editingExistingObject)
                     deleteProgrammingObject(programmingObjects, programmingObject);
 
                 editingExistingObject = false;

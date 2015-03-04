@@ -4,10 +4,36 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <!-- Condition Type -->
+    <TextView
+        android:id="@+id/printVariableTypeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Print Type"
+        android:gravity="center"
+        android:layout_alignTop="@+id/printSpinner"
+        android:layout_alignBottom="@+id/printSpinner" />
+
+    <Spinner
+        android:id="@+id/print_Spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/printVariableTypeLabel"
+        android:entries="@array/printVariableArray"/>
+
   <EditText
     android:id="@+id/print_dialog_edit_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/printSpinner"
     android:hint="Text to print"/>
+
+    <Spinner
+        android:id="@+id/print_variable_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/printVariableSpinner"
+        android:hint="Text to print"/>
+
 
 </LinearLayout>

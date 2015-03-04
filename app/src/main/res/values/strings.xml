@@ -80,6 +80,13 @@
         <item>Custom Value</item>
     </string-array>
 
+    <string-array name="printVariableArray">
+        <item>String</item>
+        <item>Variable</item>
+        <item>Number</item>
+
+    </string-array>
+
     <string name="title_activity_user">User</string>
     <string name="remember_me">Remember Me</string>
     <string name="hints_tips">Hints/Tips:</string>

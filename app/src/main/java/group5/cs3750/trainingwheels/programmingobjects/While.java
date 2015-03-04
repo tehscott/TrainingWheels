@@ -24,6 +24,10 @@ public class While extends ProgrammingObject {
     private Variable terminatingVariable;
     private String customTerminatingValue;
 
+
+
+
+
     public While() { setFields(); }
 
     // Constructor for the TRUE condition type
@@ -57,6 +61,8 @@ public class While extends ProgrammingObject {
         setFields();
     }
 
+    //Jamie messing around with constructors
+    public While(Variable var1, ComparisonOperator cOperator){}
     private void setFields() {
         allowedChildTypes = new ArrayList( // The types of programming objects that can be children to this programming object, can be null
                 Arrays.asList(
@@ -168,7 +174,7 @@ public class While extends ProgrammingObject {
         //For example
         /*
         while(variable){
-            do someting
+            do something
             variable = false;
         }
         or
