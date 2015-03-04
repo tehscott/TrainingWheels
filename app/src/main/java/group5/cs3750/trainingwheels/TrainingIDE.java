@@ -1103,31 +1103,24 @@ public class TrainingIDE extends Activity {
         dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean canSave = true;
+                if(!name.getText().toString().equals("")) {
+                    if(type.getSelectedItem().equals("Number") && value.getText().toString().equals(""))
+                        value.setText("0");
 
-                canSave = !name.getText().toString().equals("");
+                    if (type.getSelectedItem().equals("String")) {
+                        ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
+                        ((Variable) programmingObject).setValue(value.getText().toString());
+                    } else if (type.getSelectedItem().equals("Number")) {
+                        ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
+                        ((Variable) programmingObject).setValue(Float.parseFloat(value.getText().toString()));
+                    } else if (type.getSelectedItem().equals("Boolean")) {
+                        ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
+                        ((Variable) programmingObject).setValue(trueRB.isChecked());
+                    }
 
-                if(canSave) {
-                    if (type.getSelectedItem().equals("String") || type.getSelectedItem().equals("Number"))
-                        canSave = !value.getText().toString().equals("");
+                    ((Variable) programmingObject).setName(name.getText().toString());
 
-                    if(canSave) {
-                        if (type.getSelectedItem().equals("String")) {
-                            ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
-                            ((Variable) programmingObject).setValue(value.getText().toString());
-                        } else if (type.getSelectedItem().equals("Number")) {
-                            ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
-                            ((Variable) programmingObject).setValue(Float.parseFloat(value.getText().toString()));
-                        } else if (type.getSelectedItem().equals("Boolean")) {
-                            ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
-                            ((Variable) programmingObject).setValue(trueRB.isChecked());
-                        }
-
-                        ((Variable) programmingObject).setName(name.getText().toString());
-
-                        dialog.dismiss();
-                    } else
-                        Toast.makeText(TrainingIDE.this, "Please enter a value", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
                 } else
                     Toast.makeText(TrainingIDE.this, "Please enter a variable name", Toast.LENGTH_SHORT).show();
             }
@@ -1138,9 +1131,9 @@ public class TrainingIDE extends Activity {
 
     private void showPrintDialog(final ProgrammingObject programmingObject) {
         final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Print - Enter text to print", R.layout.print_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
-        final EditText editText = (EditText) dialog.getDialog().findViewById(R.id.print_dialog_edit_text);
-        final Spinner printSpinner = (Spinner) dialog.getDialog().findViewById(R.id.printSpinner);
-        final Spinner printVariableSpinner = (Spinner) dialog.getDialog().findViewById(R.id.print_variable_spinner);
+        final EditText printTextET = (EditText) dialog.getDialog().findViewById(R.id.printTextEditText);
+        final Spinner printTypeSpinner = (Spinner) dialog.getDialog().findViewById(R.id.printTypeSpinner);
+        final Spinner printVariableSpinner = (Spinner) dialog.getDialog().findViewById(R.id.printVariableSpinner);
 
         //if position is on 0 show edit text
         //if position is on 1 show variable spinner
@@ -1149,21 +1142,20 @@ public class TrainingIDE extends Activity {
         ArrayList<String> variableObjectNames = new ArrayList<String>();
         getVariableNamesAsList(variableObjectNames, programmingObjects, null); // get all variable types
 
+        printTextET.setText(((Print) programmingObject).getText());
 
-        printSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-           @Override
-           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                editText.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
-           }
+        printVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+        printVariableSpinner.setSelection(Arrays.asList(printTypes).indexOf(0));
 
-           @Override
-           public void onNothingSelected(AdapterView<?> parent) {
+        printTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                printTextET.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
+                printVariableSpinner.setVisibility(position == 1 ? View.VISIBLE : View.GONE);
+            }
 
-           }
-       });
-       printSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
-       printSpinner.setSelection(1);
-       printSpinner.setSelection(Arrays.asList(printTypes).indexOf(0));
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
         dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1179,9 +1171,22 @@ public class TrainingIDE extends Activity {
         dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(printTypeSpinner.getSelectedItemPosition() == 0 || (printTypeSpinner.getSelectedItemPosition() == 1 && printVariableSpinner.getCount() > 0)) {
+                    // can enter this block if printing text OR if printing a variable AND there is a variable selected
+                    if (printTypeSpinner.getSelectedItemPosition() == 0) {
+                        // text
+                        ((Print) programmingObject).setPrintType(Print.PrintType.TEXT);
+                        ((Print) programmingObject).setText(printTextET.getText().toString());
+                    } else if (printTypeSpinner.getSelectedItemPosition() == 1) {
+                        // variable
+                        ((Print) programmingObject).setPrintType(Print.PrintType.VARIABLE);
+                        ((Print) programmingObject).setVariable((Variable) getVariableByName(printVariableSpinner.getSelectedItem().toString(), programmingObjects));
+                    }
 
-                ((Print) programmingObject).setText(editText.getText().toString());
-                dialog.dismiss();
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(TrainingIDE.this, "There are no available variables to print.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

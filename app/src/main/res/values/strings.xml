@@ -81,9 +81,9 @@
     </string-array>
 
     <string-array name="printVariableArray">
-        <item>String</item>
+        <item>Text</item> <!-- changed from String -->
         <item>Variable</item>
-        <item>Number</item>
+        <!-- <item>Number</item> -->
 
     </string-array>
 

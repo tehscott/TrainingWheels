@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!-- Condition Type -->
     <TextView
-        android:id="@+id/printVariableTypeLabel"
+        android:id="@+id/printTypeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Print Type"
+        android:layout_alignBottom="@+id/printTypeSpinner"
+        android:layout_alignTop="@+id/printTypeSpinner"
         android:gravity="center"
-        android:layout_alignTop="@+id/printSpinner"
-        android:layout_alignBottom="@+id/printSpinner" />
+        android:text="Print Type" />
 
     <Spinner
-        android:id="@+id/print_Spinner"
+        android:id="@+id/printTypeSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/printVariableTypeLabel"
-        android:entries="@array/printVariableArray"/>
+        android:layout_toRightOf="@+id/printTypeLabel"
+        android:entries="@array/printVariableArray" />
 
-  <EditText
-    android:id="@+id/print_dialog_edit_text"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignBottom="@+id/printSpinner"
-    android:hint="Text to print"/>
-
-    <Spinner
-        android:id="@+id/print_variable_spinner"
+    <EditText
+        android:id="@+id/printTextEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/printVariableSpinner"
-        android:hint="Text to print"/>
+        android:layout_below="@+id/printTypeSpinner"
+        android:hint="Text to print" />
 
-
-</LinearLayout>
+    <Spinner
+        android:id="@+id/printVariableSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/printTypeSpinner"
+        android:visibility="gone"/>
+</RelativeLayout>

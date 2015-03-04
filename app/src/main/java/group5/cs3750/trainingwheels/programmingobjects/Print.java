@@ -9,19 +9,46 @@ import group5.cs3750.trainingwheels.R;
  * Created by Jeff on 07-Feb-15.
  */
 public class Print extends ProgrammingObject {
+    public static enum PrintType {
+        TEXT, VARIABLE
+    }
+
+    private PrintType printType = PrintType.TEXT;
     private String text;
+    private Variable variable;
     private List<ProgrammingObjectType> allowedChildTypes = new ArrayList(); // The types of programming objects that can be children to this programming object, can be null
 
     public Print() { setFields(); }
 
-    public Print(String string) {
+    public Print(String text) {
         super(ProgrammingObjectType.PRINT);
-        text = string;
+
+        this.printType = PrintType.TEXT;
+        this.text = text;
         setFields();
     }
 
-    public Print(ProgrammingObject parent) {
+    public Print(Variable variable) {
+        super(ProgrammingObjectType.PRINT);
+
+        this.printType = PrintType.VARIABLE;
+        this.variable = variable;
+        setFields();
+    }
+
+    public Print(String text, ProgrammingObject parent) {
         super(ProgrammingObjectType.PRINT, parent);
+
+        this.printType = PrintType.TEXT;
+        this.text = text;
+        setFields();
+    }
+
+    public Print(Variable variable, ProgrammingObject parent) {
+        super(ProgrammingObjectType.PRINT, parent);
+
+        this.printType = PrintType.VARIABLE;
+        this.variable = variable;
         setFields();
     }
 
@@ -33,6 +60,22 @@ public class Print extends ProgrammingObject {
         this.text = text;
     }
 
+    public PrintType getPrintType() {
+        return printType;
+    }
+
+    public void setPrintType(PrintType printType) {
+        this.printType = printType;
+    }
+
+    public Variable getVariable() {
+        return variable;
+    }
+
+    public void setVariable(Variable variable) {
+        this.variable = variable;
+    }
+
     private void setFields() {
         allowedChildTypes = new ArrayList(); // The types of programming objects that can be children to this programming object, can be null
 
@@ -42,13 +85,25 @@ public class Print extends ProgrammingObject {
     @Override
     public void toScript(StringBuilder stringBuilder) {
         stringBuilder.append("document.getElementById(\"{field}\").innerHTML += \"");
-        stringBuilder.append(text + "<br>");
+
+        if(printType == PrintType.TEXT) {
+            stringBuilder.append(text + "<br>");
+        } else if(printType == PrintType.VARIABLE) {
+            stringBuilder.append(variable.getValue().toString() + "<br>");
+        }
+
         stringBuilder.append("\";\n");
     }
 
     @Override
     public String toString() {
-        return "'" + text + "'";
+        if(printType == PrintType.TEXT) {
+            return "print '" + text + "'";
+        } else if(printType == PrintType.VARIABLE) {
+            return "print var '" + variable.getName() + "'";
+        }
+
+        return "";
     }
 
     @Override
