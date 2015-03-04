@@ -21,6 +21,7 @@
     <string-array name="variableActionArray">
         <item>Create</item>
         <item>Set</item>
+        <item>Increment</item>
     </string-array>
 
     <string-array name="conditionArray">

@@ -99,4 +99,57 @@
             android:checked="false"/>
     </RadioGroup>
 
+    <!-- Increment -->
+    <RelativeLayout
+        android:id="@+id/variableIncrementContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/variableName"
+        android:visibility="gone">
+
+        <RadioGroup
+            android:id="@+id/variableIncrementRBContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <RadioButton
+                android:id="@+id/variableIncrementUpRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Up"
+                android:checked="true"/>
+
+            <RadioButton
+                android:id="@+id/variableIncrementDownRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Down"
+                android:checked="false"/>
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/variableIncrementByLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_toRightOf="@+id/variableIncrementRBContainer"
+            android:layout_alignTop="@+id/variableIncrementRBContainer"
+            android:layout_alignBottom="@+id/variableIncrementRBContainer"
+            android:layout_marginLeft="10dp"
+            android:text="Increment by"/>
+
+        <EditText
+            android:id="@+id/variableIncrementByText"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_toRightOf="@+id/variableIncrementByLabel"
+            android:layout_alignTop="@+id/variableIncrementByLabel"
+            android:layout_alignBottom="@+id/variableIncrementByLabel"
+            android:layout_marginLeft="10dp"
+            android:inputType="numberSigned"
+            android:text=""/>
+    </RelativeLayout>
 </RelativeLayout>

@@ -12,13 +12,14 @@ public class Variable extends ProgrammingObject {
     }
 
     public static enum VariableActionType implements Serializable {
-        CREATE, SET
+        CREATE, SET, INCREMENT
     }
 
     private String name;
     private VariableType variableType = VariableType.STRING;
     private VariableActionType variableActionType = VariableActionType.CREATE;
     private Object value;
+    private double incrementValue = 0;
 
     public Variable() { setFields(); }
 
@@ -72,11 +73,43 @@ public class Variable extends ProgrammingObject {
             }
 
             text += " '" + name + "': '" + value + "'";
-        } else {
+        } else if(variableActionType == VariableActionType.SET) {
             text = "set '" + name + "': '" + value + "'";
+        } else if(variableActionType == VariableActionType.INCREMENT) {
+            text = "increment '" + name + "' " + (((Boolean) value) ? "up" : "down") + " by " + incrementValue;
         }
 
         return text;
+    }
+
+    @Override
+    public void toScript(StringBuilder stringBuilder) {
+        if(variableActionType == VariableActionType.CREATE) {
+            stringBuilder.append("var " + name);
+
+            if(value != null) {
+                if (variableType == VariableType.BOOLEAN || variableType == VariableType.NUMBER)
+                    stringBuilder.append(" = " + value + ";\n");
+                else if(variableType == VariableType.STRING)
+                    stringBuilder.append(" = '" + value + "';\n");
+            }
+        } else if(variableActionType == VariableActionType.SET) {
+            stringBuilder.append(name);
+
+            if(value != null) {
+                if (variableType == VariableType.BOOLEAN || variableType == VariableType.NUMBER)
+                    stringBuilder.append(" = " + value + ";\n");
+                else if(variableType == VariableType.STRING)
+                    stringBuilder.append(" = '" + value + "';\n");
+            }
+        } else if(variableActionType == VariableActionType.INCREMENT) {
+            stringBuilder.append(name);
+
+            if ((Boolean) value) // increment up
+                stringBuilder.append(" += " + incrementValue + ";\n");
+            else if(variableType == VariableType.STRING)
+                stringBuilder.append(" -= '" + incrementValue + "';\n");
+        }
     }
 
     @Override
@@ -126,33 +159,16 @@ public class Variable extends ProgrammingObject {
         this.variableActionType = variableActionType;
     }
 
-    @Override
-    public ProgrammingObjectType getType() {
-        return ProgrammingObjectType.VARIABLE;
+    public double getIncrementValue() {
+        return incrementValue;
+    }
+
+    public void setIncrementValue(double incrementValue) {
+        this.incrementValue = incrementValue;
     }
 
     @Override
-    public void toScript(StringBuilder stringBuilder) {
-        if(variableActionType == VariableActionType.CREATE) {
-            stringBuilder.append("var " + name);
-
-            if(value != null) {
-                if (variableType == VariableType.BOOLEAN || variableType == VariableType.NUMBER)
-                    stringBuilder.append(" = " + value + ";\n");
-                else if(variableType == VariableType.STRING)
-                    stringBuilder.append(" = '" + value + "';\n");
-            }
-        } else if(variableActionType == VariableActionType.SET) {
-            stringBuilder.append(name);
-
-            if(value != null) {
-                if (variableType == VariableType.BOOLEAN || variableType == VariableType.NUMBER)
-                    stringBuilder.append(" = " + value + ";\n");
-                else if(variableType == VariableType.STRING)
-                    stringBuilder.append(" = '" + value + "';\n");
-            }
-        }
-
-
+    public ProgrammingObjectType getType() {
+        return ProgrammingObjectType.VARIABLE;
     }
 }

@@ -31,6 +31,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.SlidingDrawer;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -38,6 +40,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
+
+import org.w3c.dom.Text;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -82,6 +86,7 @@ public class TrainingIDE extends Activity {
 
     // Object dialog variables
     private boolean didVariableTypeChange = false; // used to track if the user changed the type of a variable, used exclusively on the Variable entry dialog
+    private boolean didVariableNameSpinnerChange = false; // used to track if the user changed the action type of a variable, used exclusively on the Variable entry dialog
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,14 +257,6 @@ public class TrainingIDE extends Activity {
 
                         canvas.setLastDropLocation(new Point((int) event.getX(), (int) event.getY()));
                         findCurrentHoveredObject(programmingObjects);
-//                        if (draggedObject != null) {
-//                            // TODO: I think these will not be necessary any more
-//                            deleteProgrammingObject(programmingObjects, draggedObject);
-//                            addExistingProgrammingObject(draggedObject);
-//                            showParametersDialog(draggedObject);
-//                        } else {
-//                            //showParametersDialog(draggedObject);
-//                        }
 
                         if(draggedObject != null) {
                             deleteProgrammingObject(programmingObjects, draggedObject);
@@ -1038,52 +1035,200 @@ public class TrainingIDE extends Activity {
     
     private void showVariableDialog(final ProgrammingObject programmingObject) {
         final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Variable - Enter your parameters", R.layout.variable_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
-        final Spinner type = (Spinner) dialog.getDialog().findViewById(R.id.variableTypeSpinner);
+        final Spinner action = (Spinner) dialog.getDialog().findViewById(R.id.variableActionSpinner);
+        final TextView typeLabel = (TextView) dialog.getDialog().findViewById(R.id.variableTypeLabel);
+        final Spinner typeSpinner = (Spinner) dialog.getDialog().findViewById(R.id.variableTypeSpinner);
         final EditText name = (EditText) dialog.getDialog().findViewById(R.id.variableName);
+        final TextView variableNameLabel = (TextView) dialog.getDialog().findViewById(R.id.variableNameLabel);
+        final Spinner variableNameSpinner = (Spinner) dialog.getDialog().findViewById(R.id.variableNameSpinner);
         final EditText value = (EditText) dialog.getDialog().findViewById(R.id.variableValue);
         final LinearLayout booleanContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.variableBooleanValueContainer);
         final RadioButton trueRB = (RadioButton) dialog.getDialog().findViewById(R.id.variableTrueRadioButton);
         final RadioButton falseRB = (RadioButton) dialog.getDialog().findViewById(R.id.variableFalseRadioButton);
 
-        // TODO: Add ACTION back in
+        final RelativeLayout incrementContainer = (RelativeLayout) dialog.getDialog().findViewById(R.id.variableIncrementContainer);
+        final RadioButton incrementUpRB = (RadioButton) dialog.getDialog().findViewById(R.id.variableIncrementUpRadioButton);
+        final RadioButton incrementDownRB = (RadioButton) dialog.getDialog().findViewById(R.id.variableIncrementDownRadioButton);
+        final EditText incrementValue = (EditText) dialog.getDialog().findViewById(R.id.variableIncrementByText);
+
+        final ArrayList<String> variableObjectNames = new ArrayList<String>();
+
+        variableObjectNames.clear();
+        if(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.INCREMENT)
+            getVariableNamesAsList(variableObjectNames, programmingObjects, Variable.VariableType.NUMBER); // get only number variable types
+        else
+            getVariableNamesAsList(variableObjectNames, programmingObjects, null); // get all variable types
 
         didVariableTypeChange = false;
+        didVariableNameSpinnerChange = false;
 
+        // Action type
+        if(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.CREATE)
+            action.setSelection(0);
+        else if(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.SET)
+            action.setSelection(1);
+        else if(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.INCREMENT)
+            action.setSelection(2);
+
+        // Variable type
         if(((Variable) programmingObject).getVariableType() == Variable.VariableType.STRING)
-            type.setSelection(0);
+            typeSpinner.setSelection(0);
         else if(((Variable) programmingObject).getVariableType() == Variable.VariableType.NUMBER)
-            type.setSelection(1);
+            typeSpinner.setSelection(1);
         else if(((Variable) programmingObject).getVariableType() == Variable.VariableType.BOOLEAN)
-            type.setSelection(2);
+            typeSpinner.setSelection(2);
 
+        typeLabel.setVisibility(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.CREATE ? View.VISIBLE : View.INVISIBLE);
+        typeSpinner.setVisibility(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.CREATE ? View.VISIBLE : View.INVISIBLE);
+
+        // Variable name
         name.setText(((Variable) programmingObject).getName());
-        value.setText(((Variable) programmingObject).getValue().toString());
+        name.setVisibility(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.CREATE ? View.VISIBLE : View.GONE);
 
+        // Variable spinner
+        variableNameSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
+
+        if(variableObjectNames.size() > 0)
+            variableNameSpinner.setSelection(Arrays.asList(variableObjectNames).indexOf(((Variable) programmingObject).getName()));
+
+        variableNameLabel.setVisibility(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.SET ? View.VISIBLE : View.GONE);
+        variableNameSpinner.setVisibility(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.SET ? View.VISIBLE : View.GONE);
+
+        // Value
+        value.setText(((Variable) programmingObject).getValue().toString());
+        value.setVisibility((((Variable) programmingObject).getVariableType() == Variable.VariableType.STRING || ((Variable) programmingObject).getVariableType() == Variable.VariableType.NUMBER) && ((Variable) programmingObject).getVariableActionType() != Variable.VariableActionType.INCREMENT ? View.VISIBLE : View.GONE);
+
+        if (((Variable) programmingObject).getVariableType() == Variable.VariableType.STRING) {
+            value.setInputType(InputType.TYPE_CLASS_TEXT);
+        } else if (((Variable) programmingObject).getVariableType() == Variable.VariableType.NUMBER) {
+            value.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL); // class = this is numbers, flag = allow decimal numbs
+        }
+
+        // True/False RBs
         if(((Variable) programmingObject).getVariableType() == Variable.VariableType.BOOLEAN) {
             trueRB.setChecked((Boolean) ((Variable) programmingObject).getValue());
             falseRB.setChecked(!(Boolean) ((Variable) programmingObject).getValue());
         }
 
-        type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        booleanContainer.setVisibility(((Variable) programmingObject).getVariableType() == Variable.VariableType.BOOLEAN ? View.VISIBLE : View.GONE);
+
+        // Increment
+        if(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.INCREMENT) {
+            incrementUpRB.setChecked((Boolean) ((Variable) programmingObject).getValue());
+            incrementDownRB.setChecked(!(Boolean) ((Variable) programmingObject).getValue());
+            incrementValue.setText(String.valueOf(((Variable) programmingObject).getIncrementValue()));
+        }
+
+        incrementContainer.setVisibility(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.INCREMENT ? View.VISIBLE : View.GONE);
+
+        action.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                name.setVisibility(action.getSelectedItemPosition() == 0 ? View.VISIBLE : View.GONE);
+                typeLabel.setVisibility(action.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
+                typeSpinner.setVisibility(action.getSelectedItemPosition() == 0 ? View.VISIBLE : View.INVISIBLE);
+
+                variableNameLabel.setVisibility(action.getSelectedItemPosition() == 1 || action.getSelectedItemPosition() == 2 ? View.VISIBLE : View.GONE);
+                variableNameSpinner.setVisibility(action.getSelectedItemPosition() == 1 || action.getSelectedItemPosition() == 2 ? View.VISIBLE : View.GONE);
+
+                value.setVisibility((typeSpinner.getSelectedItemPosition() == 0 || typeSpinner.getSelectedItemPosition() == 1) && action.getSelectedItemPosition() != 2 ? View.VISIBLE : View.GONE);
+                booleanContainer.setVisibility(typeSpinner.getSelectedItemPosition() == 2 && action.getSelectedItemPosition() != 2 ? View.VISIBLE : View.GONE);
+
+                incrementContainer.setVisibility(action.getSelectedItemPosition() == 2 ? View.VISIBLE : View.GONE);
+
+                variableObjectNames.clear();
+                if(action.getSelectedItemPosition() == 2) // Increment
+                    getVariableNamesAsList(variableObjectNames, programmingObjects, Variable.VariableType.NUMBER); // get only number variable types
+                else // Create or Set
+                    getVariableNamesAsList(variableObjectNames, programmingObjects, null); // get all variable types
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 booleanContainer.setVisibility(position == 2 ? View.VISIBLE : View.GONE);
                 value.setVisibility(position == 2 ? View.GONE : View.VISIBLE);
 
-                if(didVariableTypeChange)
+                if (didVariableTypeChange)
                     value.setText(""); // clear this out so we don't save weird values
 
                 didVariableTypeChange = true; // set to true AFTER the check on purpose, otherwise it'll wipe out the value when the dialog is first opened
 
-                if(position == 0) {
+                if (position == 0) {
                     // String
                     value.setInputType(InputType.TYPE_CLASS_TEXT);
-                } else if(position == 1) {
+                } else if (position == 1) {
                     // Number
-                    value.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL); // class = this is numbers, flag = allow decimal numbs
-                } else if(position == 2) {
+                    value.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL); // class = this is numbers, flag = allow decimal numbs
+                } else if (position == 2) {
                     // Boolean
                 }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        variableNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Variable selectedVar = (Variable) getVariableByName(variableNameSpinner.getSelectedItem().toString(), programmingObjects);
+
+                if(action.getSelectedItemPosition() == 2) {
+                    // Increment
+                    // Only number variables are allowed here
+                    value.setVisibility(View.GONE);
+                    booleanContainer.setVisibility(View.GONE);
+                    incrementContainer.setVisibility(View.VISIBLE);
+
+                    typeSpinner.setSelection(1); // always a number
+
+                    if (didVariableNameSpinnerChange) {
+                        incrementUpRB.setChecked((Boolean) selectedVar.getValue());
+                        incrementDownRB.setChecked(!(Boolean) selectedVar.getValue());
+                        incrementValue.setText(String.valueOf(selectedVar.getIncrementValue()));
+                    }
+                } else {
+                    // Create, Set
+                    if (selectedVar.getVariableType() == Variable.VariableType.STRING) {
+                        value.setInputType(InputType.TYPE_CLASS_TEXT);
+                        value.setVisibility(View.VISIBLE);
+                        booleanContainer.setVisibility(View.GONE);
+
+                        typeSpinner.setSelection(0);
+
+                        if (didVariableNameSpinnerChange)
+                            value.setText(selectedVar.getValue().toString());
+                    } else if (selectedVar.getVariableType() == Variable.VariableType.NUMBER) {
+                        // Number
+                        value.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL); // class = this is numbers, flag = allow decimal numbs
+                        value.setVisibility(View.VISIBLE);
+                        booleanContainer.setVisibility(View.GONE);
+
+                        typeSpinner.setSelection(1);
+
+                        if (didVariableNameSpinnerChange)
+                            value.setText(selectedVar.getValue().toString());
+                    } else if (selectedVar.getVariableType() == Variable.VariableType.BOOLEAN) {
+                        value.setVisibility(View.GONE);
+                        booleanContainer.setVisibility(View.VISIBLE);
+
+                        typeSpinner.setSelection(2);
+
+                        if (didVariableNameSpinnerChange) {
+                            trueRB.setChecked((Boolean) selectedVar.getValue());
+                            falseRB.setChecked(!(Boolean) selectedVar.getValue());
+                        }
+                    }
+
+                    incrementContainer.setVisibility(View.GONE);
+                }
+
+                didVariableNameSpinnerChange = true;
             }
 
             @Override public void onNothingSelected(AdapterView<?> parent) {}
@@ -1100,29 +1245,70 @@ public class TrainingIDE extends Activity {
                 dialog.dismiss();
             }
         });
+
         dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!name.getText().toString().equals("")) {
-                    if(type.getSelectedItem().equals("Number") && value.getText().toString().equals(""))
-                        value.setText("0");
+                boolean canSave = true;
 
-                    if (type.getSelectedItem().equals("String")) {
-                        ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
-                        ((Variable) programmingObject).setValue(value.getText().toString());
-                    } else if (type.getSelectedItem().equals("Number")) {
-                        ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
-                        ((Variable) programmingObject).setValue(Float.parseFloat(value.getText().toString()));
-                    } else if (type.getSelectedItem().equals("Boolean")) {
-                        ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
-                        ((Variable) programmingObject).setValue(trueRB.isChecked());
+                if(action.getSelectedItemPosition() == 0) {
+                    // create
+                    canSave = !name.getText().toString().equals("");
+
+                    if(!canSave)
+                        Toast.makeText(TrainingIDE.this, "Please enter a variable name", Toast.LENGTH_SHORT).show();
+                } else if(action.getSelectedItemPosition() == 1) {
+                    // set
+                    canSave = variableObjectNames.size() > 0;
+
+                    if(!canSave)
+                        Toast.makeText(TrainingIDE.this, "There are no available variables to set", Toast.LENGTH_SHORT).show();
+                } else if(action.getSelectedItemPosition() == 2) {
+                    // increment
+                    canSave = variableObjectNames.size() > 0;
+
+                    if(!canSave)
+                        Toast.makeText(TrainingIDE.this, "There are no available variables to increment", Toast.LENGTH_SHORT).show();
+                    else {
+                        canSave = !incrementValue.getText().toString().equals("");
+
+                        if (!canSave)
+                            Toast.makeText(TrainingIDE.this, "Please enter an increment value", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                if(canSave) {
+                    if(action.getSelectedItemPosition() == 0) {
+                        ((Variable) programmingObject).setVariableActionType(Variable.VariableActionType.CREATE);
+                        ((Variable) programmingObject).setName(name.getText().toString());
+                    } else if (action.getSelectedItemPosition() == 1) {
+                        ((Variable) programmingObject).setVariableActionType(Variable.VariableActionType.SET);
+                        ((Variable) programmingObject).setName(variableNameSpinner.getSelectedItem().toString());
+                    } else if (action.getSelectedItemPosition() == 2) {
+                        ((Variable) programmingObject).setVariableActionType(Variable.VariableActionType.INCREMENT);
+                        ((Variable) programmingObject).setName(variableNameSpinner.getSelectedItem().toString());
+                        ((Variable) programmingObject).setValue(incrementUpRB.isChecked());
+                        ((Variable) programmingObject).setIncrementValue(Double.valueOf(incrementValue.getText().toString()));
                     }
 
-                    ((Variable) programmingObject).setName(name.getText().toString());
+                    if(action.getSelectedItemPosition() == 0 || action.getSelectedItemPosition() == 1) {
+                        if (typeSpinner.getSelectedItem().equals("Number") && value.getText().toString().equals(""))
+                            value.setText("0");
+
+                        if (typeSpinner.getSelectedItem().equals("String")) {
+                            ((Variable) programmingObject).setVariableType(Variable.VariableType.STRING);
+                            ((Variable) programmingObject).setValue(value.getText().toString());
+                        } else if (typeSpinner.getSelectedItem().equals("Number")) {
+                            ((Variable) programmingObject).setVariableType(Variable.VariableType.NUMBER);
+                            ((Variable) programmingObject).setValue(Float.parseFloat(value.getText().toString()));
+                        } else if (typeSpinner.getSelectedItem().equals("Boolean")) {
+                            ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
+                            ((Variable) programmingObject).setValue(trueRB.isChecked());
+                        }
+                    }
 
                     dialog.dismiss();
-                } else
-                    Toast.makeText(TrainingIDE.this, "Please enter a variable name", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -1385,7 +1571,10 @@ public class TrainingIDE extends Activity {
     // enter null for variableType to ignore type
     private void getVariableNamesAsList(ArrayList<String> list, ArrayList<ProgrammingObject> programmingObjects, Variable.VariableType variableType) {
         for (ProgrammingObject pObj : programmingObjects) {
-            if (pObj.getType() == ProgrammingObject.ProgrammingObjectType.VARIABLE) {
+            if (pObj.getType() == ProgrammingObject.ProgrammingObjectType.VARIABLE && ((Variable) pObj).getVariableActionType() == Variable.VariableActionType.CREATE && !((Variable) pObj).getName().equals("")) {
+                // Must be a VARIABLE
+                // Must be a SET action for that variable
+                // Must have a NAME (this prevents showing the currently placed variable in the list)
                 if(variableType == null || ((Variable) pObj).getVariableType() == variableType)
                     list.add(((Variable) pObj).getName());
             }

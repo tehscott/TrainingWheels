@@ -84,15 +84,11 @@ public class Print extends ProgrammingObject {
 
     @Override
     public void toScript(StringBuilder stringBuilder) {
-        stringBuilder.append("document.getElementById(\"{field}\").innerHTML += \"");
-
         if(printType == PrintType.TEXT) {
-            stringBuilder.append(text + "<br>");
+            stringBuilder.append("document.getElementById(\"{field}\").innerHTML += \"" + text + "<br>\";\n");
         } else if(printType == PrintType.VARIABLE) {
-            stringBuilder.append(variable.getValue().toString() + "<br>");
+            stringBuilder.append("document.getElementById(\"{field}\").innerHTML += " + variable.getName() + "+ \"<br>\";\n");
         }
-
-        stringBuilder.append("\";\n");
     }
 
     @Override
