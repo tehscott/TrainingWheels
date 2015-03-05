@@ -46,7 +46,7 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
     private Point screenSize = new Point();
     private boolean doDrawAreaSizeCalculate = true;
 
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
 
     private GestureDetector gestureDetector;
     final Handler handler = new Handler();

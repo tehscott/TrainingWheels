@@ -981,9 +981,7 @@ public class TrainingIDE extends Activity {
                     ((While) programmingObject).setConditionType(While.WhileConditionType.VARIABLE);
                     ((While) programmingObject).setConditionVariable((Variable) getVariableByName(conditionVariableSpinner.getSelectedItem().toString(), programmingObjects));
 
-                } else if(conditionTypeSpinner.getSelectedItemPosition() == 2) {
-                    ((While) programmingObject).setConditionType(While.WhileConditionType.CUSTOM_EXPRESSION);
-                    ((While) programmingObject).setCustomConditionExpression(conditionCustomExpressionET.getText().toString());
+                    ((While) programmingObject).setComparisonOperator(ProgrammingObject.ComparisonOperator.fromString(operatorSymbols[comparisonOperatorSpinner.getSelectedItemPosition()]));
 
                     if(terminatingValueTypeSpinner.getSelectedItemPosition() == 0) {
                         ((While) programmingObject).setTerminatingValueType(While.WhileTerminatingValueType.TRUE);
@@ -996,6 +994,9 @@ public class TrainingIDE extends Activity {
                         ((While) programmingObject).setTerminatingValueType(While.WhileTerminatingValueType.CUSTOM_VALUE);
                         ((While) programmingObject).setCustomTerminatingValue(customTerminatingValueET.getText().toString());
                     }
+                } else if(conditionTypeSpinner.getSelectedItemPosition() == 2) {
+                    ((While) programmingObject).setConditionType(While.WhileConditionType.CUSTOM_EXPRESSION);
+                    ((While) programmingObject).setCustomConditionExpression(conditionCustomExpressionET.getText().toString());
                 }
 
                 dialog.dismiss();
