@@ -288,50 +288,15 @@ public class TrainingIDE extends Activity {
                             draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
                         }
 
-//                        if (draggedObject != null)
-//                            deleteProgrammingObject(programmingObjects, draggedObject);
-//                        draggedObject = addProgrammingObject((String) event.getClipDescription().getLabel());
-
-                        //lastHoveredObject = currentHoveredObject; // being null is fine
                         closestHoverObjectAbove = null;
                         closestHoverObjectBelow = null;
                         findObjectJustAboveHoverLocation(programmingObjects);
-                        //}
+
+                        // TODO: move screen while dragging an object
 
                         break;
                 }
                 return false;
-            }
-        });
-
-        canvas.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                // They should be able to move or delete it (show a trash can icon, I think)
-
-                // Get object we are hovered over, if any
-                canvas.setCurrentHoverLocation(new Point((int) canvas.getCurrentTouchLocation().x, (int) canvas.getCurrentTouchLocation().y));
-                findCurrentHoveredObject(programmingObjects);
-                lastHoveredObject = currentHoveredObject; // null is fine
-
-                if (currentHoveredObject != null) {
-                    draggedButton = getButtonForProgrammingObject(currentHoveredObject);
-
-                    if (draggedButton != null) {
-                        ClipData clipData = ClipData.newPlainText(draggedButton.getTag().toString(), draggedButton.getTag().toString()); // The first value can be gotten from getClipDescription(), the second value can be gotten from getClipData()
-                        View.DragShadowBuilder dsb = new View.DragShadowBuilder(draggedButton);
-                        draggedButton.startDrag(clipData, dsb, draggedButton, 0);
-
-                        draggedObject = currentHoveredObject;
-                        deleteProgrammingObject(programmingObjects, currentHoveredObject);
-                        currentHoveredObject = null;
-                        draggingExistingObject = true;
-                    } else {
-                        Log.e("IDEa", "Button not found for object being picked up! This should NEVER happen (unless a PO was added).");
-                    }
-                }
-
-                return true;
             }
         });
     }
@@ -659,6 +624,8 @@ public class TrainingIDE extends Activity {
             }
         }
 
+        canvas.setDoDrawAreaSizeCalculate(true);
+
         return pObj;
     }
 
@@ -678,6 +645,8 @@ public class TrainingIDE extends Activity {
                 programmingObjects.add(programmingObject);
             }
         }
+
+        canvas.setDoDrawAreaSizeCalculate(true);
 
         return programmingObject;
     }
@@ -744,6 +713,8 @@ public class TrainingIDE extends Activity {
                     synchronized (programmingObjects) {
                         programmingObjectList.remove(pObj);
                     }
+
+                    canvas.setDoDrawAreaSizeCalculate(true);
 
                     return true;
                 }
@@ -1591,6 +1562,33 @@ public class TrainingIDE extends Activity {
         if(currentHoveredObject != null) {
             editingExistingObject = true;
             showParametersDialog(currentHoveredObject);
+        }
+    }
+
+    public void handleLongPress() {
+        // They should be able to move or delete it (show a trash can icon, I think)
+        Log.d("IDEa", "Long press event fired");
+
+        // Get object we are hovered over, if any
+        canvas.setCurrentHoverLocation(new Point((int) canvas.getCurrentTouchLocation().x, (int) canvas.getCurrentTouchLocation().y));
+        findCurrentHoveredObject(programmingObjects);
+        lastHoveredObject = currentHoveredObject; // null is fine
+
+        if (currentHoveredObject != null) {
+            draggedButton = getButtonForProgrammingObject(currentHoveredObject);
+
+            if (draggedButton != null) {
+                ClipData clipData = ClipData.newPlainText(draggedButton.getTag().toString(), draggedButton.getTag().toString()); // The first value can be gotten from getClipDescription(), the second value can be gotten from getClipData()
+                View.DragShadowBuilder dsb = new View.DragShadowBuilder(draggedButton);
+                draggedButton.startDrag(clipData, dsb, draggedButton, 0);
+
+                draggedObject = currentHoveredObject;
+                deleteProgrammingObject(programmingObjects, currentHoveredObject);
+                currentHoveredObject = null;
+                draggingExistingObject = true;
+            } else {
+                Log.e("IDEa", "Button not found for object being picked up! This should NEVER happen (unless a PO was added).");
+            }
         }
     }
 

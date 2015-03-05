@@ -9,11 +9,14 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -40,10 +43,20 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
     private Point currentTouchLocation, lastTouchLocation; // current and previous locations of where the user is/was touching
     private Point lastDropLocation; // location of where the user last dropped an object
     private Point drawOffset = new Point(); // offset of the canvas origin when drawing objects. dragging the drawing area (canvas) will simulate scrolling by using the offset
+    private Point screenSize = new Point();
+    private boolean doDrawAreaSizeCalculate = true;
 
-    private final boolean DEBUG = false;
+    private final boolean DEBUG = true;
 
     private GestureDetector gestureDetector;
+    final Handler handler = new Handler();
+    private Runnable longPressRunnable = new Runnable() {
+        // This is a pretty neat way to handle the long press event. It allows us to set the amount
+        // of time required for a long press and gives greater control in general.
+        public void run() {
+            trainingIDE.handleLongPress();
+        }
+    };
 
     public CanvasView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -90,6 +103,9 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         drawnObjectHeight *= screenDensityMultiplier;
         //drawnObjectVerticalSpacing *= screenDensityMultiplier;
         //drawnObjectHorizontalSpacing *= screenDensityMultiplier;
+
+        screenSize.x = getResources().getDisplayMetrics().widthPixels;
+        screenSize.y = getResources().getDisplayMetrics().heightPixels;
     }
 
     // This listener will be used to move the canvas around (to allow you to scroll, etc)
@@ -100,18 +116,21 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 setCurrentTouchLocation(new Point((int) event.getX(), (int) event.getY()));
+                handler.postDelayed(longPressRunnable, 500); // fire a long press event after delay
 
                 break;
 
             case MotionEvent.ACTION_UP:
                 setLastTouchLocation(getCurrentTouchLocation());
                 setCurrentTouchLocation(null);
+                handler.removeCallbacks(longPressRunnable); // they let go, cancel long press event
 
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 setLastTouchLocation(getCurrentTouchLocation());
                 setCurrentTouchLocation(new Point((int) event.getX(), (int) event.getY()));
+                handler.removeCallbacks(longPressRunnable); // they moved, cancel long press event
 
                 calculateOffset();
 
@@ -172,6 +191,8 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
                     height++;
                 }
             }
+
+            doDrawAreaSizeCalculate = false;
 
             // Debug functions
             drawHoverLocation(canvas); // Debug function, show where the user is dragging
@@ -280,9 +301,12 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
             //canvas.drawText("End " + pObj.getTypeName(), left - drawOffset.x + 5, top - drawOffset.y + 15, paint);
         }
         // Update the size of the area that contains the drawn objects
-        if((depth * drawnObjectHorizontalSpacing) + drawnObjectWidth > drawnObjectsAreaSize.x) // only update the width if this section is wider than any other
-            drawnObjectsAreaSize.x = (depth * drawnObjectHorizontalSpacing) + drawnObjectWidth; // width
-        drawnObjectsAreaSize.y = (height * drawnObjectHeight) + ((drawnObjectVerticalSpacing * height) + drawnObjectHeight); // height
+        if(doDrawAreaSizeCalculate) {
+            // Only recalculate when necessary
+            if ((depth * drawnObjectHorizontalSpacing) + drawnObjectWidth > drawnObjectsAreaSize.x) // only update the width if this section is wider than any other
+                drawnObjectsAreaSize.x = (depth * drawnObjectHorizontalSpacing) + drawnObjectWidth; // width
+            drawnObjectsAreaSize.y = (height * drawnObjectHeight) + ((drawnObjectVerticalSpacing * height) + drawnObjectHeight); // height
+        }
 
         return height;
     }
@@ -340,31 +364,39 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
             int xChange = lastTouchLocation.x - currentTouchLocation.x;
             int yChange = lastTouchLocation.y - currentTouchLocation.y;
 
+            // a positive x offset means the origin is off the screen to the lEFT
+            // a positive y offset means the origin is off the screen to the TOP
             drawOffset.x = drawOffset.x + xChange; // plus or minus here determines which way the screen drags when you move (like apple's "natural" drag option)
             drawOffset.y = drawOffset.y + yChange; // plus or minus here determines which way the screen drags when you move (like apple's "natural" drag option)
 
             // TODO: The stuff below doesn't work well
             // Restrict dragging so that they can't drag infinitely
-            // Adjust x offset
-            if(drawOffset.x < 0) drawOffset.x = 0;
 
+            // restrict dragging the screen to the left
             if(drawnObjectsAreaSize.x > getWidth()) {
-                //if(drawOffset.x + getWidth() > drawnObjectsAreaSize.x)
-                //    drawOffset.x = getWidth() - drawnObjectsAreaSize.x;
+                if (getWidth() + drawOffset.x > drawnObjectsAreaSize.x)
+                    drawOffset.x = drawnObjectsAreaSize.x - getWidth();
             } else
                 drawOffset.x = 0;
 
-            // Adjust y offset
-            if(drawOffset.y < topMargin) drawOffset.y = topMargin; // maintain the gap at the top of the screen
+            // restrict dragging the screen to the right
+            if(drawOffset.x < 0)
+                drawOffset.x = 0;
 
+            // restrict dragging the screen to the top
             if(drawnObjectsAreaSize.y > getHeight()) {
-                // Not sure why this requires an adjustment of 1, but it works
-                if (getHeight() + drawOffset.y - 1 > drawnObjectsAreaSize.y)
-                    drawOffset.y = drawnObjectsAreaSize.y - getHeight() + 1;
+                if (getHeight() + drawOffset.y > drawnObjectsAreaSize.y)
+                    drawOffset.y = drawnObjectsAreaSize.y - getHeight();
             } else
-                drawOffset.y = topMargin; // maintain the gap at the top of the screen
+                drawOffset.y = topMargin;
+
+            // restrict dragging the screen to the right
+            if(drawOffset.y < topMargin)
+                drawOffset.y = topMargin;
         }
     }
+
+
 
     /**********************************************************************************************
      **********************************GETTERS AND SETTERS*****************************************
@@ -431,6 +463,14 @@ public class CanvasView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void setTrainingIDE(TrainingIDE trainingIDE) {
         this.trainingIDE = trainingIDE;
+    }
+
+    public boolean isDoDrawAreaSizeCalculate() {
+        return doDrawAreaSizeCalculate;
+    }
+
+    public void setDoDrawAreaSizeCalculate(boolean doDrawAreaSizeCalculate) {
+        this.doDrawAreaSizeCalculate = doDrawAreaSizeCalculate;
     }
 
     /**********************************************************************************************
