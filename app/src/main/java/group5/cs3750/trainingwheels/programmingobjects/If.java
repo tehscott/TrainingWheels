@@ -11,9 +11,11 @@ public class If extends ProgrammingObject {
     private Object conditionRightSide; // Right side of the conditional statement, can be a manually-entered value or a Variable
     private Variable.VariableType conditionRightSideType;
     private ComparisonOperator comparisonOperator;
-    private String expression = "";
+    private String expression;
 
-    public If() { setFields(); }
+    public If() {
+        setFields();
+    }
 
     public If(Variable conditionLeftSide, Object conditionRightSide, Variable.VariableType conditionRightSideType, ComparisonOperator comparisonOperator) {
         super(ProgrammingObjectType.IF);
@@ -49,7 +51,13 @@ public class If extends ProgrammingObject {
 
     @Override
     public String toString() {
-        return expression;
+        if (expression != null) {
+            return expression;
+        }
+        if (conditionLeftSide != null) {
+            return conditionLeftSide.getName() + comparisonOperator.toString() + conditionRightSide.toString();
+        }
+        return "";
     }
 
     @Override
@@ -101,7 +109,25 @@ public class If extends ProgrammingObject {
 
     @Override
     public void toScript(StringBuilder stringBuilder) {
-        stringBuilder.append("if(" + getExpression() + ") {\n");
+        stringBuilder.append("if(");
+
+        if (expression != null) {
+            stringBuilder.append(expression);
+        } else {
+            if (conditionLeftSide != null) {
+                stringBuilder.append(conditionLeftSide.getName());
+            }
+            if (comparisonOperator != null) {
+                stringBuilder.append(comparisonOperator.toString());
+                if (conditionRightSide instanceof Variable) {
+                    stringBuilder.append(((Variable) conditionRightSide).getName());
+                } else if (conditionRightSide instanceof String) {
+                    stringBuilder.append(conditionRightSide);
+                }
+            }
+        }
+
+        stringBuilder.append(") {\n");
 
         for (ProgrammingObject child : children) {
             child.toScript(stringBuilder);

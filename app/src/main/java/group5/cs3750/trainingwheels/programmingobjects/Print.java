@@ -18,7 +18,9 @@ public class Print extends ProgrammingObject {
     private Variable variable;
     private List<ProgrammingObjectType> allowedChildTypes = new ArrayList(); // The types of programming objects that can be children to this programming object, can be null
 
-    public Print() { setFields(); }
+    public Print() {
+        setFields();
+    }
 
     public Print(String text) {
         super(ProgrammingObjectType.PRINT);
@@ -84,18 +86,18 @@ public class Print extends ProgrammingObject {
 
     @Override
     public void toScript(StringBuilder stringBuilder) {
-        if(printType == PrintType.TEXT) {
-            stringBuilder.append("document.getElementById(\"{field}\").innerHTML += \"" + text + "<br>\";\n");
-        } else if(printType == PrintType.VARIABLE) {
-            stringBuilder.append("document.getElementById(\"{field}\").innerHTML += " + variable.getName() + "+ \"<br>\";\n");
+        if (printType == PrintType.TEXT) {
+            stringBuilder.append(String.format("document.writeln('%s');\n", text));
+        } else if (printType == PrintType.VARIABLE) {
+            stringBuilder.append(String.format("document.writeln('%s');\n", variable.getName()));
         }
     }
 
     @Override
     public String toString() {
-        if(printType == PrintType.TEXT) {
+        if (printType == PrintType.TEXT) {
             return "print '" + text + "'";
-        } else if(printType == PrintType.VARIABLE) {
+        } else if (printType == PrintType.VARIABLE) {
             return "print var '" + variable.getName() + "'";
         }
 

@@ -2,11 +2,9 @@ package group5.cs3750.trainingwheels;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -14,9 +12,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.InputFilter;
 import android.text.InputType;
-import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.GestureDetector;
@@ -27,26 +23,19 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SlidingDrawer;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 import android.widget.ViewFlipper;
-
-import org.w3c.dom.Text;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -158,10 +147,7 @@ public class TrainingIDE extends Activity {
         final String container = "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<body>\n" +
-                "\n" +
-                "<p id=\"output\"></p>\n" +
-                "\n" +
-                "<script>%s</script>\n" +
+                "<pre><script>\n%s</script></pre>\n" +
                 "\n" +
                 "</body>\n" +
                 "</html> ";
@@ -183,7 +169,6 @@ public class TrainingIDE extends Activity {
                 }
 
                 String content = stringBuilder.toString();
-                content = content.replaceAll("\\{field\\}", "output");
                 String finalContainer = String.format(container, content);
 
                 webView.loadData(finalContainer, "text/html", null);
@@ -768,7 +753,7 @@ public class TrainingIDE extends Activity {
         } else if (programmingObject instanceof For) {
             showForDialog(programmingObject);
         } else if (programmingObject instanceof If) {
-            showIfDialog(programmingObject);
+            showIfDialog((If) programmingObject);
         } else if (programmingObject instanceof Variable) {
             showVariableDialog(programmingObject);
         } else if (programmingObject instanceof While) {
@@ -776,7 +761,7 @@ public class TrainingIDE extends Activity {
         }
     }
 
-    private void showIfDialog(final ProgrammingObject programmingObject) {
+    private void showIfDialog(final If ifObject) {
         final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "If - Enter your parameters", R.layout.if_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
         final Spinner conditionTypeSpinner = (Spinner) dialog.getDialog().findViewById(R.id.ifConditionTypeSpinner);
 
@@ -847,7 +832,7 @@ public class TrainingIDE extends Activity {
             @Override
             public void onClick(View v) {
                 if(!editingExistingObject)
-                    deleteProgrammingObject(programmingObjects, programmingObject);
+                    deleteProgrammingObject(programmingObjects, ifObject);
 
                 editingExistingObject = false;
 
@@ -857,7 +842,33 @@ public class TrainingIDE extends Activity {
         dialog.getRightButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (editingExistingObject) {
+                    ifObject.setConditionLeftSide(null);
+                    ifObject.setConditionRightSide(null);
+                    ifObject.setComparisonOperator(null);
+                    ifObject.setExpression(null);
+                }
+                if (conditionTypeSpinner.getSelectedItemPosition() == 0) {
+                    //variable selected
+                    ifObject.setConditionLeftSide(getVariableByName(((String) conditionVariableSpinner.getSelectedItem()), programmingObjects));
+                    ifObject.setComparisonOperator(ProgrammingObject.ComparisonOperator.fromString((getResources().getStringArray(R.array.operatorSymbolArray))[comparisonOperatorSpinner.getSelectedItemPosition()]));
+                    switch (terminatingValueTypeSpinner.getSelectedItemPosition()) {
+                        case 0:
+                            ifObject.setConditionRightSide("true");
+                            break;
+                        case 1:
+                            ifObject.setConditionRightSide("false");
+                            break;
+                        case 2:
+                            ifObject.setConditionRightSide(terminatingValueVariableSpinner.getSelectedItem());
+                            break;
+                        case 3:
+                            ifObject.setConditionRightSide(customTerminatingValueET.getText().toString());
+                    }
+                } else {
+                    //custom expression selected
+                    ifObject.setExpression(conditionCustomExpressionET.getText().toString());
+                }
                 dialog.dismiss();
             }
         });
@@ -1004,7 +1015,7 @@ public class TrainingIDE extends Activity {
         });
         dialog.show();
     }
-    
+
     private void showVariableDialog(final ProgrammingObject programmingObject) {
         final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "Variable - Enter your parameters", R.layout.variable_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
         final Spinner action = (Spinner) dialog.getDialog().findViewById(R.id.variableActionSpinner);
@@ -1526,11 +1537,12 @@ public class TrainingIDE extends Activity {
         dialog.show();
     }
 
-    private ProgrammingObject getVariableByName(String name, ArrayList<ProgrammingObject> programmingObjects) {
+    private Variable getVariableByName(String name, ArrayList<ProgrammingObject> programmingObjects) {
         for (ProgrammingObject pObj : programmingObjects) {
             if (pObj.getType() == ProgrammingObject.ProgrammingObjectType.VARIABLE) {
-                if(((Variable) pObj).getName().equals(name))
-                    return pObj;
+                Variable variable = (Variable) pObj;
+                if (variable.getName().equals(name))
+                    return variable;
             }
 
             if (pObj.getChildren() != null) // Look through this object's children
