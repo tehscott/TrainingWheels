@@ -31,7 +31,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="In this challenge you will build an If statement that checks to see if a condition is true. If it is true, you wll print a message stating that the condition is true.  If it is false You will print a message stating that the conditon is false."
+                android:text="An If statement is a programming conditional statement that, if proved true, performs a function or displays information. An If statement takes a conditional parameter. This parameter could be a Boolean variable, or you could be test other Variables against each other."
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp" />
         </LinearLayout>
@@ -46,7 +46,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="An If statement is a programming conditional statement that, if proved true, performs a function or displays information."
+                android:text="To create an If statement drag the If object into the programming area. The If object functions a lot like a while loop except it is only executed once. You will be prompted to enter a condition type of True, Variable, or Custom Expression."
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp" />
         </LinearLayout>
@@ -61,7 +61,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="An If statement takes a conditional perameter.  This paramater could be a Boolean variable, or you could be testing certain variables or equal, less than, or greater than."
+                android:text="You are able to use previously set Variables as your condition type. This will allow you to build more verbose constructs. Pressing OK will give you more options to compare your variable with a terminating value."
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp" />
         </LinearLayout>
@@ -76,7 +76,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Drag the If object into the programming area and select the condtion you would like to check. "
+                android:text="You are also able to use custom expressions in your If statement. This gives the user more freedom to create detailed control structures. "
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp" />
         </LinearLayout>

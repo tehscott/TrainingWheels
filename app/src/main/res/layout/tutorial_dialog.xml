@@ -31,21 +31,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="In this challenge, you will be required to print the words 'Hello World' on the screen five times. You will do this by using a For Loop and a Print statement."
-                android:layout_gravity="center_horizontal"
-                android:padding="10dp" />
-        </LinearLayout>
-
-        <!-- For loops -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="In computer science a For Loop is a programming language statement which allows code to be repeatedly executed. A For Loop is classified as an iteration statement."
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp" />
@@ -61,7 +46,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="To create a For Loop, drag it from the left panel into the Programming area on the right. You will be prompted to enter the conditions of the Loop."
+                android:text="A For Loop first sets a variable as a starting value, a variable to test that value against, and an incrementing value.  You are able to increment up or down."
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp" />
         </LinearLayout>
@@ -76,7 +61,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="After creating your Loop, drag a Print command from the left panel into the Programming area on the right. Drag it right on top of the For Loop command. Enter 'Hello World' when prompted. You're done! Tap Run to see the results!"
+                android:text="To create a For Loop, drag it from the left panel into the Programming area on the right. You will be prompted to enter a starting value, ending value, and a terminating condition. The user then chooses which direction the starting value will increment or decrement. "
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="It inprotant that you take care in creating for loops as it is easy to create infinite loops."
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp" />
         </LinearLayout>

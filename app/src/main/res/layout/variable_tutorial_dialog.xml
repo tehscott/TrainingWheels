@@ -21,7 +21,7 @@
         android:layout_below="@+id/tutorial_title"
         android:layout_above="@+id/tutorial_button_container">
 
-        <!-- For loops -->
+        <!-- Variables -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -31,12 +31,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="This is a variable.  In computer programming a variable is a storage location paired with an associated identifier.  The variable name is how we will reference the stored value."
+                android:text="A variable is a storage location paired with an associated identifier.  The variable name is how we will reference the stored value."
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp" />
         </LinearLayout>
 
-        <!-- For loops -->
+        <!-- Variables -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -46,11 +46,23 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="To create a variable drag it from the left panel into the Programming area. You will be prompted to choose the type of variable you want. Choose String, Integer, Double, or Boolean. Then give your variable a name and add a value to it."
+                android:text="To create a variable drag it from the left panel into the Programming area. You will be prompted to choose an action to perform on the Variable.  You can either Create, Set or Increment (if the variable it a number) a Variable."
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Next you can choose a variable type such as a String, Number, or Boolean.  The user then gives the Variable a name and assigns it a value."
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
 
     </ViewFlipper>
 

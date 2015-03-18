@@ -31,24 +31,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="In this challenge, you will be required to print out 10 numbers.  you will do this by using a While loop, Condition statement, Print statement, and a variable."
-                android:layout_gravity="center_horizontal"
-                android:padding="10dp" />
-        </LinearLayout>
-
-        <!-- For loops -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="A While loop is a control flow statement that allows code to be executed repeatedly based on a given boolean (true or false) condition.  The while loop can be thought of as a repeating statement.  The while contruct consists of a block of code and a condition/expression."
                 android:layout_gravity="center_horizontal"
-                android:padding="10dp" />
+                android:padding="10dp"
+                />
         </LinearLayout>
 
         <!-- For loops -->
@@ -61,7 +47,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="First you need to drag a variable into the programming area and set it to 0.  To create a While loop, drag it from the left panel into the Programming area on the right. You will be prompted to enter a condition."
+                android:text="To create a While loop, drag it from the object panel into the programming area. You will be prompted to enter a condition type of True, Variable, or Custom Expression."
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp" />
         </LinearLayout>
@@ -76,7 +62,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Inside of the while loop add a Print statement. Print the variable and increment by one."
+                android:text="You are able to use previously set Variables as your condition type. This will allow you to build more verbose constructs. Pressing OK will give you more options to compare your variable with a terminating value."
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- For loops -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You are also able to use custom expressions in your while statement.  This is for advanced users as it is easy to create infinite loops with this function. "
                 android:layout_gravity="center_horizontal"
                 android:padding="10dp" />
         </LinearLayout>
