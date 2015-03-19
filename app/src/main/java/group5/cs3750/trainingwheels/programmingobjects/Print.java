@@ -89,7 +89,7 @@ public class Print extends ProgrammingObject {
         if (printType == PrintType.TEXT) {
             stringBuilder.append(String.format("document.writeln('%s');\n", text));
         } else if (printType == PrintType.VARIABLE) {
-            stringBuilder.append(String.format("document.writeln('%s');\n", variable.getName()));
+            stringBuilder.append(String.format("document.writeln(%s);\n", variable.getName()));
         }
     }
 
