@@ -122,7 +122,7 @@ public class If extends ProgrammingObject {
                 if (conditionRightSide instanceof Variable) {
                     stringBuilder.append(((Variable) conditionRightSide).getName());
                 } else if (conditionRightSide instanceof String) {
-                    stringBuilder.append(conditionRightSide);
+                    stringBuilder.append("'" + conditionRightSide + "'");
                 }
             }
         }
