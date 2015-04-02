@@ -1,69 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/btnSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_margin="5dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/settings_selector" />
-
+    <!-- The main content view -->
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
-        <TextView
-            android:id="@+id/txtWelcomeUser"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:id="@+id/main_top1"
+            android:background="@color/main_purple"
+            android:orientation="horizontal"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="5dp"
-            android:text="WELCOME TO"
-            android:textAppearance="?android:attr/textAppearanceLargeInverse"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
+            android:id="@+id/main_top2"
+            android:layout_below="@+id/main_top1"
+            android:background="@color/main_blue">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/main_title"
+                android:src="@drawable/main_title"
+                android:layout_margin="20dp"
+                android:adjustViewBounds="true"
+                android:layout_centerVertical="true"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/main_settingsButton"
+                android:src="@drawable/settings_selector"
+                android:adjustViewBounds="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="30dp"/>
+        </RelativeLayout>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/app_name"
-            android:id="@+id/app_name_image"
-            android:layout_below="@+id/txtWelcomeUser"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp" />
+            android:id="@+id/main_addButtonTop"
+            android:src="@drawable/add_button_top"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true"
+            android:layout_above="@+id/main_addButtonBottom"
+            android:layout_marginRight="90dp"/>
 
-        <LinearLayout
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/app_name_image"
-            android:orientation="vertical"
-            android:layout_centerHorizontal="true" >
+            android:id="@+id/main_addButtonBottom"
+            android:src="@drawable/add_button_bottom"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/main_top2"
+            android:layout_marginRight="90dp"/>
 
-            <Button
-                android:id="@+id/btnNewProgram"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="NEW PROGRAM"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:layout_marginBottom="10dp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/main_addButtonMiddle"
+            android:src="@drawable/add_selector"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/main_addButtonTop"
+            android:layout_marginRight="90dp"/>
 
-            <Button
-                android:id="@+id/btnOpenProgram"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="OPEN PROGRAM"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:layout_marginBottom="10dp" />
-        </LinearLayout>
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/main_addButtonMiddle"
+            android:id="@+id/main_programList"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="10dp"/>
     </RelativeLayout>
-</RelativeLayout>
+
+    <!-- The navigation drawer -->
+    <LinearLayout android:id="@+id/left_drawer"
+        android:layout_width="220dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:orientation="vertical"
+        android:background="@color/ide_bg">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/settings_pink"
+            android:text="@string/action_settings"
+            android:textColor="@android:color/white"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:gravity="bottom"
+            android:padding="10dp"/>
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sound"
+            android:textSize="16sp"
+            android:textAllCaps="true"
+            android:id="@+id/soundSwitch"
+            android:layout_margin="10dp"/>
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hints_tips"
+            android:textSize="16sp"
+            android:textAllCaps="true"
+            android:id="@+id/hintsSwitch"
+            android:layout_marginLeft="10dp"/>
+    </LinearLayout>
+</android.support.v4.widget.DrawerLayout>

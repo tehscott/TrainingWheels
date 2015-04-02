@@ -4,13 +4,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Switch;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,68 +28,76 @@ import group5.cs3750.trainingwheels.programmingobjects.ProgrammingObject;
  * Created by Brady on 11/13/2014.
  */
 public class MainMenu extends Activity {
-    private AlertDialog loadDialog;
-    private View loadButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
+        initDrawer();
         initButtons();
     }
 
+    private void initDrawer() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        final SharedPreferences.Editor editor = prefs.edit();
+
+        boolean sound = prefs.getBoolean("sound", true);
+        boolean hints = prefs.getBoolean("hints", false);
+
+        Switch soundSwitch = (Switch) findViewById(R.id.soundSwitch);
+        Switch hintsSwitch = (Switch) findViewById(R.id.hintsSwitch);
+
+        soundSwitch.setChecked(sound);
+        hintsSwitch.setChecked(hints);
+
+        soundSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                editor.putBoolean("sound", isChecked);
+            }
+        });
+
+        hintsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                editor.putBoolean("hints", isChecked);
+            }
+        });
+    }
+
     private void initButtons() {
-        findViewById(R.id.btnSettings).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.main_settingsButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent settings = new Intent(MainMenu.this, Settings.class);
-                startActivity(settings);
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+                if(drawerLayout.isDrawerOpen(Gravity.RIGHT))
+                    drawerLayout.closeDrawer(Gravity.RIGHT);
+                else
+                    drawerLayout.openDrawer(Gravity.RIGHT);
             }
         });
 
-        loadButton = findViewById(R.id.btnOpenProgram);
-        View newButton = findViewById(R.id.btnNewProgram);
-
-        loadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadSavedFilesList();
-            }
-        });
-        newButton.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.main_addButtonMiddle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent user = new Intent(MainMenu.this, TrainingIDE.class);
                 startActivity(user);
             }
         });
-
-        newButton.setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_green, 12, 0));
-        loadButton.setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12, 0));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkLoadButton();
-    }
 
-    private void checkLoadButton() {
-        if (fileList().length == 0) {
-            loadButton.setEnabled(false);
-            loadButton.setClickable(false);
-        } else {
-            loadButton.setEnabled(true);
-            loadButton.setClickable(true);
-        }
+        loadSavedFilesList();
     }
 
     private void loadSavedFilesList() {
         final String[] files = fileList();
-        View fileView = View.inflate(this, R.layout.load_dialog, null);
-        ListView listView = (ListView) fileView.findViewById(R.id.list_view);
-        ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, files);
+        ListView listView = (ListView) findViewById(R.id.main_programList);
+        ListAdapter adapter = new ProgramsListAdapter(MainMenu.this, files);
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -141,22 +154,14 @@ public class MainMenu extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 deleteFile(files[position]);
-                                checkLoadButton();
+
+                                loadSavedFilesList();
                             }
                         })
                         .create()
                         .show();
-                if (loadDialog != null) {
-                    loadDialog.dismiss();
-                }
                 return true;
             }
         });
-
-        loadDialog = new AlertDialog.Builder(this)
-                .setTitle("Select saved file")
-                .setView(fileView)
-                .create();
-        loadDialog.show();
     }
 }
