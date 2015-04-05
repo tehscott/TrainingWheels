@@ -42,7 +42,7 @@ public class MainMenu extends Activity {
         final SharedPreferences.Editor editor = prefs.edit();
 
         boolean sound = prefs.getBoolean("sound", true);
-        boolean hints = prefs.getBoolean("hints", false);
+        boolean hints = prefs.getBoolean("hints", true);
 
         Switch soundSwitch = (Switch) findViewById(R.id.soundSwitch);
         Switch hintsSwitch = (Switch) findViewById(R.id.hintsSwitch);

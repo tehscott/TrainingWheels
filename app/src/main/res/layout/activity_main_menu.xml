@@ -113,6 +113,7 @@
             android:textSize="16sp"
             android:textAllCaps="true"
             android:id="@+id/soundSwitch"
+            android:checked="true"
             android:layout_margin="10dp"/>
 
         <Switch
@@ -122,6 +123,7 @@
             android:textSize="16sp"
             android:textAllCaps="true"
             android:id="@+id/hintsSwitch"
+            android:checked="true"
             android:layout_marginLeft="10dp"/>
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

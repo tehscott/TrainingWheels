@@ -390,88 +390,92 @@ public class TrainingIDE extends Activity {
 //        });
 //    }
 
-    private void showTutorial(String tutorial) {
-        SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+    private void showTutorial(final String tutorial) {
+        final SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         final boolean hints = getPrefs.getBoolean("hints", true);
         final View tutorialView;
+
         if (hints) {
+            boolean showHint = getPrefs.getBoolean("show" + tutorial + "Hints", true);
 
-            if (tutorial.contentEquals("for")) {
-                tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
-            } else if (tutorial.contentEquals("while")) {
-                tutorialView = getLayoutInflater().inflate(R.layout.while_tutorial_dialog, null);
-            } else if (tutorial.contentEquals("variable")) {
-                tutorialView = getLayoutInflater().inflate(R.layout.variable_tutorial_dialog, null);
-            } else if (tutorial.contentEquals("function")) {
-                tutorialView = getLayoutInflater().inflate(R.layout.function_tuorial_dialog, null);
-            } else if (tutorial.contentEquals("print")) {
-                tutorialView = getLayoutInflater().inflate(R.layout.print_tutorial_dialog, null);
-            } else if (tutorial.contentEquals("if")) {
-                tutorialView = getLayoutInflater().inflate(R.layout.if_tutorial_dialog, null);
-            } else if (tutorial.contentEquals("string")) {
-                tutorialView = getLayoutInflater().inflate(R.layout.string_tutorial_dialog, null);
-            } else {
-                tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
+            if(showHint) {
+                if (tutorial.contentEquals("for")) {
+                    tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
+                } else if (tutorial.contentEquals("while")) {
+                    tutorialView = getLayoutInflater().inflate(R.layout.while_tutorial_dialog, null);
+                } else if (tutorial.contentEquals("variable")) {
+                    tutorialView = getLayoutInflater().inflate(R.layout.variable_tutorial_dialog, null);
+                } else if (tutorial.contentEquals("function")) {
+                    tutorialView = getLayoutInflater().inflate(R.layout.function_tuorial_dialog, null);
+                } else if (tutorial.contentEquals("print")) {
+                    tutorialView = getLayoutInflater().inflate(R.layout.print_tutorial_dialog, null);
+                } else if (tutorial.contentEquals("if")) {
+                    tutorialView = getLayoutInflater().inflate(R.layout.if_tutorial_dialog, null);
+                } else if (tutorial.contentEquals("string")) {
+                    tutorialView = getLayoutInflater().inflate(R.layout.string_tutorial_dialog, null);
+                } else {
+                    tutorialView = getLayoutInflater().inflate(R.layout.tutorial_dialog, null);
+                }
+
+                tutorialFlipper = (ViewFlipper) tutorialView.findViewById(R.id.tutorial_flipper);
+                tutorialFlipper.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(final View view, final MotionEvent event) {
+                        detector.onTouchEvent(event);
+                        return true;
+                    }
+                });
+
+                tutorialPrevButton = (Button) tutorialView.findViewById(R.id.tutorial_prev_button);
+                tutorialCloseButton = (Button) tutorialView.findViewById(R.id.tutorial_close_button);
+                tutorialNextButton = (Button) tutorialView.findViewById(R.id.tutorial_next_button);
+
+                tutorialPrevButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_in));
+                        tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_out));
+                        tutorialFlipper.showPrevious();
+
+                        tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
+                        tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
+                    }
+                });
+                tutorialPrevButton.setEnabled(false);
+
+                tutorialCloseButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        tutorialDialog.dismiss();
+                    }
+                });
+
+                tutorialNextButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_in));
+                        tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_out));
+                        tutorialFlipper.showNext();
+                        tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
+                        tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
+                    }
+                });
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+                builder.setTitle("IDEA Tutorial");
+                builder.setView(tutorialView);
+                builder.setCancelable(false); // False so that they are forced to dismiss and fire the OnDismiss event
+
+                tutorialDialog = builder.create();
+                tutorialDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        //prefs.edit().putBoolean("showTutorial", false).commit();
+                        getPrefs.edit().putBoolean("show" + tutorial + "Hints", false).apply();
+                    }
+                });
+                tutorialDialog.show();
             }
-
-            tutorialFlipper = (ViewFlipper) tutorialView.findViewById(R.id.tutorial_flipper);
-            tutorialFlipper.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(final View view, final MotionEvent event) {
-                    detector.onTouchEvent(event);
-                    return true;
-                }
-            });
-
-
-            tutorialPrevButton = (Button) tutorialView.findViewById(R.id.tutorial_prev_button);
-            tutorialCloseButton = (Button) tutorialView.findViewById(R.id.tutorial_close_button);
-            tutorialNextButton = (Button) tutorialView.findViewById(R.id.tutorial_next_button);
-
-            tutorialPrevButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_in));
-                    tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.right_out));
-                    tutorialFlipper.showPrevious();
-
-                    tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
-                    tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
-                }
-            });
-            tutorialPrevButton.setEnabled(false);
-
-            tutorialCloseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    tutorialDialog.dismiss();
-                }
-            });
-
-            tutorialNextButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    tutorialFlipper.setInAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_in));
-                    tutorialFlipper.setOutAnimation(AnimationUtils.loadAnimation(TrainingIDE.this, R.anim.left_out));
-                    tutorialFlipper.showNext();
-                    tutorialPrevButton.setEnabled(tutorialFlipper.getDisplayedChild() > 0);
-                    tutorialNextButton.setEnabled(tutorialFlipper.getDisplayedChild() < tutorialFlipper.getChildCount() - 1);
-                }
-            });
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
-            builder.setTitle("IDEA Tutorial");
-            builder.setView(tutorialView);
-            builder.setCancelable(false); // False so that they are forced to dismiss and fire the OnDismiss event
-
-            tutorialDialog = builder.create();
-            tutorialDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    //prefs.edit().putBoolean("showTutorial", false).commit();
-                }
-            });
-            tutorialDialog.show();
         }
     }
 
@@ -1172,7 +1176,7 @@ public class TrainingIDE extends Activity {
         variableNameSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
 
         if(variableObjectNames.size() > 0)
-            variableNameSpinner.setSelection(Arrays.asList(variableObjectNames).indexOf(((Variable) programmingObject).getName()));
+            variableNameSpinner.setSelection(Arrays.asList(variableObjectNames).get(0).indexOf(((Variable) programmingObject).getName()));
 
         variableNameLabel.setVisibility(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.SET ? View.VISIBLE : View.GONE);
         variableNameSpinner.setVisibility(((Variable) programmingObject).getVariableActionType() == Variable.VariableActionType.SET ? View.VISIBLE : View.GONE);
@@ -1233,7 +1237,7 @@ public class TrainingIDE extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 booleanContainer.setVisibility(position == 2 ? View.VISIBLE : View.GONE);
-                value.setVisibility(position == 2 ? View.GONE : View.VISIBLE);
+                value.setVisibility((typeSpinner.getSelectedItemPosition() == 0 || typeSpinner.getSelectedItemPosition() == 1) && action.getSelectedItemPosition() != 2 ? View.VISIBLE : View.GONE);
 
                 if (didVariableTypeChange)
                     value.setText(""); // clear this out so we don't save weird values
@@ -1268,7 +1272,7 @@ public class TrainingIDE extends Activity {
                     booleanContainer.setVisibility(View.GONE);
                     incrementContainer.setVisibility(View.VISIBLE);
 
-                    typeSpinner.setSelection(1); // always a number
+                    //typeSpinner.setSelection(1); // always a number
 
                     if (didVariableNameSpinnerChange) {
                         incrementUpRB.setChecked((Boolean) selectedVar.getValue());
@@ -1282,7 +1286,7 @@ public class TrainingIDE extends Activity {
                         value.setVisibility(View.VISIBLE);
                         booleanContainer.setVisibility(View.GONE);
 
-                        typeSpinner.setSelection(0);
+                        //typeSpinner.setSelection(0);
 
                         if (didVariableNameSpinnerChange)
                             value.setText(selectedVar.getValue().toString());
@@ -1300,7 +1304,7 @@ public class TrainingIDE extends Activity {
                         value.setVisibility(View.GONE);
                         booleanContainer.setVisibility(View.VISIBLE);
 
-                        typeSpinner.setSelection(2);
+                        //typeSpinner.setSelection(2);
 
                         if (didVariableNameSpinnerChange) {
                             trueRB.setChecked((Boolean) selectedVar.getValue());
@@ -1374,7 +1378,8 @@ public class TrainingIDE extends Activity {
                         ((Variable) programmingObject).setIncrementValue(Double.valueOf(incrementValue.getText().toString()));
                     }
 
-                    if(action.getSelectedItemPosition() == 0 || action.getSelectedItemPosition() == 1) {
+                    if(action.getSelectedItemPosition() == 0) {
+                        // Create
                         if (typeSpinner.getSelectedItem().equals("Number") && value.getText().toString().equals(""))
                             value.setText("0");
 
@@ -1386,6 +1391,20 @@ public class TrainingIDE extends Activity {
                             ((Variable) programmingObject).setValue(Float.parseFloat(value.getText().toString()));
                         } else if (typeSpinner.getSelectedItem().equals("Boolean")) {
                             ((Variable) programmingObject).setVariableType(Variable.VariableType.BOOLEAN);
+                            ((Variable) programmingObject).setValue(trueRB.isChecked());
+                        }
+                    } else if(action.getSelectedItemPosition() == 1) {
+                        // Set
+                        Variable selectedVar = (Variable) getVariableByName(variableNameSpinner.getSelectedItem().toString(), programmingObjects);
+
+                        if (selectedVar.getVariableType() == Variable.VariableType.NUMBER && value.getText().toString().equals(""))
+                            value.setText("0");
+
+                        if (selectedVar.getVariableType() == Variable.VariableType.STRING) {
+                            ((Variable) programmingObject).setValue(value.getText().toString());
+                        } else if (selectedVar.getVariableType() == Variable.VariableType.NUMBER) {
+                            ((Variable) programmingObject).setValue(Float.parseFloat(value.getText().toString()));
+                        } else if (selectedVar.getVariableType() == Variable.VariableType.BOOLEAN) {
                             ((Variable) programmingObject).setValue(trueRB.isChecked());
                         }
                     }
@@ -1414,7 +1433,15 @@ public class TrainingIDE extends Activity {
         printTextET.setText(((Print) programmingObject).getText());
 
         printVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
-        printVariableSpinner.setSelection(Arrays.asList(printTypes).indexOf(0));
+
+        if(((Print) programmingObject).getVariable() != null)
+            printVariableSpinner.setSelection(variableObjectNames.indexOf(((Print) programmingObject).getVariable().getName()));
+
+        if(((Print) programmingObject).getPrintType() == Print.PrintType.TEXT) {
+            printTypeSpinner.setSelection(0);
+        } else if(((Print) programmingObject).getPrintType() == Print.PrintType.VARIABLE) {
+            printTypeSpinner.setSelection(1);
+        }
 
         printTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
