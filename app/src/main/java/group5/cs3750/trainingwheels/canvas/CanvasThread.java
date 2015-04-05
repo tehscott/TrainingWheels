@@ -117,7 +117,11 @@ public class CanvasThread extends Thread {
                 // in case of an exception the surface is not left in
                 // an inconsistent state
                 if (canvas != null) {
-                    surfaceHolder.unlockCanvasAndPost(canvas);
+                    try {
+                        surfaceHolder.unlockCanvasAndPost(canvas);
+                    } catch (IllegalArgumentException e) {
+                        Log.e("IDEa", "unlockCanvasAndPost crashed.");
+                    }
                 }
             }	// end finally
         }

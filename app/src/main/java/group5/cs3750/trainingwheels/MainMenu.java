@@ -110,6 +110,7 @@ public class MainMenu extends Activity {
 
                     Intent intent = new Intent(MainMenu.this, TrainingIDE.class);
                     intent.putExtra(TrainingIDE.PROGRAMMING_OBJECT_LIST, list);
+                    intent.putExtra(TrainingIDE.OPENED_FILE_NAME, files[position]);
 
                     startActivity(intent);
                 } catch (IOException e) {

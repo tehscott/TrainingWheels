@@ -12,10 +12,12 @@ import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.DrawerLayout;
 import android.text.InputType;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -52,6 +54,7 @@ import group5.cs3750.trainingwheels.programmingobjects.While;
 
 public class TrainingIDE extends Activity {
     public static final String PROGRAMMING_OBJECT_LIST = "group5.cs3750.trainingwheels.TrainingIDE.PROGRAMMING_OBJECT_LIST";
+    public static final String OPENED_FILE_NAME = "group5.cs3750.trainingwheels.TrainingIDE.OPENED_FILE_NAME";
     private Button bIf, bWhile, bFor, bFunction, bVariable, bPrint;
     private Button bBack, bRun, bClear;
 
@@ -77,6 +80,8 @@ public class TrainingIDE extends Activity {
     private boolean didVariableTypeChange = false; // used to track if the user changed the type of a variable, used exclusively on the Variable entry dialog
     private boolean didVariableNameSpinnerChange = false; // used to track if the user changed the action type of a variable, used exclusively on the Variable entry dialog
 
+    private String openedFileName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,16 +90,21 @@ public class TrainingIDE extends Activity {
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             programmingObjects = (ArrayList<ProgrammingObject>) savedInstanceState.getSerializable("POs");
+            openedFileName = savedInstanceState.getString("OpenedFileName");
         } else {
             Bundle extras = getIntent().getExtras();
             if (extras != null && extras.containsKey(PROGRAMMING_OBJECT_LIST)) {
                 programmingObjects = (ArrayList<ProgrammingObject>) extras.getSerializable(PROGRAMMING_OBJECT_LIST);
             }
+
+            if(extras != null && extras.containsKey(OPENED_FILE_NAME)) {
+                openedFileName = extras.getString(OPENED_FILE_NAME);
+            }
         }
 
         initButtons();
         initCanvas();
-        initOutputWindow();
+        //initOutputWindow();
 
         canvasThread = new CanvasThread(canvas.getHolder(), canvas);
         canvasThread.start();
@@ -103,8 +113,40 @@ public class TrainingIDE extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putSerializable("POs", programmingObjects);
+        outState.putString("OpenedFileName", openedFileName);
 
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+        builder.setMessage("Save '" + (openedFileName == null || openedFileName.equals("") ? "New Program" : openedFileName) + "'?");
+        builder.setCancelable(true);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                canvasThread.setRunning(false);
+                doSave(true);
+            }
+        });
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                canvasThread.setRunning(false);
+                finish();
+            }
+        });
+        builder.create().show();
     }
 
     private void initButtons() {
@@ -118,13 +160,21 @@ public class TrainingIDE extends Activity {
         bVariable = (Button) findViewById(R.id.bVariable);
         bPrint = (Button) findViewById(R.id.bPrint);
 
-        // Long click listeners
-        bWhile.setOnLongClickListener(new CustomOnLongPressListener());
-        bIf.setOnLongClickListener(new CustomOnLongPressListener());
-        bFor.setOnLongClickListener(new CustomOnLongPressListener());
-        bVariable.setOnLongClickListener(new CustomOnLongPressListener());
-        bFunction.setOnLongClickListener(new CustomOnLongPressListener());
-        bPrint.setOnLongClickListener(new CustomOnLongPressListener());
+//        // Long click listeners
+//        bWhile.setOnLongClickListener(new CustomOnLongPressListener());
+//        bIf.setOnLongClickListener(new CustomOnLongPressListener());
+//        bFor.setOnLongClickListener(new CustomOnLongPressListener());
+//        bVariable.setOnLongClickListener(new CustomOnLongPressListener());
+//        bFunction.setOnLongClickListener(new CustomOnLongPressListener());
+//        bPrint.setOnLongClickListener(new CustomOnLongPressListener());
+
+        // On touch listeners
+        bWhile.setOnTouchListener(new CustomOnTouchListener());
+        bIf.setOnTouchListener(new CustomOnTouchListener());
+        bFor.setOnTouchListener(new CustomOnTouchListener());
+        bVariable.setOnTouchListener(new CustomOnTouchListener());
+        bFunction.setOnTouchListener(new CustomOnTouchListener());
+        bPrint.setOnTouchListener(new CustomOnTouchListener());
 
         // Custom backgrounds
         bIf.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new If().getDrawColor(), 12, 0));
@@ -133,6 +183,10 @@ public class TrainingIDE extends Activity {
         //bFunction.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), R.color.button_purple, 12, 0));
         bVariable.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new Variable().getDrawColor(), 12, 0));
         bPrint.setBackgroundDrawable(getBackgroundGradientDrawable(getResources(), new Print().getDrawColor(), 12, 0));
+
+        // Opened file name text view
+        if(openedFileName != null && !openedFileName.equals(""))
+            ((TextView) findViewById(R.id.openedFileNameTV)).setText("Editing: '" + openedFileName + "'");
 
         /*
          Back, Run, Clear buttons
@@ -155,7 +209,7 @@ public class TrainingIDE extends Activity {
         bBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
 
@@ -173,28 +227,55 @@ public class TrainingIDE extends Activity {
 
                 webView.loadData(finalContainer, "text/html", null);
 
-                ((SlidingDrawer) findViewById(R.id.output_drawer)).open();
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+                if(drawerLayout.isDrawerOpen(Gravity.RIGHT))
+                    drawerLayout.closeDrawer(Gravity.RIGHT);
+                else
+                    drawerLayout.openDrawer(Gravity.RIGHT);
+
+                //((SlidingDrawer) findViewById(R.id.output_drawer)).open();
             }
         });
 
         bClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(TrainingIDE.this);
+                builder.setMessage("This will clear the entire program. Continue?");
+                builder.setCancelable(true);
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String container = "<!DOCTYPE html>\n" +
+                                "<html>\n" +
+                                "<body>\n" +
+                                "</body>\n" +
+                                "</html>";
+
+                        webView.loadData(container, "text/html", null);
+
+                        synchronized (programmingObjects) {
+                            programmingObjects.clear();
+                        }
+
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.create().show();
             }
         });
 
-        bClear.setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(R.id.save_button)).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                String container = "<!DOCTYPE html>\n" +
-                        "<html>\n" +
-                        "<body>\n" +
-                        "</body>\n" +
-                        "</html>";
-
-                webView.loadData(container, "text/html", null);
-
-                programmingObjects.clear();
+            public void onClick(View view) {
+                doSave(false);
             }
         });
     }
@@ -286,28 +367,28 @@ public class TrainingIDE extends Activity {
         });
     }
 
-    private void initOutputWindow() {
-        final VerticalTextView bShowOutput = (VerticalTextView) findViewById(R.id.handle);
-        final SlidingDrawer slidingDrawer = (SlidingDrawer) findViewById(R.id.output_drawer);
-
-        bShowOutput.setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_light_blue, 12, 2));
-
-        slidingDrawer.setOnDrawerOpenListener(new SlidingDrawer.OnDrawerOpenListener() {
-            @Override
-            public void onDrawerOpened() {
-                bShowOutput.setText("Hide Output");
-                bShowOutput.setTopDown(false);
-            }
-        });
-
-        slidingDrawer.setOnDrawerCloseListener(new SlidingDrawer.OnDrawerCloseListener() {
-            @Override
-            public void onDrawerClosed() {
-                bShowOutput.setText("Show Output");
-                bShowOutput.setTopDown(true);
-            }
-        });
-    }
+//    private void initOutputWindow() {
+//        final VerticalTextView bShowOutput = (VerticalTextView) findViewById(R.id.handle);
+//        final SlidingDrawer slidingDrawer = (SlidingDrawer) findViewById(R.id.output_drawer);
+//
+//        bShowOutput.setBackgroundDrawable(TrainingIDE.getBackgroundGradientDrawable(getResources(), R.color.button_light_blue, 12, 2));
+//
+//        slidingDrawer.setOnDrawerOpenListener(new SlidingDrawer.OnDrawerOpenListener() {
+//            @Override
+//            public void onDrawerOpened() {
+//                bShowOutput.setText("Hide Output");
+//                bShowOutput.setTopDown(false);
+//            }
+//        });
+//
+//        slidingDrawer.setOnDrawerCloseListener(new SlidingDrawer.OnDrawerCloseListener() {
+//            @Override
+//            public void onDrawerClosed() {
+//                bShowOutput.setText("Show Output");
+//                bShowOutput.setTopDown(true);
+//            }
+//        });
+//    }
 
     private void showTutorial(String tutorial) {
         SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -481,6 +562,25 @@ public class TrainingIDE extends Activity {
                         findObjectJustAboveHoverLocation(programmingObject.getChildren());
                 }
             }
+        }
+    }
+
+    private class CustomOnTouchListener implements View.OnTouchListener {
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                Log.i("IDEA", view.getTag() + " drag started.");
+
+                ClipData clipData = ClipData.newPlainText(view.getTag().toString(), view.getTag().toString()); // The first value can be gotten from getClipDescription(), the second value can be gotten from getClipData()
+                View.DragShadowBuilder dsb = new View.DragShadowBuilder(view);
+                view.startDrag(clipData, dsb, view, 0);
+                view.setEnabled(false);
+
+                draggedButton = view;
+            }
+
+            return false;
         }
     }
 
@@ -1605,22 +1705,43 @@ public class TrainingIDE extends Activity {
         }
     }
 
-    public void doSave(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Save Program");
-        builder.setView(View.inflate(this, R.layout.save_dialog, null));
-        builder.setNeutralButton(android.R.string.ok, null);
+    public void doSave(boolean exit) {
+        if(openedFileName == null || openedFileName.equals("")) {
+            // new program
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Save Program");
+            builder.setView(View.inflate(this, R.layout.save_dialog, null));
+            builder.setNeutralButton(android.R.string.ok, null);
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-        alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new SaveClickListener(alertDialog));
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+            alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new SaveClickListener(alertDialog, exit));
+        } else {
+            // existing program
+            try {
+                ObjectOutputStream oos = new ObjectOutputStream(openFileOutput(openedFileName, MODE_PRIVATE));
+                oos.writeObject(programmingObjects);
+                oos.close();
+
+                Toast.makeText(TrainingIDE.this, "'" + openedFileName + "' saved successfully.", Toast.LENGTH_SHORT).show();
+
+                if(exit)
+                    finish();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     class SaveClickListener implements View.OnClickListener {
         private final AlertDialog mDialog;
+        private final boolean mExit;
 
-        public SaveClickListener(AlertDialog dialogView) {
+        public SaveClickListener(AlertDialog dialogView, boolean exit) {
             mDialog = dialogView;
+            mExit = exit;
         }
 
         @Override
@@ -1646,6 +1767,14 @@ public class TrainingIDE extends Activity {
                     oos.writeObject(programmingObjects);
                     oos.close();
                     mDialog.dismiss();
+
+                    openedFileName = titleText;
+                    ((TextView) findViewById(R.id.openedFileNameTV)).setText("Editing: '" + openedFileName + "'");
+
+                    Toast.makeText(TrainingIDE.this, "'" + titleText + "' saved successfully.", Toast.LENGTH_SHORT).show();
+
+                    if(mExit)
+                        finish();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
