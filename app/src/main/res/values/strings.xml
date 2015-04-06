@@ -92,5 +92,6 @@
     <string name="hints_tips">Tips</string>
     <string name="sound">Sound</string>
     <string name="title_activity_java_script_demo">JavaScriptDemo</string>
+    <string name="output">Output</string>
 
 </resources>

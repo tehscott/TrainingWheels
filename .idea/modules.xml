@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TrainingWheels.iml" filepath="$PROJECT_DIR$/TrainingWheels.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TrainingWheels.iml" filepath="$PROJECT_DIR$/TrainingWheels.iml" />
       <module fileurl="file://$PROJECT_DIR$/TrainingWheels-deliverable.iml" filepath="$PROJECT_DIR$/TrainingWheels-deliverable.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

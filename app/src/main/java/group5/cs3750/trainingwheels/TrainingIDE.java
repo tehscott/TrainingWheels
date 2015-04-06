@@ -891,9 +891,6 @@ public class TrainingIDE extends Activity {
         getVariableNamesAsList(variableObjectNames, programmingObjects, null); // get all variable types
 
         conditionTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            //<item>Variable</item>
-            //<item>Custom Expression</item>
-
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 conditionVariableLabel.setVisibility(position == 0 ? View.VISIBLE : View.GONE); // only visible for 'Variable' selection
@@ -930,7 +927,12 @@ public class TrainingIDE extends Activity {
 
         conditionVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
         terminatingValueVariableSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
-        conditionTypeSpinner.setSelection(0); // 'Variable' selection
+
+        if(ifObject.getConditionLeftSide() != null) {
+            conditionTypeSpinner.setSelection(0); // 'Variable' selection
+        } else {
+            conditionTypeSpinner.setSelection(1); // 'Custom Expression' selection
+        }
 
         dialog.getLeftButton().setOnClickListener(new View.OnClickListener() {
             @Override
