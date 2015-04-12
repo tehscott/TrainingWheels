@@ -5,7 +5,7 @@
     android:background="@color/ide_bg">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_centerInParent="true"
@@ -16,27 +16,31 @@
             android:layout_height="wrap_content"
             android:id="@+id/letterI"
             android:src="@drawable/letteri"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp"
+            android:layout_weight=".25"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/letterD"
             android:src="@drawable/letterd"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp"
+            android:layout_weight=".25" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/letterE"
             android:src="@drawable/lettere"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp"
+            android:layout_weight=".25" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/letterA"
             android:src="@drawable/lettera"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp"
+            android:layout_weight=".25" />
     </LinearLayout>
 </RelativeLayout>
