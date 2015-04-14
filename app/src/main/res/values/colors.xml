@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- http://www.google.com/design/spec/style/color.html# -->
-    <color name="back_button_bar_bg">#e0e0e0</color>
-    <color name="ide_bg">#eeeeee</color>
+    <color name="back_button_bar_bg">#3f51b5</color>
+    <color name="ide_bg">#ffffff</color>
 
     <!-- button/programming object colors -->
     <color name="button_teal">#009688</color>

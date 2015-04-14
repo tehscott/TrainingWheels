@@ -15,15 +15,15 @@
             android:id="@+id/top_bar_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:background="@color/back_button_bar_bg">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="false"
                 android:background="@color/back_button_bar_bg"
-                android:scaleType="fitXY"
-                android:src="@drawable/back_button_bar" />
+                android:scaleType="fitXY" />
 
             <ImageView
                 android:id="@+id/back_button_bg"
@@ -41,7 +41,7 @@
                 android:layout_alignLeft="@+id/back_button_bg"
                 android:layout_alignRight="@+id/back_button_bg"
                 android:layout_alignTop="@+id/back_button_bg"
-                android:background="@android:color/transparent"
+                android:background="@color/back_button_bar_bg"
                 android:minHeight="0dp"
                 android:minWidth="0dp"
                 android:text="Back "
@@ -65,7 +65,8 @@
                 android:layout_toRightOf="@+id/back_button"
                 android:gravity="center_vertical"
                 android:text="Editing: 'New Program'"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/run_button"
@@ -75,7 +76,7 @@
                 android:layout_alignLeft="@+id/run_button_bg"
                 android:layout_alignRight="@+id/run_button_bg"
                 android:layout_alignTop="@+id/run_button_bg"
-                android:background="@android:color/transparent"
+                android:background="@color/back_button_bar_bg"
                 android:minHeight="0dp"
                 android:minWidth="0dp"
                 android:text="  Run"
@@ -95,7 +96,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/bar_horizontal"
-                android:padding="5dp" />
+                android:padding="5dp"
+                android:background="@color/ide_bg" />
 
             <!--
             <SlidingDrawer
@@ -262,7 +264,8 @@
             android:id="@+id/bottom_bar_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white">
 
             <ImageView
                 android:id="@+id/save_button_bg"
@@ -279,11 +282,11 @@
                 android:layout_alignLeft="@+id/save_button_bg"
                 android:layout_alignRight="@+id/save_button_bg"
                 android:layout_alignTop="@+id/save_button_bg"
-                android:background="@android:color/transparent"
+                android:background="@android:color/white"
                 android:minHeight="0dp"
                 android:minWidth="0dp"
                 android:text="Save "
-                android:textColor="@color/ide_button_text" />
+                android:textColor="#ffff4081" />
 
             <ImageView
                 android:id="@+id/clear_button_bg"
@@ -301,11 +304,11 @@
                 android:layout_alignLeft="@+id/clear_button_bg"
                 android:layout_alignRight="@+id/clear_button_bg"
                 android:layout_alignTop="@+id/clear_button_bg"
-                android:background="@android:color/transparent"
+                android:background="@android:color/white"
                 android:minHeight="0dp"
                 android:minWidth="0dp"
                 android:text="  Clear"
-                android:textColor="@color/ide_button_text" />
+                android:textColor="#ffff4081" />
         </RelativeLayout>
     </RelativeLayout>
 
