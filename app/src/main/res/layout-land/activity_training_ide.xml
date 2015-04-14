@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:adjustViewBounds="true"
-                android:src="@drawable/back_button" />
+                android:src="@drawable/back" />
 
             <Button
                 android:id="@+id/back_button"
@@ -41,11 +41,11 @@
                 android:layout_alignLeft="@+id/back_button_bg"
                 android:layout_alignRight="@+id/back_button_bg"
                 android:layout_alignTop="@+id/back_button_bg"
-                android:background="#ff3f51b5"
+                android:background="@android:color/transparent"
                 android:minHeight="0dp"
                 android:minWidth="0dp"
-                android:text="Back "
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:singleLine="false" />
 
             <TextView
                 android:id="@+id/openedFileNameTV"
@@ -72,10 +72,10 @@
                 android:id="@+id/run_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/run_button_bg"
+                android:layout_alignBottom="@+id/back_button"
                 android:layout_alignLeft="@+id/run_button_bg"
                 android:layout_alignRight="@+id/run_button_bg"
-                android:layout_alignTop="@+id/run_button_bg"
+                android:layout_alignTop="@+id/back_button"
                 android:background="#ff3f51b5"
                 android:minHeight="0dp"
                 android:minWidth="0dp"
