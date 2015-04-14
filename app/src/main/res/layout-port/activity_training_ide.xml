@@ -96,8 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/bar_horizontal"
-                android:padding="5dp"
-                android:background="@color/ide_bg" />
+                android:padding="5dp" />
 
             <!--
             <SlidingDrawer
