@@ -79,6 +79,8 @@ public class TrainingIDE extends Activity {
     // Object dialog variables
     private boolean didVariableTypeChange = false; // used to track if the user changed the type of a variable, used exclusively on the Variable entry dialog
     private boolean didVariableNameSpinnerChange = false; // used to track if the user changed the action type of a variable, used exclusively on the Variable entry dialog
+    private boolean didForStartingValueSpinnerChange = false; // used to track if the user changed the starting value of a for, used exclusively on the For entry dialog
+    private boolean didForEndingValueSpinnerChange = false; // used to track if the user changed the starting value of a for, used exclusively on the For entry dialog
 
     private String openedFileName;
 
@@ -1494,13 +1496,21 @@ public class TrainingIDE extends Activity {
     private void showForDialog(final ProgrammingObject programmingObject) {
         final CustomDialog dialog = new CustomDialog(TrainingIDE.this, true, "For - Enter your parameters", R.layout.for_dialog, getString(android.R.string.cancel), getString(android.R.string.ok));
         final EditText labelET = (EditText) dialog.getDialog().findViewById(R.id.labelEditText);
+
+        // Start value
+        final Spinner startingValueSpinner = (Spinner) dialog.getDialog().findViewById(R.id.startingValueSpinner);
         final LinearLayout startingValueContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.startValueContainer);
         final TextView startingValueTV = (TextView) dialog.getDialog().findViewById(R.id.startValueTextView);
-        final Spinner startingValueSpinner = (Spinner) dialog.getDialog().findViewById(R.id.startingValueSpinner);
+
+        // End value
+        final Spinner endingValueSpinner = (Spinner) dialog.getDialog().findViewById(R.id.endValueSpinner);
         final LinearLayout endingValueContainer = (LinearLayout) dialog.getDialog().findViewById(R.id.endValueContainer);
         final TextView endingValueTV = (TextView) dialog.getDialog().findViewById(R.id.endValueTextView);
-        final Spinner endingValueSpinner = (Spinner) dialog.getDialog().findViewById(R.id.endValueSpinner);
+
+        // End value operator
         final Spinner endingValueOperatorSpinner = (Spinner) dialog.getDialog().findViewById(R.id.endValueOperatorSpinner);
+
+        // Count
         final RadioButton countUpRB = (RadioButton) dialog.getDialog().findViewById(R.id.countUpRadioButton);
         final RadioButton countDownRB = (RadioButton) dialog.getDialog().findViewById(R.id.countDownRadioButton);
 
@@ -1516,23 +1526,30 @@ public class TrainingIDE extends Activity {
         startingValueSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
         endingValueSpinner.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_item, variableObjectNames));
 
+        didForStartingValueSpinnerChange = false;
+        didForEndingValueSpinnerChange = false;
+
         if(((For) programmingObject).getStartingValue() != null) {
-            startingValueTV.setText(((For) programmingObject).getStartingValue());
+            startingValueTV.setText(String.valueOf(((For) programmingObject).getStartingValue()));
             startingValueContainer.setVisibility(View.VISIBLE);
             startingValueSpinner.setSelection(1); // manual entry
         } else if(((For) programmingObject).getStartingValueVariable() != null) {
+            didForStartingValueSpinnerChange = true;
             startingValueContainer.setVisibility(View.GONE); // should be gone already, but be sure
             startingValueSpinner.setSelection(variableObjectNames.indexOf(((For) programmingObject).getStartingValueVariable().getName())); // manual entry
-        }
+        } else
+            didForStartingValueSpinnerChange = true;
 
         if(((For) programmingObject).getEndingValue() != null) {
-            endingValueTV.setText(((For) programmingObject).getEndingValue());
+            endingValueTV.setText(String.valueOf(((For) programmingObject).getEndingValue()));
             endingValueContainer.setVisibility(View.VISIBLE);
             endingValueSpinner.setSelection(1); // manual entry
         } else if(((For) programmingObject).getStartingValueVariable() != null) {
+            didForEndingValueSpinnerChange = true;
             endingValueContainer.setVisibility(View.GONE); // should be gone already, but be sure
             endingValueSpinner.setSelection(variableObjectNames.indexOf(((For) programmingObject).getEndValueVariable().getName())); // manual entry
-        }
+        } else
+            didForEndingValueSpinnerChange = true;
 
         endingValueOperatorSpinner.setSelection(Arrays.asList(operatorSymbols).indexOf(((For) programmingObject).getEndingValueComparisonOperator().toString()));
 
@@ -1570,7 +1587,11 @@ public class TrainingIDE extends Activity {
                             startingValueSpinner.setSelection(0);
                         }
                     });
-                    alert.show();
+
+                    if(didForStartingValueSpinnerChange)
+                        alert.show();
+                    else
+                        didForStartingValueSpinnerChange = true;
                 } else {
                     startingValueContainer.setVisibility(View.GONE);
                 }
@@ -1610,7 +1631,11 @@ public class TrainingIDE extends Activity {
                             endingValueSpinner.setSelection(0);
                         }
                     });
-                    alert.show();
+
+                    if(didForEndingValueSpinnerChange)
+                        alert.show();
+                    else
+                        didForEndingValueSpinnerChange = true;
                 } else {
                     endingValueContainer.setVisibility(View.GONE);
                 }
