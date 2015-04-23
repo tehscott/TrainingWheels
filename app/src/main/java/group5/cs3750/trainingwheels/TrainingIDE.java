@@ -534,6 +534,7 @@ public class TrainingIDE extends Activity {
      * This only does anything if the user is dragging and if they are not hovering over
      * an existing programming object. The user must also be within the bounds of the drawn object area.
      */
+    // TODO: When dragging an object that can contain children, this method can recurse infinitely and cause a stack overflow
     private void findObjectJustAboveHoverLocation(List<ProgrammingObject> programmingObjectList) {
         if (currentHoveredObject == null && canvas.getCurrentHoverLocation() != null) {
             // Only draw a line if they are dragging within the bounding box of the drawn objects area
@@ -565,8 +566,11 @@ public class TrainingIDE extends Activity {
                         }
                     }
 
-                    if (programmingObject.getChildren() != null) // Look through this object's children
+                    //Log.i("IDEa", "Is child: " + isPOChildOfPO(programmingObject, draggedObject));
+                    if (!draggedObject.equals(programmingObject) && programmingObject.getChildren() != null && programmingObject.getChildren().size() > 0) { // Look through this object's children
+                        //Log.i("IDEa", programmingObject.getTypeName() + ". child count: " + programmingObject.getChildren().size());
                         findObjectJustAboveHoverLocation(programmingObject.getChildren());
+                    }
                 }
             }
         }
