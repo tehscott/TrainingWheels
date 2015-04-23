@@ -48,22 +48,79 @@ public class For extends ProgrammingObject {
 
     @Override
     public String toString() {
-        if(endValueVariable != null)
-            return startingValue + " to var " + endValueVariable.getName() + ", " + getEndingValueComparisonOperator().toString();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        String varName = "i";
+        stringBuilder.append("for(var ").append(varName);
+        stringBuilder.append(" = ");
+
+        if(startingValueVariable != null) {
+            stringBuilder.append(startingValueVariable.getName());
+        } else if(startingValue != null) {
+            stringBuilder.append(startingValue);
+        } else {
+            stringBuilder.append(0);
+        }
+
+        stringBuilder.append("; ");
+        stringBuilder.append(varName);
+        stringBuilder.append(" ");
+        stringBuilder.append(endingValueComparisonOperator.toString());
+        stringBuilder.append(" ");
+
+        if(endValueVariable != null) {
+            stringBuilder.append(endValueVariable.getName());
+        } else if(endingValue != null) {
+            stringBuilder.append(endingValue);
+        } else {
+            stringBuilder.append(0);
+        }
+
+        stringBuilder.append("; ");
+        stringBuilder.append(varName);
+
+        if(countUp)
+            stringBuilder.append("++").append(") {"); // for(var i = 0; i < 10; i++) {
         else
-            return startingValue + " to " + endingValue + ", " + getEndingValueComparisonOperator().toString();
+            stringBuilder.append("--").append(") {"); // for(var i = 0; i < 10; i--) {
+
+        for (ProgrammingObject child : children) {
+            child.toScript(stringBuilder);
+        }
+
+        return stringBuilder.toString();
     }
 
     @Override
     public void toScript(StringBuilder stringBuilder) {
         String varName = "i" + String.valueOf(For.nextInt++);
-        stringBuilder.append("for(var ").append(varName).append(" = ").append(startingValue).append("; ") // for(var i = 0;
-                .append(varName).append(" ").append(endingValueComparisonOperator.toString()); // for(var i = 0; i <
+        stringBuilder.append("for(var ").append(varName);
+        stringBuilder.append(" = ");
 
-        if(endValueVariable != null)
-            stringBuilder.append(endValueVariable.getName()).append("; ").append(varName); // for(var i = 0; i < x; i
-        else
-            stringBuilder.append(endingValue).append("; ").append(varName); // for(var i = 0; i < 10; i
+        if(startingValueVariable != null) {
+            stringBuilder.append(startingValueVariable.getName());
+        } else if(startingValue != null) {
+            stringBuilder.append(startingValue);
+        } else {
+            stringBuilder.append(0);
+        }
+
+        stringBuilder.append("; ");
+        stringBuilder.append(varName);
+        stringBuilder.append(" ");
+        stringBuilder.append(endingValueComparisonOperator.toString());
+        stringBuilder.append(" ");
+
+        if(endValueVariable != null) {
+            stringBuilder.append(endValueVariable.getName());
+        } else if(endingValue != null) {
+            stringBuilder.append(endingValue);
+        } else {
+            stringBuilder.append(0);
+        }
+
+        stringBuilder.append("; ");
+        stringBuilder.append(varName);
 
         if(countUp)
             stringBuilder.append("++").append(") {"); // for(var i = 0; i < 10; i++) {
@@ -75,26 +132,6 @@ public class For extends ProgrammingObject {
         }
 
         stringBuilder.append("}\n");
-
-//        Boolean down = false;
-//        if(getEndingValueComparisonOperator().toString().contentEquals("<")){
-//            down = true;
-//        }
-//        String varName = "i" + String.valueOf(For.nextInt++);
-//        stringBuilder.append("for(var ").append(varName).append(" = ").append(startingValue).append("; ")
-//                .append(varName).append(" ").append(endingValueComparisonOperator.toString()).append(endingValue).append("; ")
-//                .append(varName);
-//        if(getEndingValueComparisonOperator().toString().contentEquals("<")){
-//            stringBuilder.append("++").append("){");
-//        }else{
-//            stringBuilder.append("--").append("){");;
-//        }
-//
-//        for (ProgrammingObject child : children) {
-//            child.toScript(stringBuilder);
-//        }
-//
-//        stringBuilder.append("}\n");
     }
 
     @Override

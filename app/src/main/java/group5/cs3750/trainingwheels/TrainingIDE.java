@@ -221,11 +221,12 @@ public class TrainingIDE extends Activity {
                 StringBuilder stringBuilder = new StringBuilder();
                 for (ProgrammingObject programmingObject : programmingObjects) {
                     programmingObject.toScript(stringBuilder);
-                    System.out.println(stringBuilder.toString());
                 }
 
                 String content = stringBuilder.toString();
                 String finalContainer = String.format(container, content);
+
+                Log.d("IDEa", content);
 
                 webView.loadData(finalContainer, "text/html", null);
 
